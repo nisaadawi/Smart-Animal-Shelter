@@ -20,17 +20,26 @@ function renderAnimals() {
     grid.innerHTML = animalList.map(animal => {
         const hasAlerts = animal.alerts.length > 0 || animal.health === 'danger';
         const devices = [];
-        if (animal.sensors.heartRate) devices.push('❤️');
-        if (animal.sensors.temp || animal.sensors.baskingTemp) devices.push('🌡️');
-        if (animal.cctv) devices.push('📹');
-        if (animal.tracking.enabled) devices.push('📍');
         if (animal.safety) devices.push('🔒');
+        const profile = animal.profile || {};
+        const behaviorProfile = animal.behaviorProfile || {};
+        const idTag = profile.idTag || 'ID pending';
+        const speciesBreed = `${animal.species}${profile.breed ? ` • ${profile.breed}` : ''}`;
+        const dobAge = profile.age && profile.dob
+            ? `${profile.age} • ${profile.dob}`
+            : profile.age || profile.dob || '—';
+        const enclosure = profile.enclosure || 'Assigning habitat…';
+        const sex = profile.sex || '—';
+        const behaviorSummary = behaviorProfile.summary || 'Behavior data syncing…';
+        const behaviorAlert = behaviorProfile.alert || 'AI assistant calibrating signals…';
+
+        const imageStyle = animal.imageFocus ? `style="object-position:${animal.imageFocus}"` : '';
 
         return `
             <div class="animal-card ${hasAlerts ? 'has-alert' : ''}" onclick="openModal(${animal.id})">
                 <div class="animal-image-wrapper">
-                    <img src="${animal.images[0]}" class="animal-image" alt="${animal.name}">
-                    ${animal.tracking.enabled ? '<div class="tracking-badge live">LIVE TRACKING</div>' : ''}
+                    <img src="${animal.images[0]}" class="animal-image" alt="${animal.name}" ${imageStyle}>
+
                     <div class="health-badge ${animal.health}">
                         ${animal.health === 'good' ? '✓' : animal.health === 'warning' ? '⚠️' : '🔴'}
                     </div>
@@ -39,21 +48,36 @@ function renderAnimals() {
                     <div class="animal-header">
                         <div>
                             <div class="animal-name">${animal.name}</div>
-                            <div class="animal-species">${animal.species}</div>
+                            <div class="id-tag">${idTag}</div>
+                        </div>
+                        <span class="health-chip ${animal.health}">${animal.health.toUpperCase()}</span>
+                    </div>
+                    <div class="animal-species">${speciesBreed}</div>
+                    <div class="animal-meta-grid">
+                        <div class="meta-card">
+                            <div class="meta-label">📅 DOB / Age</div>
+                            <div class="meta-value">${dobAge}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">🚻 Sex</div>
+                            <div class="meta-value">${sex}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">🃏 Cage / Zone</div>
+                            <div class="meta-value">${enclosure}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">⏱ Last Fed</div>
+                            <div class="meta-value">${animal.lastFed}</div>
                         </div>
                     </div>
-                    <div class="animal-stats">
-                        <div class="stat-item">
-                            <div class="stat-item-label">Last Fed</div>
-                            <div class="stat-item-value">${animal.lastFed}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-item-label">Health Status</div>
-                            <div class="stat-item-value">${animal.health.toUpperCase()}</div>
-                        </div>
-                    </div>
+                    <div class="behavior-chip">${behaviorSummary}</div>
                     <div class="animal-devices">
                         ${devices.map(icon => `<div class="device-icon">${icon}</div>`).join('')}
+                    </div>
+                    <div class="ai-alert">
+                        <span class="ai-label">Behavior alert</span>
+                        <span class="ai-text">${behaviorAlert}</span>
                     </div>
                     <div class="animal-actions">
                         <button class="btn btn-primary">👁️ View Details</button>
