@@ -1,0 +1,83 @@
+/* INVENTORY SPECIFIC STYLES */
+
+.inventory-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.inventory-item {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.inventory-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.inventory-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, #dbeafe, #ede9fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+}
+
+.inventory-details {
+    flex: 1;
+}
+
+.inventory-name {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.inventory-category {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.inventory-stock {
+    text-align: right;
+}
+
+.stock-level {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.stock-status {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stock-low {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.stock-ok {
+    background: #d1fae5;
+    color: var(--success);
+}
+
