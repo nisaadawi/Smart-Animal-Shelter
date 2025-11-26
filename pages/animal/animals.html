@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animals Management - Smart Animal Shelter</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🐾</div>
+                <div class="logo-text">
+                    <h1>Smart Shelter</h1>
+                    <p>Khairul Johari</p>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Main</div>
+                <div class="nav-item active" onclick="window.location.href='../dashboard/dashboard.html'">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='animals.html'">
+                    <span class="nav-icon">🐾</span>
+                    <span>Animals</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='../tracking/tracking.html'">
+                    <span class="nav-icon">📍</span>
+                    <span>Live Tracking</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='../alerts/alerts.html'">
+                    <span class="nav-icon">🚨</span>
+                    <span>Alerts</span>
+                    <span class="nav-badge" id="alertBadge">0</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Operations</div>
+                <div class="nav-item" onclick="window.location.href='../feeding/feeding.html'">
+                    <span class="nav-icon">🍽️</span>
+                    <span>Feeding</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='../health/health.html'">
+                    <span class="nav-icon">❤️</span>
+                    <span>Health Monitor</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='../environment/environment.html'">
+                    <span class="nav-icon">🌡️</span>
+                    <span>Environment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='../inventory/inventory.html'">
+                    <span class="nav-icon">📦</span>
+                    <span>Inventory</span>
+                    <span class="nav-badge" id="inventoryBadge">0</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">System</div>
+                <div class="nav-item" onclick="window.location.href='../reports/reports.html'">
+                    <span class="nav-icon">📈</span>
+                    <span>Reports</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-btn">
+                        🔔
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="header-btn">⚙️</button>
+                    <div class="user-avatar">KJ</div>
+                </div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- ANIMALS SECTION -->
+                <section class="page-section active" id="animals-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Animals Management</h1>
+                        <p class="section-subtitle">Browse and manage all animals by species</p>
+                    </div>
+
+                    <div class="species-tabs">
+                        <div class="species-tab active" onclick="filterSpecies('Goat')">🐐 Goats</div>
+                        <div class="species-tab" onclick="filterSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                        <div class="species-tab" onclick="filterSpecies('Alligator')">🐊 Alligators</div>
+                        <div class="species-tab" onclick="filterSpecies('Snail')">🐌 Snails</div>
+                        <div class="species-tab" onclick="filterSpecies('Porcupine')">🦔 Porcupines</div>
+                        <div class="species-tab" onclick="filterSpecies('Fox')">🦊 Foxes</div>
+                    </div>
+
+                    <div class="animals-grid" id="animalsGrid"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ANIMAL DETAIL MODAL -->
+    <div class="modal" id="animalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Animal Name</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Species</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <img src="" id="modalImage" class="modal-image" alt="Animal">
+
+                <div id="emergencyPanel"></div>
+
+                <div class="cctv-feed" id="cctvFeed">
+                    <div class="cctv-placeholder">📹</div>
+                    <div class="cctv-overlay">
+                        <span class="rec-dot"></span>
+                        <span>LIVE</span>
+                    </div>
+                </div>
+
+                <div class="sensors-grid" id="modalSensors"></div>
+
+                <div class="notes-section">
+                    <h3 class="notes-title">📝 Recent Activity</h3>
+                    <div id="modalNotes"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
+                <button class="btn btn-primary" onclick="window.location.href='tracking.html'; closeModal();">📍 Track Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="../data.js"></script>
+    <script src="../utils.js"></script>
+    <script src="../animal/animal.js"></script>
+    <script src="../modal.js"></script>
+</html>
