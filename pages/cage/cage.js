@@ -4,7 +4,7 @@ let panX = 0; // Horizontal pan position (pixels)
 let panY = 0; // Vertical pan position (pixels)
 const panStep = 50; // Pixels to move per button press
 const maxPan = 200; // Maximum pan distance in pixels
-let cageCurrentSpecies = 'Porcupine'; // Default species for cage monitor
+let cageCurrentSpecies = 'Goat'; // Default species for cage monitor
 
 // Video sources for each species
 const speciesVideos = {
@@ -25,6 +25,156 @@ const speciesDisplayNames = {
     'Porcupine': 'Porcupines',
     'Fox': 'Foxes'
 };
+
+// Species-specific environmental thresholds
+const speciesThresholds = {
+    'Goat': {
+        minTemp: 10,
+        maxTemp: 25,
+        optimalTemp: 18,
+        minHumidity: 40,
+        maxHumidity: 70,
+        optimalHumidity: 55,
+        tempRange: '(10-25°C)',
+        humidityRange: '(40-70%)'
+    },
+    'Sugarglider': {
+        minTemp: 20,
+        maxTemp: 28,
+        optimalTemp: 24,
+        minHumidity: 50,
+        maxHumidity: 80,
+        optimalHumidity: 65,
+        tempRange: '(20-28°C)',
+        humidityRange: '(50-80%)'
+    },
+    'Alligator': {
+        minTemp: 25,
+        maxTemp: 35,
+        optimalTemp: 30,
+        minHumidity: 60,
+        maxHumidity: 90,
+        optimalHumidity: 75,
+        tempRange: '(25-35°C)',
+        humidityRange: '(60-90%)'
+    },
+    'Snail': {
+        minTemp: 18,
+        maxTemp: 26,
+        optimalTemp: 22,
+        minHumidity: 70,
+        maxHumidity: 95,
+        optimalHumidity: 85,
+        tempRange: '(18-26°C)',
+        humidityRange: '(70-95%)'
+    },
+    'Porcupine': {
+        minTemp: 15,
+        maxTemp: 25,
+        optimalTemp: 20,
+        minHumidity: 40,
+        maxHumidity: 65,
+        optimalHumidity: 50,
+        tempRange: '(15-25°C)',
+        humidityRange: '(40-65%)'
+    },
+    'Fox': {
+        minTemp: 5,
+        maxTemp: 20,
+        optimalTemp: 12,
+        minHumidity: 30,
+        maxHumidity: 60,
+        optimalHumidity: 45,
+        tempRange: '(5-20°C)',
+        humidityRange: '(30-60%)'
+    }
+};
+
+// Enhanced alert suggestions for different environmental issues
+const alertSuggestions = {
+    'temperature': {
+        'high': {
+            title: 'High Temperature Alert',
+            message: (species, current, min, max) => `Temperature is too high for ${speciesDisplayNames[species]} (${current}°C). Optimal range: ${min}-${max}°C.`,
+            suggestions: [
+                'Increase ventilation by setting fan to HIGH',
+                'Activate cooling system if available',
+                'Reduce direct sunlight exposure',
+                'Check air conditioning settings',
+                'Provide additional water sources'
+            ],
+            immediateAction: 'Set fan speed to HIGH'
+        },
+        'low': {
+            title: 'Low Temperature Alert',
+            message: (species, current, min, max) => `Temperature is too low for ${speciesDisplayNames[species]} (${current}°C). Optimal range: ${min}-${max}°C.`,
+            suggestions: [
+                'Activate heating system',
+                'Reduce ventilation by setting fan to LOW',
+                'Check insulation and close any drafts',
+                'Increase ambient room temperature',
+                'Provide additional bedding or heat lamps'
+            ],
+            immediateAction: 'Set fan speed to LOW'
+        }
+    },
+    'humidity': {
+        'high': {
+            title: 'High Humidity Alert',
+            message: (species, current, min, max) => `Humidity is too high for ${speciesDisplayNames[species]} (${current}%). Optimal range: ${min}-${max}%.`,
+            suggestions: [
+                'Increase ventilation by setting fan to HIGH',
+                'Activate dehumidifier if available',
+                'Improve air circulation in the habitat',
+                'Reduce water sources temporarily',
+                'Check for water leaks or spills'
+            ],
+            immediateAction: 'Set fan speed to HIGH'
+        },
+        'low': {
+            title: 'Low Humidity Alert',
+            message: (species, current, min, max) => `Humidity is too low for ${speciesDisplayNames[species]} (${current}%). Optimal range: ${min}-${max}%.`,
+            suggestions: [
+                'Activate humidifier or misting system',
+                'Reduce ventilation by setting fan to LOW',
+                'Add water bowls or wet towels to habitat',
+                'Use a room humidifier nearby',
+                'Increase frequency of misting'
+            ],
+            immediateAction: 'Set fan speed to LOW'
+        }
+    }
+};
+
+// Problematic initial environments with specific issues
+const problematicEnvironments = {
+    'Snail': {
+        temperature: 15, // Too cold for snails
+        humidity: 60,    // Too dry for snails
+        airQuality: 'Fair',
+        issues: ['temperature_low', 'humidity_low']
+    },
+    'Fox': {
+        temperature: 23, // Too warm for foxes
+        humidity: 65,    // Too humid for foxes
+        airQuality: 'Poor',
+        issues: ['temperature_high', 'humidity_high']
+    }
+};
+
+// Environment state - will be updated based on species
+let environmentState = {
+    temperature: 0,
+    humidity: 0,
+    airQuality: 'Good',
+    lightLevel: 75,
+    fanSpeed: 'medium',
+    cageLocked: true,
+    autoVentilation: false, // Changed to false to require manual fixes
+    lastAlert: null
+};
+
+// ========== CORE FUNCTIONS ==========
 
 // Switch CCTV feed based on selected species
 function switchCCTVFeed(species) {
@@ -61,7 +211,7 @@ function switchCCTVFeed(species) {
     panY = 0;
     
     // Update video source
-    const videoSrc = speciesVideos[species] || speciesVideos['Porcupine'];
+    const videoSrc = speciesVideos[species] || speciesVideos['Goat'];
     
     // Show placeholder while loading
     if (cctvPlaceholder) {
@@ -74,6 +224,9 @@ function switchCCTVFeed(species) {
     
     // Reset video position
     cctvVideo.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px))`;
+    
+    // Initialize environment for this species
+    initializeSpeciesEnvironment(species);
     
     // Load new video
     cctvVideo.load();
@@ -89,9 +242,282 @@ function switchCCTVFeed(species) {
     };
     
     if (typeof showToast === 'function') {
-        showToast(`Switched to ${species} CCTV feed`);
+        showToast(`Switched to ${species} habitat`);
     }
 }
+
+// Initialize environment for a specific species
+function initializeSpeciesEnvironment(species) {
+    const thresholds = speciesThresholds[species] || speciesThresholds['Goat'];
+    
+    // Check if this species has a problematic environment
+    if (problematicEnvironments[species]) {
+        // Use problematic values for Snail and Fox
+        environmentState.temperature = problematicEnvironments[species].temperature;
+        environmentState.humidity = problematicEnvironments[species].humidity;
+        environmentState.airQuality = problematicEnvironments[species].airQuality;
+        
+        // Immediately trigger enhanced alerts for problematic environments
+        setTimeout(() => {
+            triggerInitialAlerts(species);
+        }, 1000);
+    } else {
+        // Set initial values to optimal ranges for other species
+        environmentState.temperature = thresholds.optimalTemp;
+        environmentState.humidity = thresholds.optimalHumidity;
+        environmentState.airQuality = 'Good';
+    }
+    
+    // Update display with species-specific ranges
+    updateEnvironmentDisplay();
+    updateSpeciesRanges(species);
+}
+
+// Trigger initial alerts for problematic environments
+function triggerInitialAlerts(species) {
+    const thresholds = speciesThresholds[species];
+    const problematicEnv = problematicEnvironments[species];
+    
+    problematicEnv.issues.forEach(issue => {
+        const [type, level] = issue.split('_');
+        
+        if (type === 'temperature') {
+            const alert = createTemperatureAlert(species, level, thresholds);
+            setTimeout(() => {
+                showEnhancedAlert(alert);
+            }, 1000);
+        } else if (type === 'humidity') {
+            const alert = createHumidityAlert(species, level, thresholds);
+            setTimeout(() => {
+                showEnhancedAlert(alert);
+            }, 1500);
+        }
+    });
+}
+
+// ========== ALERT SYSTEM ==========
+
+// Create temperature alert with suggestions
+function createTemperatureAlert(species, type, thresholds) {
+    const alertConfig = alertSuggestions.temperature[type];
+    return {
+        type: 'temperature',
+        level: type,
+        title: alertConfig.title,
+        message: alertConfig.message(species, Math.round(environmentState.temperature), thresholds.minTemp, thresholds.maxTemp),
+        suggestions: alertConfig.suggestions,
+        immediateAction: alertConfig.immediateAction,
+        severity: 'critical'
+    };
+}
+
+// Create humidity alert with suggestions
+function createHumidityAlert(species, type, thresholds) {
+    const alertConfig = alertSuggestions.humidity[type];
+    return {
+        type: 'humidity',
+        level: type,
+        title: alertConfig.title,
+        message: alertConfig.message(species, Math.round(environmentState.humidity), thresholds.minHumidity, thresholds.maxHumidity),
+        suggestions: alertConfig.suggestions,
+        immediateAction: alertConfig.immediateAction,
+        severity: 'critical'
+    };
+}
+
+// Show enhanced alert with suggestions
+function showEnhancedAlert(alert) {
+    // Create detailed alert message with suggestions
+    let detailedMessage = `${alert.message}\n\n`;
+    detailedMessage += `🚨 **Immediate Action Required:** ${alert.immediateAction}\n\n`;
+    detailedMessage += `💡 **Recommended Steps:**\n`;
+    
+    alert.suggestions.forEach((suggestion, index) => {
+        detailedMessage += `${index + 1}. ${suggestion}\n`;
+    });
+    
+    if (typeof showToast === 'function') {
+        // Show alert notification without auto-executing
+        showToast(`🚨 ${alert.title}: Click "Apply Fix" to resolve`, 'critical');
+    }
+    
+    console.log(`ENHANCED ALERT: ${alert.title}`);
+    console.log(`Message: ${alert.message}`);
+    console.log(`Immediate Action: ${alert.immediateAction}`);
+    console.log(`Suggestions:`, alert.suggestions);
+    
+    // Update the alert panel if it exists
+    updateAlertPanel(alert);
+}
+
+// Update alert panel in the UI with close button
+function updateAlertPanel(alert) {
+    // Create or update alert panel in the interface
+    let alertPanel = document.getElementById('alertPanel');
+    if (!alertPanel) {
+        alertPanel = document.createElement('div');
+        alertPanel.id = 'alertPanel';
+        alertPanel.className = 'alert-panel';
+        document.querySelector('.content').prepend(alertPanel);
+    }
+    
+    const alertElement = document.createElement('div');
+    alertElement.className = `alert-item ${alert.severity}`;
+    alertElement.innerHTML = `
+        <div class="alert-header">
+            <span class="alert-icon">🚨</span>
+            <strong class="alert-title">${alert.title}</strong>
+            <button class="alert-close-btn" onclick="this.parentElement.parentElement.remove()">
+                <span class="close-icon">×</span>
+            </button>
+        </div>
+        <div class="alert-message">${alert.message}</div>
+        <div class="alert-immediate">
+            <strong>Recommended Action:</strong> ${alert.immediateAction}
+        </div>
+        <div class="alert-suggestions">
+            <strong>Additional Steps:</strong>
+            <ul>
+                ${alert.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+            </ul>
+        </div>
+        <div class="alert-actions">
+            <button class="action-btn primary" onclick="handleAlertAction('${alert.type}', '${alert.level}', this)">
+                Apply Fix
+            </button>
+            <button class="dismiss-btn" onclick="this.parentElement.parentElement.remove()">
+                Dismiss
+            </button>
+        </div>
+    `;
+    
+    alertPanel.appendChild(alertElement);
+    
+    // Auto-remove after 60 seconds (increased from 30)
+    setTimeout(() => {
+        if (alertElement.parentNode) {
+            alertElement.remove();
+        }
+    }, 60000);
+}
+
+// Handle alert actions when user clicks "Apply Fix"
+function handleAlertAction(type, level, buttonElement) {
+    // Disable the button to prevent multiple clicks
+    if (buttonElement) {
+        buttonElement.disabled = true;
+        buttonElement.textContent = 'Applying...';
+        buttonElement.style.opacity = '0.7';
+    }
+    
+    // Execute the appropriate fix based on alert type and level
+    if (type === 'temperature') {
+        if (level === 'high') {
+            setFanSpeed('high');
+            showToast('Fix applied: Fan speed set to HIGH', 'success');
+        } else if (level === 'low') {
+            setFanSpeed('low');
+            showToast('Fix applied: Fan speed set to LOW', 'success');
+        }
+    } else if (type === 'humidity') {
+        if (level === 'high') {
+            setFanSpeed('high');
+            showToast('Fix applied: Fan speed set to HIGH', 'success');
+        } else if (level === 'low') {
+            setFanSpeed('low');
+            showToast('Fix applied: Fan speed set to LOW', 'success');
+        }
+    }
+    
+    // Remove the alert after applying fix
+    const alertElement = buttonElement.closest('.alert-item');
+    if (alertElement) {
+        setTimeout(() => {
+            alertElement.remove();
+        }, 2000);
+    }
+    
+    // Log the action
+    console.log(`User applied fix for ${type} ${level} alert`);
+}
+
+// Clear all alerts function
+function clearAllAlerts() {
+    const alertPanel = document.getElementById('alertPanel');
+    if (alertPanel) {
+        alertPanel.innerHTML = '';
+        showToast('All alerts cleared', 'info');
+    }
+}
+
+// Add clear all button to alert panel
+function addClearAllButton() {
+    const alertPanel = document.getElementById('alertPanel');
+    if (alertPanel && !alertPanel.querySelector('.clear-all-btn')) {
+        const clearAllBtn = document.createElement('button');
+        clearAllBtn.className = 'clear-all-btn';
+        clearAllBtn.innerHTML = 'Clear All Alerts';
+        clearAllBtn.onclick = clearAllAlerts;
+        alertPanel.insertBefore(clearAllBtn, alertPanel.firstChild);
+    }
+}
+
+// Check if current environment is within species thresholds and send alerts
+function checkEnvironmentStatus(species) {
+    const thresholds = speciesThresholds[species] || speciesThresholds['Goat'];
+    const now = Date.now();
+    
+    let activeAlerts = [];
+    
+    // Check temperature
+    if (environmentState.temperature > thresholds.maxTemp) {
+        if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
+            activeAlerts.push(createTemperatureAlert(species, 'high', thresholds));
+            environmentState.lastAlert = now;
+            
+            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
+            // Now fixes only happen when user clicks "Apply Fix"
+        }
+    } else if (environmentState.temperature < thresholds.minTemp) {
+        if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
+            activeAlerts.push(createTemperatureAlert(species, 'low', thresholds));
+            environmentState.lastAlert = now;
+            
+            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
+            // Now fixes only happen when user clicks "Apply Fix"
+        }
+    }
+    
+    // Check humidity
+    if (environmentState.humidity > thresholds.maxHumidity) {
+        if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
+            activeAlerts.push(createHumidityAlert(species, 'high', thresholds));
+            environmentState.lastAlert = now;
+            
+            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
+            // Now fixes only happen when user clicks "Apply Fix"
+        }
+    } else if (environmentState.humidity < thresholds.minHumidity) {
+        if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
+            activeAlerts.push(createHumidityAlert(species, 'low', thresholds));
+            environmentState.lastAlert = now;
+            
+            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
+            // Now fixes only happen when user clicks "Apply Fix"
+        }
+    }
+    
+    // Show alerts
+    activeAlerts.forEach(alert => {
+        showEnhancedAlert(alert);
+    });
+    
+    // Update status indicators
+    updateStatusIndicator('temperature', environmentState.temperature, thresholds.minTemp, thresholds.maxTemp, thresholds.optimalTemp);
+    updateStatusIndicator('humidity', environmentState.humidity, thresholds.minHumidity, thresholds.maxHumidity, thresholds.optimalHumidity);
+}
+
+// ========== CAMERA CONTROLS ==========
 
 // Move camera in specified direction
 function moveCamera(direction) {
@@ -159,15 +585,12 @@ function toggleRecording() {
         if (typeof showToast === 'function') {
             showToast('Recording started');
         }
-        // Here you would start actual recording functionality
-        // For now, it's just a visual indicator
     } else {
         recordBtn.classList.remove('recording');
         recordBtn.querySelector('.action-label').textContent = 'Record';
         if (typeof showToast === 'function') {
             showToast('Recording stopped');
         }
-        // Here you would stop recording and save the file
     }
 }
 
@@ -193,7 +616,7 @@ function takeScreenshot() {
             const video = cctvVideo;
             const videoWidth = video.videoWidth || video.offsetWidth;
             const videoHeight = video.videoHeight || video.offsetHeight;
-            const scale = Math.max(canvas.width / videoWidth, canvas.height / videoHeight) * 1.5; // 1.5 because video is 150%
+            const scale = Math.max(canvas.width / videoWidth, canvas.height / videoHeight) * 1.5;
             
             // Calculate source rectangle (what part of the video to show)
             const sourceX = (videoWidth / 2) - (canvas.width / 2 / scale) - (panX / scale);
@@ -227,10 +650,6 @@ function takeScreenshot() {
                 
                 if (typeof showToast === 'function') {
                     showToast('Screenshot saved');
-                }
-            } else {
-                if (typeof showToast === 'function') {
-                    showToast('Screenshot failed');
                 }
             }
         }, 'image/png');
@@ -274,6 +693,368 @@ function centerCamera() {
     }
 }
 
+// ========== ENVIRONMENT CONTROL FUNCTIONS ==========
+
+// Update environment display
+// Update environment display
+function updateEnvironmentDisplay() {
+    // Update cage condition values
+    const currentTempElement = document.querySelector('[data-metric="temperature"] .metric-value');
+    const currentHumidityElement = document.querySelector('[data-metric="humidity"] .metric-value');
+    const airQualityElement = document.querySelector('[data-metric="air-quality"] .metric-value');
+    
+    if (currentTempElement) {
+        currentTempElement.textContent = `${Math.round(environmentState.temperature)}°C`;
+    }
+    
+    if (currentHumidityElement) {
+        currentHumidityElement.textContent = `${Math.round(environmentState.humidity)}%`;
+    }
+    
+    if (airQualityElement) {
+        airQualityElement.textContent = environmentState.airQuality;
+    }
+    
+    // Update controller values
+    const currentLightLevelElement = document.getElementById('currentLightLevel');
+    const fanSpeedElement = document.getElementById('fanSpeed');
+    const lightSlider = document.getElementById('lightSlider');
+    
+    if (currentLightLevelElement) {
+        currentLightLevelElement.textContent = `${environmentState.lightLevel}%`;
+    }
+    
+    if (fanSpeedElement) {
+        fanSpeedElement.textContent = environmentState.fanSpeed.charAt(0).toUpperCase() + environmentState.fanSpeed.slice(1);
+    }
+    
+    if (lightSlider) {
+        lightSlider.value = environmentState.lightLevel;
+    }
+    
+    // Update cage lock status
+    updateCageLockDisplay();
+    
+    // Update button active states
+    updateFanButtons();
+    updateLightingPresets();
+    
+    // Check environment status for current species
+    checkEnvironmentStatus(cageCurrentSpecies);
+}
+
+// Update display with species-specific ranges
+function updateSpeciesRanges(species) {
+    const thresholds = speciesThresholds[species] || speciesThresholds['Goat'];
+    
+    // Update cage condition cards with ranges
+    const tempCard = document.querySelector('[data-metric="temperature"]');
+    const humidityCard = document.querySelector('[data-metric="humidity"]');
+    
+    if (tempCard) {
+        const rangeElement = tempCard.querySelector('.metric-range');
+        if (!rangeElement) {
+            const metricValue = tempCard.querySelector('.metric-value');
+            const rangeEl = document.createElement('div');
+            rangeEl.className = 'metric-range';
+            rangeEl.textContent = thresholds.tempRange;
+            metricValue.parentNode.appendChild(rangeEl);
+        } else {
+            rangeElement.textContent = thresholds.tempRange;
+        }
+    }
+    
+    if (humidityCard) {
+        const rangeElement = humidityCard.querySelector('.metric-range');
+        if (!rangeElement) {
+            const metricValue = humidityCard.querySelector('.metric-value');
+            const rangeEl = document.createElement('div');
+            rangeEl.className = 'metric-range';
+            rangeEl.textContent = thresholds.humidityRange;
+            metricValue.parentNode.appendChild(rangeEl);
+        } else {
+            rangeElement.textContent = thresholds.humidityRange;
+        }
+    }
+}
+
+// Update status indicator based on current value
+function updateStatusIndicator(metric, currentValue, min, max, optimal) {
+    const element = document.querySelector(`[data-metric="${metric}"] .metric-status`);
+    if (!element) return;
+    
+    const tolerance = (max - min) * 0.1;
+    
+    if (Math.abs(currentValue - optimal) <= tolerance) {
+        element.textContent = 'Optimal';
+        element.className = 'metric-status optimal';
+    } else if (currentValue >= min && currentValue <= max) {
+        element.textContent = 'Acceptable';
+        element.className = 'metric-status acceptable';
+    } else {
+        element.textContent = 'Critical';
+        element.className = 'metric-status critical';
+        
+        // Add glow effect for critical status
+        const card = element.closest('.condition-card');
+        if (card) {
+            card.classList.add('glow');
+            setTimeout(() => card.classList.remove('glow'), 2000);
+        }
+    }
+}
+
+// Update cage lock display
+function updateCageLockDisplay() {
+    const lockStatus = document.getElementById('lockStatus');
+    const lockToggle = document.getElementById('lockToggle');
+    
+    if (!lockStatus || !lockToggle) return;
+    
+    const statusIndicator = lockStatus.querySelector('.status-indicator');
+    const statusText = lockStatus.querySelector('.status-text');
+    
+    if (statusIndicator && statusText) {
+        if (environmentState.cageLocked) {
+            statusIndicator.className = 'status-indicator locked';
+            statusText.textContent = 'Locked';
+            lockToggle.textContent = 'Unlock Cage';
+            lockToggle.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+        } else {
+            statusIndicator.className = 'status-indicator unlocked';
+            statusText.textContent = 'Unlocked';
+            lockToggle.textContent = 'Lock Cage';
+            lockToggle.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        }
+    }
+}
+
+// Update fan buttons active state (for initial load)
+// Update fan buttons active state (for initial load)
+function updateFanButtons() {
+    const fanButtons = document.querySelectorAll('.fan-btn');
+    fanButtons.forEach(btn => {
+        btn.classList.remove('active');
+        
+        // Map button text to speed values
+        const buttonText = btn.textContent.toLowerCase();
+        let buttonSpeed = '';
+        
+        if (buttonText.includes('low')) {
+            buttonSpeed = 'low';
+        } else if (buttonText.includes('med')) {
+            buttonSpeed = 'medium';
+        } else if (buttonText.includes('high')) {
+            buttonSpeed = 'high';
+        }
+        
+        if (buttonSpeed === environmentState.fanSpeed) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Toggle cage lock
+function toggleCageLock() {
+    environmentState.cageLocked = !environmentState.cageLocked;
+    updateCageLockDisplay();
+    
+    if (typeof showToast === 'function') {
+        const message = environmentState.cageLocked ? 'Cage locked' : 'Cage unlocked';
+        showToast(message);
+    }
+    
+    console.log(`Cage lock ${environmentState.cageLocked ? 'engaged' : 'released'}`);
+}
+
+// Set fan speed and update active state
+// Set fan speed and update active state
+function setFanSpeed(speed) {
+    // Remove active class from all fan buttons
+    const fanButtons = document.querySelectorAll('.fan-btn');
+    fanButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    const clickedButton = document.querySelector(`[onclick="setFanSpeed('${speed}')"]`);
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    } else {
+        // Fallback: try to find by speed mapping
+        const buttons = document.querySelectorAll('.fan-btn');
+        buttons.forEach(btn => {
+            const buttonText = btn.textContent.toLowerCase();
+            let buttonSpeed = '';
+            
+            if (buttonText.includes('low')) {
+                buttonSpeed = 'low';
+            } else if (buttonText.includes('med')) {
+                buttonSpeed = 'medium';
+            } else if (buttonText.includes('high')) {
+                buttonSpeed = 'high';
+            }
+            
+            if (buttonSpeed === speed) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Update fan speed state
+    environmentState.fanSpeed = speed;
+    updateEnvironmentDisplay();
+    
+    if (typeof showToast === 'function') {
+        showToast(`Fan speed set to ${speed}`);
+    }
+    
+    console.log(`Fan speed set to: ${speed}`);
+}
+
+// Set lighting preset and update active state
+function setLightingPreset(preset) {
+    // Remove active class from all preset buttons
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    presetButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    const clickedButton = document.querySelector(`[onclick="setLightingPreset('${preset}')"]`);
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
+    
+    // Update lighting state
+    switch(preset) {
+        case 'night':
+            environmentState.lightLevel = 10;
+            break;
+        case 'day':
+            environmentState.lightLevel = 75;
+            break;
+        case 'uvb':
+            environmentState.lightLevel = 50;
+            break;
+    }
+    
+    updateEnvironmentDisplay();
+    
+    if (typeof showToast === 'function') {
+        showToast(`Lighting set to ${preset} mode`);
+    }
+    
+    console.log(`Lighting preset: ${preset}, level: ${environmentState.lightLevel}%`);
+}
+
+// Adjust light level manually and update preset buttons
+function adjustLightLevel(level) {
+    environmentState.lightLevel = level;
+    
+    // Update preset button states when manually adjusting
+    updateLightingPresets();
+    updateEnvironmentDisplay();
+    
+    if (typeof showToast === 'function') {
+        showToast(`Light level set to ${level}%`);
+    }
+    
+    console.log(`Light level adjusted to: ${level}%`);
+}
+
+// Update lighting preset buttons active state (for initial load)
+function updateLightingPresets() {
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    presetButtons.forEach(btn => {
+        btn.classList.remove('active');
+        
+        // Determine which preset should be active based on current light level
+        let activePreset = '';
+        if (environmentState.lightLevel <= 15) {
+            activePreset = 'night';
+        } else if (environmentState.lightLevel >= 70) {
+            activePreset = 'day';
+        } else {
+            activePreset = 'uvb';
+        }
+        
+        // Check if this button matches the active preset
+        const buttonPreset = btn.getAttribute('onclick');
+        if (buttonPreset && buttonPreset.includes(activePreset)) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Handle light slider change
+function handleLightSliderChange() {
+    const slider = document.getElementById('lightSlider');
+    if (slider) {
+        const level = parseInt(slider.value);
+        adjustLightLevel(level);
+    }
+}
+
+// Toggle auto ventilation
+function toggleAutoVentilation() {
+    environmentState.autoVentilation = !environmentState.autoVentilation;
+    
+    if (typeof showToast === 'function') {
+        const message = environmentState.autoVentilation ? 'Auto ventilation enabled' : 'Auto ventilation disabled';
+        showToast(message);
+    }
+    
+    console.log(`Auto ventilation: ${environmentState.autoVentilation}`);
+}
+
+// Simulate environment changes (for demo purposes)
+function simulateEnvironmentChanges() {
+    const thresholds = speciesThresholds[cageCurrentSpecies] || speciesThresholds['Goat'];
+    
+    // For problematic species, make the environment fluctuate around the problematic values
+    if (cageCurrentSpecies === 'Snail' || cageCurrentSpecies === 'Fox') {
+        const problematicEnv = problematicEnvironments[cageCurrentSpecies];
+        const tempChange = (Math.random() - 0.5) * 1.0;
+        const humidityChange = (Math.random() - 0.5) * 2.0;
+        
+        environmentState.temperature = Math.max(
+            thresholds.minTemp - 5, 
+            Math.min(thresholds.maxTemp + 5, problematicEnv.temperature + tempChange)
+        );
+        environmentState.humidity = Math.max(
+            thresholds.minHumidity - 10, 
+            Math.min(thresholds.maxHumidity + 10, problematicEnv.humidity + humidityChange)
+        );
+    } else {
+        // Normal fluctuations for other species
+        const tempChange = (Math.random() - 0.5) * 0.8;
+        const humidityChange = (Math.random() - 0.5) * 1.5;
+        
+        environmentState.temperature = Math.max(
+            thresholds.minTemp - 2, 
+            Math.min(thresholds.maxTemp + 2, environmentState.temperature + tempChange)
+        );
+        environmentState.humidity = Math.max(
+            thresholds.minHumidity - 5, 
+            Math.min(thresholds.maxHumidity + 5, environmentState.humidity + humidityChange)
+        );
+    }
+    
+    // Update air quality based on conditions
+    if (environmentState.temperature > thresholds.maxTemp || environmentState.humidity > thresholds.maxHumidity) {
+        environmentState.airQuality = 'Poor';
+    } else if (environmentState.temperature < thresholds.minTemp || environmentState.humidity < thresholds.minHumidity) {
+        environmentState.airQuality = 'Fair';
+    } else {
+        environmentState.airQuality = 'Good';
+    }
+    
+    updateEnvironmentDisplay();
+}
+
+// ========== INITIALIZATION ==========
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     const positionIndicator = document.getElementById('cameraPosition');
@@ -284,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize species name in header
     const speciesNameElement = document.getElementById('currentSpeciesName');
     if (speciesNameElement) {
-        speciesNameElement.textContent = speciesDisplayNames[cageCurrentSpecies] || 'Porcupines';
+        speciesNameElement.textContent = speciesDisplayNames[cageCurrentSpecies] || 'Goats';
     }
 
     // Hide placeholder if video loads successfully
@@ -314,5 +1095,49 @@ document.addEventListener('DOMContentLoaded', () => {
             handleVideoLoad();
         }
     }
+    
+    // Initialize environment for default species
+    initializeSpeciesEnvironment(cageCurrentSpecies);
+    
+    // Set up event listeners
+    const lightSlider = document.getElementById('lightSlider');
+    if (lightSlider) {
+        lightSlider.addEventListener('input', handleLightSliderChange);
+    }
+    
+    // Add alert indicators to Snail and Fox tabs
+    const snailTab = document.querySelector('[data-species="Snail"]');
+    const foxTab = document.querySelector('[data-species="Fox"]');
+    
+    if (snailTab && !snailTab.querySelector('.alert-indicator')) {
+        const snailAlert = document.createElement('span');
+        snailAlert.className = 'alert-indicator';
+        snailAlert.innerHTML = '⚠️';
+        snailAlert.style.marginLeft = '8px';
+        snailAlert.style.animation = 'pulse 1s infinite';
+        snailTab.appendChild(snailAlert);
+    }
+    
+    if (foxTab && !foxTab.querySelector('.alert-indicator')) {
+        const foxAlert = document.createElement('span');
+        foxAlert.className = 'alert-indicator';
+        foxAlert.innerHTML = '⚠️';
+        foxAlert.style.marginLeft = '8px';
+        foxAlert.style.animation = 'pulse 1s infinite';
+        foxTab.appendChild(foxAlert);
+    }
+    
+    // Initialize button active states
+    updateFanButtons();
+    updateLightingPresets();
+    
+    // Simulate environment changes every 8 seconds (for demo)
+    setInterval(simulateEnvironmentChanges, 8000);
+    
+    console.log('Cage Monitor initialized with manual fix application');
+    
+    // Add clear all button to alert panel
+    setTimeout(() => {
+        addClearAllButton();
+    }, 2000);
 });
-
