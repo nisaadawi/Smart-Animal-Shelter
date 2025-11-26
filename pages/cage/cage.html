@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cage Monitor - Smart Animal Shelter</title>
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="cage.css">
+</head>
+
+<body>
+    <div class="app">
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-btn">
+                        🔔
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="header-btn">⚙️</button>
+                    <div class="user-avatar">KJ</div>
+                </div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- CAGE MONITOR SECTION -->
+                <section class="page-section active" id="cage-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Cage Monitor</h1>
+                        <p class="section-subtitle">Live CCTV feed with camera control</p>
+                    </div>
+
+                    <div class="species-tabs-container">
+                        <div class="species-tabs">
+                            <div class="species-tab active" onclick="switchCCTVFeed('Goat')" data-species="Goat">🐐 Goats</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Sugarglider')" data-species="Sugarglider">🐿️ Sugar Gliders</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Alligator')" data-species="Alligator">🐊 Alligators</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Snail')" data-species="Snail">🐌 Snails</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Porcupine')" data-species="Porcupine">🦔 Porcupines</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Fox')" data-species="Fox">🦊 Foxes</div>
+                        </div>
+                    </div>
+
+                    <div class="cctv-container">
+                            <div class="CCTV-header">
+                                <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">Porcupines</span></h1>
+                            </div>
+                            <div class="cctv-display-wrapper">
+                                <div class="cctv-feed" id="cctvFeed">
+                                    <video src="../../videos/porcupine.MP4" alt="CCTV Feed" class="cctv-video"
+                                        id="cctvVideo" autoplay loop muted playsinline>
+                                    </video>
+                                    <div class="cctv-placeholder" id="cctvPlaceholder">📹</div>
+                                    <div class="cctv-overlay">
+                                        <span class="rec-dot"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                    <!-- <div class="camera-position-indicator">
+                                        <span id="cameraPosition">0°</span>
+                                    </div> -->
+                                </div>
+
+                                <div class="camera-controls-wrapper">
+                                    <div class="camera-controls-card">
+                                        <div class="camera-controls">
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnUp" onclick="moveCamera('up')"
+                                                    title="Look Up">
+                                                    <span>▲</span>
+                                                </button>
+                                            </div>
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnLeft" onclick="moveCamera('left')"
+                                                    title="Look Left">
+                                                    <span>◄</span>
+                                                </button>
+                                                <button class="camera-btn camera-btn-center" id="btnCenter"
+                                                    onclick="centerCamera()" title="Center Camera">
+                                                    <!-- <span>Center</span> -->
+                                                </button>
+                                                <button class="camera-btn" id="btnRight" onclick="moveCamera('right')"
+                                                    title="Look Right">
+                                                    <span>►</span>
+                                                </button>
+                                            </div>
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnDown" onclick="moveCamera('down')"
+                                                    title="Look Down">
+                                                    <span>▼</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="camera-action-buttons-wrapper">
+                                        <div class="camera-action-buttons">
+                                            <button class="action-btn record-btn" id="recordBtn"
+                                                onclick="toggleRecording()" title="Start Recording">
+                                                <span class="action-icon">🔴</span>
+                                                <span class="action-label">Record</span>
+                                            </button>
+                                            <button class="action-btn screenshot-btn" id="screenshotBtn"
+                                                onclick="takeScreenshot()" title="Take Screenshot">
+                                                <span class="action-icon">📷</span>
+                                                <span class="action-label">Screenshot</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
+    <script src="../utils.js"></script>
+    <script src="cage.js"></script>
+</body>
+
+</html>
