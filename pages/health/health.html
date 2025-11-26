@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - Smart Animal Shelter</title>
+    <title>Health Monitor - Smart Animal Shelter</title>
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
@@ -45,7 +45,7 @@
                     <span class="nav-icon">🍽️</span>
                     <span>Feeding</span>
                 </div>
-                <div class="nav-item" onclick="window.location.href='health.html'">
+                <div class="nav-item active" onclick="window.location.href='health.html'">
                     <span class="nav-icon">❤️</span>
                     <span>Health Monitor</span>
                 </div>
@@ -91,31 +91,36 @@
                 </div>
             </header>
 
+            
+
             <!-- CONTENT -->
             <div class="content">
-                <!-- REPORTS SECTION -->
-                <section class="page-section active" id="reports-section">
+                <!-- HEALTH SECTION -->
+                <section class="page-section active" id="health-section">
                     <div class="section-header">
-                        <h1 class="section-title">Reports & Analytics</h1>
-                        <p class="section-subtitle">Performance metrics and trends</p>
+                        <h1 class="section-title">Health Monitoring</h1>
+                        <p class="section-subtitle">Real-time health metrics and alerts</p>
                     </div>
 
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">Feeding Compliance</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">95%</div>
-                            <div class="stat-label">Health Score</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">CCTV Cameras</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">100%</div>
-                            <div class="stat-label">System Uptime</div>
+                    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 28px; border-radius: var(--radius-xl); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.5);">
+                        <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 800; color: var(--text-primary);">💉 Vaccination Schedule</h3>
+                        <div class="schedule-grid">
+                            <div class="schedule-item">
+                                <div class="schedule-time">🩺</div>
+                                <div class="schedule-details">
+                                    <div class="schedule-animal">Foxes - Rabies Vaccine</div>
+                                    <div class="schedule-meal">Due: Next week</div>
+                                </div>
+                                <div class="schedule-status status-pending">Upcoming</div>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">💊</div>
+                                <div class="schedule-details">
+                                    <div class="schedule-animal">Nanny - Antibiotics</div>
+                                    <div class="schedule-meal">Twice daily for 5 days</div>
+                                </div>
+                                <div class="schedule-status status-pending">Active</div>
+                            </div>
                         </div>
                     </div>
                 </section>
