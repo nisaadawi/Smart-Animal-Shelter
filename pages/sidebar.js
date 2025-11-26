@@ -176,6 +176,7 @@ const sidebarHTML = `<style>
         <div class="nav-title">Operations</div>
         <a class="nav-item" href="../feeding/feeding.html">🍽️ Feeding</a>
         <a class="nav-item" href="../health/health.html">❤️ Health Monitor</a>
+        <a class="nav-item" href="../cage/cage.html">🏠 Cage Monitor</a>
         <a class="nav-item" href="../environment/environment.html">🌡️ Environment</a>
         <a class="nav-item" href="../inventory/inventory.html">📦 Inventory</a>
     </div>
@@ -222,6 +223,7 @@ function setActiveNavItem() {
                 (currentPage.includes('alerts') && hrefPage.includes('alerts')) ||
                 (currentPage.includes('feeding') && hrefPage.includes('feeding')) ||
                 (currentPage.includes('health') && hrefPage.includes('health')) ||
+                (currentPage.includes('cage') && hrefPage.includes('cage')) ||
                 (currentPage.includes('environment') && hrefPage.includes('environment')) ||
                 (currentPage.includes('inventory') && hrefPage.includes('inventory')) ||
                 (currentPage.includes('reports') && hrefPage.includes('reports'))) {
