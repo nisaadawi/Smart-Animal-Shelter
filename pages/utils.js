@@ -26,13 +26,7 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Navigation
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('open');
-    }
-}
+// Sidebar functions moved to sidebar.js
 
 // Close modal on outside click
 function setupModalClose() {

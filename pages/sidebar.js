@@ -1,4 +1,7 @@
-<style>
+// Sidebar functionality - HTML and CSS embedded to work with file:// protocol
+
+// Sidebar HTML and CSS (embedded)
+const sidebarHTML = `<style>
 /* SIDEBAR CSS VARIABLES */
 :root {
     --primary: #6366f1;
@@ -183,4 +186,63 @@
             <span class="nav-icon">📈</span> Reports
         </a>
     </div>
-</aside>
+</aside>`;
+
+// Load sidebar
+function loadSidebar() {
+    const sidebarContainer = document.getElementById('sidebar-container') || document.querySelector('.app');
+    if (!sidebarContainer) {
+        console.error('Sidebar container not found');
+        return;
+    }
+
+    // Insert sidebar HTML directly (works with file:// protocol, no CORS issues)
+    sidebarContainer.insertAdjacentHTML('afterbegin', sidebarHTML);
+    
+    // Set active nav item based on current page
+    setActiveNavItem();
+}
+
+// Set active navigation item based on current page
+function setActiveNavItem() {
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop() || currentPath.split('/').slice(-2).join('/');
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        const href = item.getAttribute('href');
+        if (href) {
+            const hrefPage = href.split('/').pop();
+            // Match if current page matches the href page
+            if (currentPage === hrefPage || 
+                (currentPage === 'dashboard.html' && hrefPage === 'dashboard.html') ||
+                (currentPage.includes('animals') && hrefPage.includes('animals')) ||
+                (currentPage.includes('tracking') && hrefPage.includes('tracking')) ||
+                (currentPage.includes('alerts') && hrefPage.includes('alerts')) ||
+                (currentPage.includes('feeding') && hrefPage.includes('feeding')) ||
+                (currentPage.includes('health') && hrefPage.includes('health')) ||
+                (currentPage.includes('environment') && hrefPage.includes('environment')) ||
+                (currentPage.includes('inventory') && hrefPage.includes('inventory')) ||
+                (currentPage.includes('reports') && hrefPage.includes('reports'))) {
+                item.classList.add('active');
+            }
+        }
+    });
+}
+
+// Navigation
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}
+
+// Initialize sidebar on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Load sidebar if container exists
+    if (document.getElementById('sidebar-container') || document.querySelector('.app')) {
+        loadSidebar();
+    }
+});
