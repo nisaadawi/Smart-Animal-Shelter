@@ -4,6 +4,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animals Management - Smart Animal Shelter</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-btn">
+                        🔔
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="header-btn">⚙️</button>
+                    <div class="user-avatar">KJ</div>
+                </div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- ANIMALS SECTION -->
+                <section class="page-section active" id="animals-section">
+                    <div class="section-header">
+                        <h1 class="section-title">Animals Management</h1>
+                        <p class="section-subtitle">Browse and manage all animals by species</p>
+                    </div>
+
+                    <div class="species-tabs">
+                        <div class="species-tab active" onclick="filterSpecies('Goat')">🐐 Goats</div>
+                        <div class="species-tab" onclick="filterSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                        <div class="species-tab" onclick="filterSpecies('Alligator')">🐊 Alligators</div>
+                        <div class="species-tab" onclick="filterSpecies('Snail')">🐌 Snails</div>
+                        <div class="species-tab" onclick="filterSpecies('Porcupine')">🦔 Porcupines</div>
+                        <div class="species-tab" onclick="filterSpecies('Fox')">🦊 Foxes</div>
+                    </div>
+
+                    <div class="animals-grid" id="animalsGrid"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ANIMAL DETAIL MODAL -->
+    <div class="modal" id="animalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Animal Name</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Species</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <img src="" id="modalImage" class="modal-image" alt="Animal">
+
+                <div id="emergencyPanel"></div>
+
+                <div class="identity-grid">
+                    <div class="identity-card">
+                        <div class="identity-label">🏷 Name / ID Tag</div>
+                        <div class="identity-value" id="identityNameTag">—</div>
+                    </div>
+                    <div class="identity-card">
+                        <div class="identity-label">🐾 Species & Breed</div>
+                        <div class="identity-value" id="identitySpecies">—</div>
+                    </div>
+                    <div class="identity-card">
+                        <div class="identity-label">📅 DOB / Age</div>
+                        <div class="identity-value" id="identityAge">—</div>
+                    </div>
+                    <div class="identity-card">
+                        <div class="identity-label">🚻 Sex</div>
+                        <div class="identity-value" id="identitySex">—</div>
+                    </div>
+                    <div class="identity-card">
+                        <div class="identity-label">🃏 Cage / Zone</div>
+                        <div class="identity-value" id="identityZone">—</div>
+                    </div>
+                </div>
+
+                <div class="sensors-grid" id="modalSensors"></div>
+
+                <div class="timer-grid">
+                    <div class="timer-card">
+                        <div class="timer-label">Feeding Countdown</div>
+                        <div class="timer-value" id="feedingTimer">—</div>
+                        <div class="timer-subtext">Upcoming feed & enrichment</div>
+                    </div>
+                    <div class="timer-card">
+                        <div class="timer-label">Medication Countdown</div>
+                        <div class="timer-value" id="medTimer">—</div>
+                        <div class="timer-subtext">Health regimen reminder</div>
+                    </div>
+                </div>
+
+                <div class="insight-grid">
+                    <div class="insight-card">
+                        <div class="insight-card-header">
+                            <div>
+                                <div class="insight-title">Vital Sign Trends</div>
+                                <div class="insight-subtitle">7-day monitoring</div>
+                            </div>
+                            <span class="insight-chip">AI-stabilized</span>
+                        </div>
+                        <canvas id="vitalTrendChart" height="90"></canvas>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-card-header">
+                            <div>
+                                <div class="insight-title">Weight Curve</div>
+                                <div class="insight-subtitle">Growth & nutrition</div>
+                            </div>
+                            <span class="insight-chip success">Balanced</span>
+                        </div>
+                        <canvas id="weightTrendChart" height="90"></canvas>
+                    </div>
+                </div>
+
+                <div class="behavior-intel">
+                    <div class="behavior-header">
+                        <div>
+                            <h3 class="behavior-title">🧩 Behavior Notes</h3>
+                            <p class="behavior-subtitle">Temperament, stressors & enrichment</p>
+                        </div>
+                        <span class="behavior-chip" id="behaviorMood">Behavior syncing…</span>
+                    </div>
+                    <p class="behavior-summary" id="behaviorSummary">—</p>
+                    <div class="behavior-alert" id="behaviorAlert">AI assistant calibrating signals…</div>
+                </div>
+
+                <div class="notes-section">
+                    <h3 class="notes-title">📝 Recent Activity</h3>
+                    <div id="modalNotes"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
+    <script src="../utils.js"></script>
+    <script src="../animals/animal.js"></script>
+    <script src="../modal.js"></script>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animals Management - Smart Animal Shelter</title>
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="animals.css">
     <link rel="stylesheet" href="../../css/modal.css">
