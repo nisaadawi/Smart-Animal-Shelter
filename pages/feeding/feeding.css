@@ -658,6 +658,54 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
+.auto-feeder-info-banner {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    animation: slideDownFadeIn 0.3s ease-out;
+}
+
+.auto-feeder-info-banner.banner-off {
+    background: linear-gradient(135deg, #e2d2938e, #ecd598b2);
+    border: 2px solid #fbbf24;
+    color: #8f3f0d;
+}
+
+.auto-feeder-info-banner.banner-on {
+    background: linear-gradient(135deg, #d1fae581, #a7f3d09e);
+    border: 2px solid #10b981;
+    color: #065f46;
+}
+
+.info-banner-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    text-align: center;
+    align-items: center;
+}
+
+.info-banner-text {
+    flex: 1;
+}
+
+@keyframes slideDownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .schedule-header-actions {
     margin-bottom: 20px;
     padding-bottom: 16px;
@@ -1047,8 +1095,10 @@
 /* FEED BUTTON */
 .feed-button-container {
     margin-top: 20px;
+    padding-bottom: 5px;
     padding-top: 20px;
     border-top: 2px solid rgba(99, 102, 241, 0.1);
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
 }
 
 .feed-button {
@@ -1067,7 +1117,6 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
 }

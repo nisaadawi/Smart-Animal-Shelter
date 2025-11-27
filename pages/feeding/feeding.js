@@ -613,13 +613,13 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                             </div>
                             <div class="feed-button-container">
                                 <button class="feed-button" onclick="feedAnimals('${speciesFilter}')">
-                                    🍽️ FEED
+                                    Feed Now
                                 </button>
                             </div>
                         </div>
                         <div class="daily-intake-section">
                             <div class="card-header daily-intake-header">
-                                <h3 class="card-title">AI-Helper</h3>
+                                <h3 class="card-title">SMART FEEDING ASSISTANT</h3>
                                 <div class="ai-badge">
                                     <span class="ai-spark-icon">✨</span>
                                     <span class="ai-badge-text">AI-Driven</span>
@@ -666,6 +666,14 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                             <span class="toggle-slider"></span>
                         </label>
                         <span class="toggle-label">${autoFeederOn ? 'ON' : 'OFF'}</span>
+                    </div>
+                </div>
+                
+                <div class="auto-feeder-info-banner ${autoFeederOn ? 'banner-on' : 'banner-off'}">
+                    <div class="info-banner-text">
+                        ${autoFeederOn 
+                            ? '🛈︎ AUTO FEEDER IS ACTIVE <br> Please configure your feeding schedule with accurate times and portion amounts to ensure proper automatic feeding.' 
+                            : '🛈︎ AUTO FEEDER IS DISABLED <br> Make sure to turn on the toggle to enable the automation.'}
                     </div>
                 </div>
                 
@@ -856,12 +864,26 @@ function toggleAutoFeeder(species) {
         }
     }
 
-    // Re-render the schedule content container to show/hide button and schedule
+    const autoFeederOn = autoFeederEnabled[species];
+
+    // Update the info banner inside the card but outside schedule-content-container
     const scheduleCard = toggle.closest('.auto-feeder-schedule-card');
     if (scheduleCard) {
-        const scheduleContentContainer = scheduleCard.querySelector('.schedule-content-container');
-        const autoFeederOn = autoFeederEnabled[species];
+        const banner = scheduleCard.querySelector('.auto-feeder-info-banner');
+        if (banner) {
+            banner.className = `auto-feeder-info-banner ${autoFeederOn ? 'banner-on' : 'banner-off'}`;
+            banner.innerHTML = `
+                <div class="info-banner-text">
+                    ${autoFeederOn 
+                        ? '🛈︎ AUTO FEEDER IS ACTIVE <br>Please configure your feeding schedule with accurate times and portion amounts to ensure proper automatic feeding.' 
+                        : '🛈︎ AUTO FEEDER IS DISABLED <br> Make sure to turn on the toggle to enable the automation.'}
+                </div>
+            `;
+        }
 
+        // Re-render the schedule content container to show/hide button and schedule
+        const scheduleContentContainer = scheduleCard.querySelector('.schedule-content-container');
+        
         if (scheduleContentContainer) {
             scheduleContentContainer.innerHTML = `
                 <div class="schedule-header-actions">
