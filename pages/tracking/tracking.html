@@ -104,6 +104,12 @@
                     <div class="tracking-panel">
                         <div class="tracking-toolbar" id="trackingToolbar"></div>
                         <div class="tracking-stats" id="trackingStats"></div>
+                        <div class="map-zoom-controls">
+                            <label for="speciesZoomSelect" class="zoom-label">📍 Quick Zoom:</label>
+                            <select id="speciesZoomSelect" class="species-zoom-select" onchange="handleSpeciesZoom(this.value)">
+                                <option value="all">🌍 Whole Site</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="tracking-container">
@@ -142,27 +148,19 @@
             <div class="modal-body">
                 <img src="" id="modalImage" class="modal-image" alt="Animal">
 
-                <div id="emergencyPanel"></div>
-
-                <div class="cctv-feed" id="cctvFeed">
-                    <div class="cctv-placeholder">📹</div>
-                    <div class="cctv-overlay">
-                        <span class="rec-dot"></span>
-                        <span>LIVE</span>
-                    </div>
-                </div>
+                <div id="trackingInfo" class="tracking-info-section"></div>
 
                 <div class="sensors-grid" id="modalSensors"></div>
+
+                <div id="alertsSection" style="display: none;" class="alerts-section">
+                    <h3 class="notes-title">⚠️ Active Alerts</h3>
+                    <div id="modalAlerts"></div>
+                </div>
 
                 <div class="notes-section">
                     <h3 class="notes-title">📝 Recent Activity</h3>
                     <div id="modalNotes"></div>
                 </div>
-            </div>
-
-            <div class="modal-footer" id="modalFooter">
-                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
-                <button class="btn btn-primary" onclick="closeModal();">📍 Track Location</button>
             </div>
         </div>
     </div>

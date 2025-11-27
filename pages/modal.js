@@ -9,28 +9,79 @@ function openModal(id) {
     document.getElementById('modalSubtitle').textContent = animal.species;
     document.getElementById('modalImage').src = animal.images[0];
 
-    // Emergency panel for dangerous animals
-    const emergencyPanel = document.getElementById('emergencyPanel');
-    if (animal.safety) {
-        emergencyPanel.innerHTML = `
-            <div class="emergency-panel">
-                <div class="emergency-title">⚠️ Safety Controls</div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-danger" onclick="emergencyLock()">🔒 Emergency Lock</button>
-                    <button class="btn btn-danger" onclick="supervisorAlert()">📢 Alert Supervisor</button>
+    // Tracking info (only if tracking is enabled)
+    const trackingInfo = document.getElementById('trackingInfo');
+    if (trackingInfo && animal.tracking?.enabled) {
+        const battery = animal.tracking.battery ?? 100;
+        const batteryDisplay = battery.toFixed(2);
+        const batteryStatus = battery >= 50 ? 'good' : battery >= 20 ? 'warning' : 'critical';
+        const batteryIcon = battery >= 50 ? '🔋' : battery >= 20 ? '🪫' : '⚠️';
+        
+        trackingInfo.style.display = 'block';
+        trackingInfo.innerHTML = `
+            <div class="tracking-info-card">
+                <div class="tracking-info-item">
+                    <span class="tracking-label">📍 Location</span>
+                    <span class="tracking-value">${animal.tracking.location || 'Unknown'}</span>
+                </div>
+                <div class="tracking-info-item">
+                    <span class="tracking-label">🏃 Status</span>
+                    <span class="tracking-value status-${animal.tracking.status}">${animal.tracking.status}</span>
+                </div>
+                <div class="tracking-info-item">
+                    <span class="tracking-label">${batteryIcon} Battery</span>
+                    <span class="tracking-value battery-${batteryStatus}">${batteryDisplay}%</span>
+                </div>
+                <div class="tracking-info-item">
+                    <span class="tracking-label">🔋 Last Charged</span>
+                    <span class="tracking-value">${animal.tracking.lastCharge || 'Recently'}</span>
                 </div>
             </div>
         `;
-    } else {
-        emergencyPanel.innerHTML = '';
+    } else if (trackingInfo) {
+        trackingInfo.style.display = 'none';
     }
 
-    // CCTV feed display
-    const cctvFeed = document.getElementById('cctvFeed');
-    if (!animal.cctv) {
-        cctvFeed.style.display = 'none';
-    } else {
-        cctvFeed.style.display = 'block';
+    // Alerts
+    const alertsSection = document.getElementById('alertsSection');
+    const modalAlerts = document.getElementById('modalAlerts');
+    if (alertsSection && modalAlerts) {
+        if (animal.alerts && animal.alerts.length > 0) {
+            alertsSection.style.display = 'block';
+            
+            // Determine severity based on health status
+            const severity = animal.health === 'danger' ? 'urgent' : 
+                           animal.health === 'warning' ? 'moderate' : 'routine';
+            const meta = severityMeta[severity] || severityMeta.moderate;
+            
+            modalAlerts.innerHTML = animal.alerts.map((alert, index) => {
+                // Use first alert for main display, or combine if multiple
+                const isFirst = index === 0;
+                return `
+                <div class="modal-alert-item ${severity}">
+                    <div class="modal-alert-header">
+                        <span class="modal-alert-pill ${severity}">${meta.icon || '⚠️'} ${meta.label || severity.toUpperCase()}</span>
+                        <span class="modal-alert-time">Just now</span>
+                    </div>
+                    <div class="modal-alert-message">${alert}</div>
+                    <div class="modal-alert-animal">${animal.name} (${animal.species})</div>
+                    <div class="modal-alert-meta">
+                        <span class="modal-alert-tag">📍 ${animal.tracking?.location || 'Shelter grounds'}</span>
+                        <span class="modal-alert-tag">❤️ Status: ${animal.health ? animal.health.toUpperCase() : 'OK'}</span>
+                    </div>
+                    <div class="modal-alert-progress">
+                        <div class="modal-alert-progress-fill" style="--progress:${meta.progress || '60%'}"></div>
+                    </div>
+                    <div class="modal-alert-actions">
+                        <button class="btn btn-primary" onclick="closeModal(); window.location.href='tracking.html';">View Details</button>
+                        <button class="btn btn-success" onclick="this.closest('.modal-alert-item').style.opacity='0.5';">Acknowledge</button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        } else {
+            alertsSection.style.display = 'none';
+        }
     }
 
     // Sensors
@@ -47,9 +98,16 @@ function openModal(id) {
     document.getElementById('modalSensors').innerHTML = sensorsHtml;
 
     // Notes
-    document.getElementById('modalNotes').innerHTML = animal.notes.map(n =>
-        `<div class="note-item"><span class="note-time">${n.time}:</span> ${n.text}</div>`
-    ).join('');
+    const modalNotes = document.getElementById('modalNotes');
+    if (modalNotes) {
+        if (animal.notes && animal.notes.length > 0) {
+            modalNotes.innerHTML = animal.notes.map(n =>
+                `<div class="note-item"><span class="note-time">${n.time}:</span> ${n.text}</div>`
+            ).join('');
+        } else {
+            modalNotes.innerHTML = '<div class="info-empty">No recent activity recorded</div>';
+        }
+    }
 
     document.getElementById('animalModal').classList.add('active');
 }

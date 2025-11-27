@@ -103,50 +103,140 @@
 
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon blue">🐾</div>
+                            <div class="stat-icon blue">
+                                <span>🐾</span>
+                            </div>
                             <div class="stat-value" id="totalAnimals">0</div>
                             <div class="stat-label">Total Animals</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon red">⚠️</div>
+                            <div class="stat-icon red">
+                                <span>⚠️</span>
+                            </div>
                             <div class="stat-value" id="needAttention">0</div>
                             <div class="stat-label">Need Attention</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon green">✅</div>
+                            <div class="stat-icon green">
+                                <span>✅</span>
+                            </div>
                             <div class="stat-value" id="tasksPending">0</div>
                             <div class="stat-label">Tasks Pending</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon purple">📍</div>
+                            <div class="stat-icon purple">
+                                <span>📍</span>
+                            </div>
                             <div class="stat-value" id="trackingActive">0</div>
                             <div class="stat-label">Tracking Active</div>
                         </div>
                     </div>
 
                     <div class="dashboard-graphs">
-                        <div class="graph-card">
+                        <div class="graph-card species-card">
                             <h3>Species Distribution</h3>
                             <p>Population mix across the shelter</p>
                             <canvas id="speciesChart"></canvas>
+                            <div class="chart-meta" id="speciesSummary"></div>
                         </div>
-                        <div class="graph-card">
+                        <div class="graph-card health-card">
                             <h3>Health Status</h3>
                             <p>Overall wellness for tracked animals</p>
                             <canvas id="healthStatusChart"></canvas>
+                            <div class="chart-legend" id="healthLegend"></div>
+                            <div class="chart-meta" id="healthSummary"></div>
                         </div>
                     </div>
 
-                    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 28px; border-radius: var(--radius-xl); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.5);">
-                        <h2 style="margin-bottom: 20px; font-size: 22px; font-weight: 800; color: var(--text-primary);">
-                            <span style="margin-right: 8px;">🎯</span>
+                    <div class="quick-actions">
+                        <h2>
+                            <span>🎯</span>
                             Quick Actions
                         </h2>
+<<<<<<< Updated upstream
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
                             <button class="btn btn-primary" onclick="window.location.href='feeding.html'">📋 Feeding Schedule</button>
                             <button class="btn btn-primary" onclick="window.location.href='alerts.html'">🚨 Check Alerts</button>
                             <button class="btn btn-primary" onclick="window.location.href='tracking.html'">📍 Live Tracking</button>
                             <button class="btn btn-primary" onclick="window.location.href='environment.html'">🌡️ Room Controls</button>
+=======
+                        <div class="quick-actions-grid">
+                            <button class="btn btn-primary" onclick="window.location.href='../feeding/feeding.html'">📋 Feeding Schedule</button>
+                            <button class="btn btn-primary" onclick="window.location.href='../alerts/alerts.html'">🚨 Check Alerts</button>
+                            <button class="btn btn-primary" onclick="window.location.href='../tracking/tracking.html'">📍 Live Tracking</button>
+                            <button class="btn btn-primary" onclick="window.location.href='../environment/environment.html'">🌡️ Room Controls</button>
+>>>>>>> Stashed changes
+                        </div>
+                    </div>
+
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Live safety</p>
+                                    <h3>Critical Alerts</h3>
+                                </div>
+                                <span class="count-pill" id="urgentAlertCount">0</span>
+                            </div>
+                            <div class="alerts-list" id="urgentAlertsList"></div>
+                        </div>
+
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Daily ops</p>
+                                    <h3>Task Progress</h3>
+                                </div>
+                                <div class="progress-chip" id="taskProgressValue">0%</div>
+                            </div>
+                            <div class="task-progress">
+                                <div class="progress-ring">
+                                    <div class="progress-ring-fill" id="taskProgressRing"></div>
+                                    <div class="progress-ring-label">
+                                        <span id="tasksCompletedCount">0</span>
+                                        <small>done</small>
+                                    </div>
+                                </div>
+                                <div class="task-progress-details">
+                                    <div class="next-task" id="nextTask"></div>
+                                    <div class="task-timeline" id="taskTimeline"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Supplies</p>
+                                    <h3>Inventory Watch</h3>
+                                </div>
+                                <span class="count-pill critical" id="inventoryLowCount">0</span>
+                            </div>
+                            <div class="inventory-list" id="inventoryWatchList"></div>
+                        </div>
+                    </div>
+
+                    <div class="map-activity-grid">
+                        <div class="map-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Location</p>
+                                    <h3>Active Trackers</h3>
+                                </div>
+                                <span class="pill" id="mapTrackerCount">0 active</span>
+                            </div>
+                            <div id="dashboardMap" class="dashboard-map"></div>
+                            <div class="map-legend" id="mapLegend"></div>
+                        </div>
+
+                        <div class="activity-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Timeline</p>
+                                    <h3>Recent Activity</h3>
+                                </div>
+                            </div>
+                            <div class="activity-list" id="activityList"></div>
                         </div>
                     </div>
                 </section>

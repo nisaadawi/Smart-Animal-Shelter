@@ -32,7 +32,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Goat },
                 radius: trackingClusters.Goat.radius,
                 location: 'East Pasture',
-                status: 'moving'
+                status: 'moving',
+                battery: 87,
+                lastCharge: '2 days ago'
             },
             cctv: true,
             alerts: [],
@@ -64,7 +66,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Goat },
                 radius: trackingClusters.Goat.radius,
                 location: 'East Pasture',
-                status: 'resting'
+                status: 'resting',
+                battery: 45,
+                lastCharge: '5 days ago'
             },
             cctv: true,
             alerts: ['Decreased appetite - Monitor closely'],
@@ -96,7 +100,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Goat },
                 radius: trackingClusters.Goat.radius,
                 location: 'West Pasture',
-                status: 'moving'
+                status: 'moving',
+                battery: 92,
+                lastCharge: '1 day ago'
             },
             cctv: true,
             alerts: [],
@@ -200,7 +206,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Alligator },
                 radius: trackingClusters.Alligator.radius,
                 location: 'Marsh Basin',
-                status: 'moving'
+                status: 'moving',
+                battery: 78,
+                lastCharge: '3 days ago'
             },
             cctv: true,
             safety: true,
@@ -233,7 +241,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Alligator },
                 radius: trackingClusters.Alligator.radius,
                 location: 'South Wetlands',
-                status: 'resting'
+                status: 'resting',
+                battery: 23,
+                lastCharge: '8 days ago'
             },
             cctv: true,
             safety: true,
@@ -332,7 +342,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Porcupine },
                 radius: trackingClusters.Porcupine.radius,
                 location: 'Central Area',
-                status: 'moving'
+                status: 'moving',
+                battery: 65,
+                lastCharge: '4 days ago'
             },
             cctv: true,
             alerts: [],
@@ -363,7 +375,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Porcupine },
                 radius: trackingClusters.Porcupine.radius,
                 location: 'Central Area',
-                status: 'resting'
+                status: 'resting',
+                battery: 34,
+                lastCharge: '6 days ago'
             },
             cctv: true,
             alerts: ['Reduced enrichment usage - schedule play session'],
@@ -393,7 +407,9 @@ const animalDatabase = {
                 center: { ...trackingClusters.Porcupine },
                 radius: trackingClusters.Porcupine.radius,
                 location: 'Central Area',
-                status: 'resting'
+                status: 'resting',
+                battery: 56,
+                lastCharge: '4 days ago'
             },
             cctv: true,
             alerts: ['Elevated temperature (38.6°C) - Vet notified'],
@@ -427,7 +443,9 @@ const animalDatabase = {
                 center: { ...trackingClusters['Red Fox'] },
                 radius: trackingClusters['Red Fox'].radius,
                 location: 'North Enclosure',
-                status: 'moving'
+                status: 'moving',
+                battery: 81,
+                lastCharge: '2 days ago'
             },
             cctv: true,
             safety: true,
@@ -460,7 +478,9 @@ const animalDatabase = {
                 center: { ...trackingClusters['Red Fox'] },
                 radius: trackingClusters['Red Fox'].radius,
                 location: 'North Enclosure',
-                status: 'moving'
+                status: 'moving',
+                battery: 95,
+                lastCharge: '1 day ago'
             },
             cctv: true,
             safety: true,

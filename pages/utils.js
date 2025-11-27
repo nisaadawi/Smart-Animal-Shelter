@@ -11,6 +11,11 @@ const markerMap = new Map();
 let mapNeedsFit = true;
 let speciesChartInstance = null;
 let healthStatusChartInstance = null;
+let trailLayer = null;
+const trailMap = new Map();
+const movementHistory = new Map();
+let trailsEnabled = false;
+let trailTimeRange = 3600000; // 1 hour in milliseconds
 
 // Utility functions
 function clamp(value, min, max) {
