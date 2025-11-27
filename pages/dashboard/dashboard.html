@@ -154,18 +154,92 @@
                             Quick Actions
                         </h2>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
                             <button class="btn btn-primary" onclick="window.location.href='feeding.html'">📋 Feeding Schedule</button>
                             <button class="btn btn-primary" onclick="window.location.href='alerts.html'">🚨 Check Alerts</button>
                             <button class="btn btn-primary" onclick="window.location.href='tracking.html'">📍 Live Tracking</button>
                             <button class="btn btn-primary" onclick="window.location.href='environment.html'">🌡️ Room Controls</button>
 =======
+=======
+>>>>>>> Stashed changes
                         <div class="quick-actions-grid">
                             <button class="btn btn-primary" onclick="window.location.href='../feeding/feeding.html'">📋 Feeding Schedule</button>
                             <button class="btn btn-primary" onclick="window.location.href='../alerts/alerts.html'">🚨 Check Alerts</button>
                             <button class="btn btn-primary" onclick="window.location.href='../tracking/tracking.html'">📍 Live Tracking</button>
                             <button class="btn btn-primary" onclick="window.location.href='../environment/environment.html'">🌡️ Room Controls</button>
 >>>>>>> Stashed changes
+                        </div>
+                    </div>
+
+                    <div class="insight-grid">
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Live safety</p>
+                                    <h3>Critical Alerts</h3>
+                                </div>
+                                <span class="count-pill" id="urgentAlertCount">0</span>
+                            </div>
+                            <div class="alerts-list" id="urgentAlertsList"></div>
+                        </div>
+
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Daily ops</p>
+                                    <h3>Task Progress</h3>
+                                </div>
+                                <div class="progress-chip" id="taskProgressValue">0%</div>
+                            </div>
+                            <div class="task-progress">
+                                <div class="progress-ring">
+                                    <div class="progress-ring-fill" id="taskProgressRing"></div>
+                                    <div class="progress-ring-label">
+                                        <span id="tasksCompletedCount">0</span>
+                                        <small>done</small>
+                                    </div>
+                                </div>
+                                <div class="task-progress-details">
+                                    <div class="next-task" id="nextTask"></div>
+                                    <div class="task-timeline" id="taskTimeline"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Supplies</p>
+                                    <h3>Inventory Watch</h3>
+                                </div>
+                                <span class="count-pill critical" id="inventoryLowCount">0</span>
+                            </div>
+                            <div class="inventory-list" id="inventoryWatchList"></div>
+                        </div>
+                    </div>
+
+                    <div class="map-activity-grid">
+                        <div class="map-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Location</p>
+                                    <h3>Active Trackers</h3>
+                                </div>
+                                <span class="pill" id="mapTrackerCount">0 active</span>
+                            </div>
+                            <div id="dashboardMap" class="dashboard-map"></div>
+                            <div class="map-legend" id="mapLegend"></div>
+                        </div>
+
+                        <div class="activity-card">
+                            <div class="insight-header">
+                                <div>
+                                    <p class="eyebrow">Timeline</p>
+                                    <h3>Recent Activity</h3>
+                                </div>
+                            </div>
+                            <div class="activity-list" id="activityList"></div>
                         </div>
                     </div>
 
