@@ -56,73 +56,178 @@
                     </div>
 
                     <div class="cctv-container">
-                            <div class="CCTV-header">
-                                <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">Porcupines</span></h1>
+                        <div class="CCTV-header">
+                            <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">Goats</span></h1>
+                        </div>
+                        <div class="cctv-display-wrapper">
+                            <div class="cctv-feed" id="cctvFeed">
+                                <video class="cctv-video" id="cctvVideo" autoplay loop muted playsinline>
+                                    <source src="../../videos/goat.MOV" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="cctv-placeholder" id="cctvPlaceholder">📹</div>
+                                <div class="cctv-overlay">
+                                    <span class="rec-dot"></span>
+                                    <span>LIVE</span>
+                                </div>
+                                <div class="camera-position-indicator" id="cameraPosition">Center</div>
                             </div>
-                            <div class="cctv-display-wrapper">
-                                <div class="cctv-feed" id="cctvFeed">
-                                    <video src="../../videos/porcupine.MP4" alt="CCTV Feed" class="cctv-video"
-                                        id="cctvVideo" autoplay loop muted playsinline>
-                                    </video>
-                                    <div class="cctv-placeholder" id="cctvPlaceholder">📹</div>
-                                    <div class="cctv-overlay">
-                                        <span class="rec-dot"></span>
-                                        <span>LIVE</span>
-                                    </div>
-                                    <!-- <div class="camera-position-indicator">
-                                        <span id="cameraPosition">0°</span>
-                                    </div> -->
-                                </div>
 
-                                <div class="camera-controls-wrapper">
-                                    <div class="camera-controls-card">
-                                        <div class="camera-controls">
-                                            <div class="control-row">
-                                                <button class="camera-btn" id="btnUp" onclick="moveCamera('up')"
-                                                    title="Look Up">
-                                                    <span>▲</span>
-                                                </button>
-                                            </div>
-                                            <div class="control-row">
-                                                <button class="camera-btn" id="btnLeft" onclick="moveCamera('left')"
-                                                    title="Look Left">
-                                                    <span>◄</span>
-                                                </button>
-                                                <button class="camera-btn camera-btn-center" id="btnCenter"
-                                                    onclick="centerCamera()" title="Center Camera">
-                                                    <!-- <span>Center</span> -->
-                                                </button>
-                                                <button class="camera-btn" id="btnRight" onclick="moveCamera('right')"
-                                                    title="Look Right">
-                                                    <span>►</span>
-                                                </button>
-                                            </div>
-                                            <div class="control-row">
-                                                <button class="camera-btn" id="btnDown" onclick="moveCamera('down')"
-                                                    title="Look Down">
-                                                    <span>▼</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camera-action-buttons-wrapper">
-                                        <div class="camera-action-buttons">
-                                            <button class="action-btn record-btn" id="recordBtn"
-                                                onclick="toggleRecording()" title="Start Recording">
-                                                <span class="action-icon">🔴</span>
-                                                <span class="action-label">Record</span>
+                            <div class="camera-controls-wrapper">
+                                <div class="camera-controls-card">
+                                    <div class="camera-controls">
+                                        <div class="control-row">
+                                            <button class="camera-btn" id="btnUp" onclick="moveCamera('up')" title="Look Up">
+                                                <span>▲</span>
                                             </button>
-                                            <button class="action-btn screenshot-btn" id="screenshotBtn"
-                                                onclick="takeScreenshot()" title="Take Screenshot">
-                                                <span class="action-icon">📷</span>
-                                                <span class="action-label">Screenshot</span>
+                                        </div>
+                                        <div class="control-row">
+                                            <button class="camera-btn" id="btnLeft" onclick="moveCamera('left')" title="Look Left">
+                                                <span>◄</span>
+                                            </button>
+                                            <button class="camera-btn camera-btn-center" id="btnCenter" onclick="centerCamera()" title="Center Camera">
+                                                <!-- <span>Center</span> -->
+                                            </button>
+                                            <button class="camera-btn" id="btnRight" onclick="moveCamera('right')" title="Look Right">
+                                                <span>►</span>
+                                            </button>
+                                        </div>
+                                        <div class="control-row">
+                                            <button class="camera-btn" id="btnDown" onclick="moveCamera('down')" title="Look Down">
+                                                <span>▼</span>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="camera-action-buttons-wrapper">
+                                    <div class="camera-action-buttons">
+                                        <button class="action-btn record-btn" id="recordBtn" onclick="toggleRecording()" title="Start Recording">
+                                            <span class="action-icon">🔴</span>
+                                            <span class="action-label">Record</span>
+                                        </button>
+                                        <button class="action-btn screenshot-btn" id="screenshotBtn" onclick="takeScreenshot()" title="Take Screenshot">
+                                            <span class="action-icon">📷</span>
+                                            <span class="action-label">Screenshot</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CAGE CONDITION CONTAINER -->
+                    <div class="cage-condition-container">
+                        <div class="section-header">
+                            <h2 class="section-title">Cage Condition</h2>
+                        </div>
+                        
+                        <div class="condition-grid">
+                            <!-- Temperature -->
+                            <div class="condition-card" data-metric="temperature">
+                                <div class="condition-icon">🌡️</div>
+                                <div class="condition-content">
+                                    <div class="metric-label">Temperature</div>
+                                    <div class="metric-value">22°C</div>
+                                    <div class="metric-range">(10-25°C)</div>
+                                    <div class="metric-status optimal">Optimal</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Humidity -->
+                            <div class="condition-card" data-metric="humidity">
+                                <div class="condition-icon">💧</div>
+                                <div class="condition-content">
+                                    <div class="metric-label">Humidity</div>
+                                    <div class="metric-value">65%</div>
+                                    <div class="metric-range">(40-70%)</div>
+                                    <div class="metric-status optimal">Optimal</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Air Quality -->
+                            <div class="condition-card" data-metric="air-quality">
+                                <div class="condition-icon">💨</div>
+                                <div class="condition-content">
+                                    <div class="metric-label">Air Quality</div>
+                                    <div class="metric-value">Good</div>
+                                    <div class="metric-range">CO₂: 450ppm</div>
+                                    <div class="metric-status optimal">Optimal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- CONTROLLER CONTAINER -->
+                    <div class="controller-container">
+                        <div class="section-header">
+                            <h2 class="section-title">Cage Environment Controller</h2>
+                        </div>
+                        
+                        <div class="controller-grid">
+                            <!-- Lighting Control -->
+                            <div class="controller-card">
+                                <div class="controller-header">
+                                    <span class="controller-icon">💡</span>
+                                    <h3>Lighting</h3>
+                                </div>
+                                <div class="controller-value" id="currentLightLevel">50%</div>
+                                
+                                <!-- Light Slider -->
+                                <div class="light-controls">
+                                    <input type="range" class="light-slider" id="lightSlider" 
+                                           min="0" max="100" value="50" 
+                                           oninput="handleLightSliderChange()">
+                                    <div class="slider-labels">
+                                        <span>0%</span>
+                                        <span>50%</span>
+                                        <span>100%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="lighting-presets">
+                                    <button class="preset-btn" onclick="setLightingPreset('night')">🌙</button>
+                                    <button class="preset-btn" onclick="setLightingPreset('day')">☀️</button>
+                                    <button class="preset-btn" onclick="setLightingPreset('uvb')">🔆</button>
+                                </div>
+                            </div>
 
+                            <!-- Ventilation Control -->
+                            <div class="controller-card">
+                                <div class="controller-header">
+                                    <span class="controller-icon">💨</span>
+                                    <h3>Ventilation</h3>
+                                </div>
+                                <div class="controller-value" id="fanSpeed">Low</div>
+                                <div class="fan-controls">
+                                    <button class="fan-btn" onclick="setFanSpeed('low')">Low</button>
+                                    <button class="fan-btn" onclick="setFanSpeed('medium')">Med</button>
+                                    <button class="fan-btn" onclick="setFanSpeed('high')">High</button>
+                                </div>
+                                
+                                <!-- Auto Ventilation Toggle -->
+                                <div class="auto-ventilation-toggle">
+                                    <span class="toggle-label">Auto Ventilation</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" onchange="toggleAutoVentilation()">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
 
+                            <!-- Cage Lock -->
+                            <div class="controller-card">
+                                <div class="controller-header">
+                                    <span class="controller-icon">🔒</span>
+                                    <h3>Cage Lock</h3>
+                                </div>
+                                <div class="controller-value" id="lockStatus">
+                                    <span class="status-indicator unlocked"></span>
+                                    <span class="status-text">Unlocked</span>
+                                </div>
+                                <div class="lock-controls">
+                                    <button class="lock-btn" onclick="toggleCageLock()" id="lockToggle">
+                                        Lock Cage
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
