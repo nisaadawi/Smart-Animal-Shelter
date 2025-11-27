@@ -673,15 +673,15 @@
 }
 
 .auto-feeder-info-banner.banner-off {
-    background: linear-gradient(135deg, #e2d2938e, #ecd598b2);
-    border: 2px solid #fbbf24;
-    color: #8f3f0d;
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.4), rgba(253, 230, 138, 0.5));
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    color: #92400e;
 }
 
 .auto-feeder-info-banner.banner-on {
-    background: linear-gradient(135deg, #d1fae581, #a7f3d09e);
-    border: 2px solid #10b981;
-    color: #065f46;
+    background: linear-gradient(135deg, rgba(209, 250, 229, 0.4), rgba(167, 243, 208, 0.5));
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #248267;
 }
 
 .info-banner-icon {
