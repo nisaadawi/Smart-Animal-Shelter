@@ -1,14 +1,51 @@
+let trackingMapPreset = 'all';
+
 // Tracking page functionality
 function initializeTracking() {
-    renderTrackingToolbar();
-    initializeMap();
-    renderTracking();
-    startTrackingSimulation();
+    try {
+        if (typeof animalDatabase === 'undefined') {
+            console.error('animalDatabase is not defined');
+            return;
+        }
+        if (typeof trackingSpeciesMeta === 'undefined') {
+            console.error('trackingSpeciesMeta is not defined');
+            return;
+        }
+
+        const allAnimals = Object.values(animalDatabase).flat();
+        allAnimals.forEach(animal => {
+            if (animal.tracking?.enabled &&
+                Number.isFinite(animal.tracking.lat) &&
+                Number.isFinite(animal.tracking.lng)) {
+                ensureTrackingDefaults(animal);
+                recordMovementHistory(animal);
+            }
+        });
+
+        renderTrackingToolbar();
+        renderSpeciesZoomDropdown();
+        initializeMap();
+        renderTracking();
+        startTrackingSimulation();
+    } catch (error) {
+        console.error('Error initializing tracking:', error);
+    }
+}
+
+function ensureTrackingDefaults(animal) {
+    if (!animal.tracking) return;
+    if (typeof animal.tracking.battery !== 'number') {
+        animal.tracking.battery = 100;
+    }
+    if (!animal.tracking.lastCharge) {
+        animal.tracking.lastCharge = 'today';
+    }
 }
 
 function renderTrackingToolbar() {
     const toolbar = document.getElementById('trackingToolbar');
     if (!toolbar) return;
+    if (typeof animalDatabase === 'undefined' || typeof trackingSpeciesMeta === 'undefined') return;
     const allAnimals = Object.values(animalDatabase).flat();
 
     const filters = Object.entries(trackingSpeciesMeta).map(([species, meta]) => {
@@ -23,13 +60,55 @@ function renderTrackingToolbar() {
         `;
     }).join('');
 
+    // Add button after Alligators (last species)
+    const addButton = `
+        <button class="tracking-add-btn" onclick="openAnimalAddModal()" title="Add animals to track">
+            <span class="add-icon">+</span>
+        </button>
+    `;
+
     toolbar.innerHTML = `
-        <div class="tracking-filters">${filters}</div>
-        <div class="tracking-view-toggle">
-            <button class="tracking-view-btn ${trackingViewMode === 'map' ? 'active' : ''}" onclick="setTrackingView('map')">Map View</button>
-            <button class="tracking-view-btn ${trackingViewMode === 'heat' ? 'active' : ''}" onclick="setTrackingView('heat')">Heat View</button>
+        <div class="tracking-filters">${filters}${addButton}</div>
+        <div class="tracking-controls-group">
+            <div class="tracking-view-toggle">
+                <button class="tracking-view-btn ${trailsEnabled ? 'active' : ''}" onclick="toggleTrails(true)">🐾 Trails On</button>
+                <button class="tracking-view-btn ${!trailsEnabled ? 'active' : ''}" onclick="toggleTrails(false)">🐾 Trails Off</button>
+            </div>
         </div>
     `;
+}
+
+function renderSpeciesZoomDropdown() {
+    const select = document.getElementById('speciesZoomSelect');
+    if (!select) return;
+    const allAnimals = Object.values(animalDatabase).flat();
+
+    select.innerHTML = '<option value="all">🌍 Whole Site</option>';
+
+    Object.entries(trackingClusters).forEach(([species, cluster]) => {
+        const meta = trackingSpeciesMeta[species] || {};
+        const count = allAnimals.filter(a => a.tracking.enabled && a.species === species).length;
+        const alertCount = allAnimals.filter(a =>
+            a.tracking.enabled &&
+            a.species === species &&
+            (a.alerts.length > 0 || a.health !== 'good')
+        ).length;
+
+        const alertText = alertCount > 0 ? ` ⚠️ ${alertCount}` : '';
+        const optionText = `${meta.icon || '📍'} ${meta.label || species} (${count} tracked${alertText})`;
+
+        const option = document.createElement('option');
+        option.value = species;
+        option.textContent = optionText;
+        select.appendChild(option);
+    });
+
+    select.value = trackingMapPreset;
+}
+
+function handleSpeciesZoom(value) {
+    trackingMapPreset = value;
+    focusMapPreset(value);
 }
 
 function initializeMap() {
@@ -53,7 +132,9 @@ function initializeMap() {
     mapInstance.setMaxBounds(bounds.pad(0.02));
 
     markerLayer = L.layerGroup().addTo(mapInstance);
+    trailLayer = L.layerGroup().addTo(mapInstance);
     markerMap.clear();
+    trailMap.clear();
     setTimeout(() => mapInstance.invalidateSize(), 200);
 }
 
@@ -69,7 +150,11 @@ function renderTrackingStats(trackedAnimals) {
     const moving = trackedAnimals.filter(a => a.tracking.status === 'moving').length;
     const resting = trackedAnimals.length - moving;
     const alerts = trackedAnimals.filter(a => a.alerts.length > 0 || a.health !== 'good').length;
-    const coverage = Math.round((trackingFilters.size / Object.keys(trackingSpeciesMeta).length) * 100);
+    const lowBattery = trackedAnimals.filter(a => (a.tracking.battery ?? 100) < 20).length;
+    const avgBattery = trackedAnimals.length > 0
+        ? trackedAnimals.reduce((sum, a) => sum + (a.tracking.battery ?? 100), 0) / trackedAnimals.length
+        : 0;
+    const avgBatteryDisplay = avgBattery.toFixed(2);
 
     stats.innerHTML = `
         <div class="tracking-stat-card">
@@ -78,14 +163,14 @@ function renderTrackingStats(trackedAnimals) {
             <div class="stat-meta">${moving} moving • ${resting} resting</div>
         </div>
         <div class="tracking-stat-card">
+            <div class="stat-label">Battery Status</div>
+            <div class="stat-value">${avgBatteryDisplay}%</div>
+            <div class="stat-meta">${lowBattery > 0 ? `⚠️ ${lowBattery} need charging` : 'All devices charged'}</div>
+        </div>
+        <div class="tracking-stat-card">
             <div class="stat-label">Active Alerts</div>
             <div class="stat-value">${alerts}</div>
             <div class="stat-meta">${alerts ? 'Immediate attention required' : 'All clear'}</div>
-        </div>
-        <div class="tracking-stat-card">
-            <div class="stat-label">Filter Coverage</div>
-            <div class="stat-value">${coverage}%</div>
-            <div class="stat-meta">${trackingFilters.size} / ${Object.keys(trackingSpeciesMeta).length} species visible</div>
         </div>
     `;
 }
@@ -95,12 +180,18 @@ function renderTrackingLegend(allAnimals) {
     if (!legendEl) return;
     const legendItems = Object.entries(trackingSpeciesMeta).map(([species, meta]) => {
         const count = allAnimals.filter(a => a.tracking.enabled && a.species === species).length;
+        const alerts = allAnimals.filter(a =>
+            a.tracking.enabled &&
+            a.species === species &&
+            (a.alerts.length > 0 || a.health !== 'good')
+        ).length;
         if (!count) return '';
         return `
-            <div class="legend-item">
+            <div class="legend-item ${alerts ? 'alert' : ''}">
                 <span class="legend-dot" style="background:${meta.color};"></span>
                 ${meta.icon} ${meta.label}
                 <span style="font-weight:800; margin-left:4px;">${count}</span>
+                ${alerts ? `<span class="legend-alert-badge">⚠️ ${alerts}</span>` : ''}
             </div>
         `;
     }).join('');
@@ -112,9 +203,15 @@ function buildAnimalIcon(animal) {
     const meta = trackingSpeciesMeta[animal.species] || {};
     const emoji = meta.icon || '🐾';
     const color = meta.color || '#6366f1';
+    const hasAlert = animal.alerts.length > 0 || animal.health !== 'good';
+    const battery = animal.tracking.battery ?? 100;
+    const lowBattery = battery < 20;
+    const batteryIndicator = lowBattery ? '<span class="pin-battery-low">⚠️</span>' : '';
     const html = `
-        <div class="map-pin ${animal.tracking.status}" style="--pin-color:${color}" data-label="${animal.name}">
+        <div class="map-pin ${animal.tracking.status} ${hasAlert ? 'has-alert' : ''}" style="--pin-color:${color}" data-label="${animal.name}">
             <div class="map-pin-inner">${emoji}</div>
+            ${hasAlert ? '<span class="pin-alert-dot"></span>' : ''}
+            ${batteryIndicator}
         </div>
     `;
     return L.divIcon({
@@ -148,6 +245,210 @@ function setTrackingView(mode) {
     renderTrackingToolbar();
 }
 
+function toggleTrails(forceState) {
+    if (typeof forceState === 'boolean') {
+        if (trailsEnabled === forceState) return;
+        trailsEnabled = forceState;
+    } else {
+        trailsEnabled = !trailsEnabled;
+    }
+
+    renderTrackingToolbar();
+    renderTracking();
+    showToast(trailsEnabled ? 'Movement trails enabled' : 'Movement trails disabled');
+}
+
+function renderMovementTrails(trackedAnimals) {
+    if (!trailLayer || !mapInstance) return;
+
+    const now = Date.now();
+    const activeTrailIds = new Set();
+
+    trackedAnimals.forEach(animal => {
+        if (!movementHistory.has(animal.id)) return;
+
+        const history = movementHistory.get(animal.id);
+        if (history.length < 2) return;
+
+        const visibleHistory = history.filter(point =>
+            (now - point.timestamp) <= trailTimeRange &&
+            Number.isFinite(point.lat) &&
+            Number.isFinite(point.lng)
+        );
+
+        if (visibleHistory.length < 2) return;
+
+        // Clean and validate coordinates - remove duplicates and invalid points
+        const validPoints = [];
+        const seenPoints = new Set();
+        const minDistance = 0.00001; // Minimum distance between points to prevent duplicates
+
+        visibleHistory.forEach(point => {
+            const key = `${point.lat.toFixed(6)},${point.lng.toFixed(6)}`;
+            
+            // Check if this point is valid and not a duplicate
+            if (
+                Number.isFinite(point.lat) &&
+                Number.isFinite(point.lng) &&
+                Math.abs(point.lat) <= 90 &&
+                Math.abs(point.lng) <= 180
+            ) {
+                // Check minimum distance from previous point
+                if (validPoints.length === 0) {
+                    validPoints.push(point);
+                    seenPoints.add(key);
+                } else {
+                    const lastPoint = validPoints[validPoints.length - 1];
+                    const distance = Math.sqrt(
+                        Math.pow(point.lat - lastPoint.lat, 2) +
+                        Math.pow(point.lng - lastPoint.lng, 2)
+                    );
+                    
+                    if (distance >= minDistance && !seenPoints.has(key)) {
+                        validPoints.push(point);
+                        seenPoints.add(key);
+                    }
+                }
+            }
+        });
+
+        if (validPoints.length < 2) return;
+
+        const latLngs = validPoints.map(point => [point.lat, point.lng]);
+        activeTrailIds.add(animal.id);
+
+        if (trailMap.has(animal.id)) {
+            const existingTrail = trailMap.get(animal.id);
+            existingTrail.setLatLngs(latLngs);
+            existingTrail.setStyle({
+                color: trackingSpeciesMeta[animal.species]?.color || '#6366f1',
+                opacity: 0.65,
+                weight: 3,
+                smoothFactor: 2
+            });
+        } else {
+            const trail = L.polyline(latLngs, {
+                color: trackingSpeciesMeta[animal.species]?.color || '#6366f1',
+                weight: 3,
+                opacity: 0.65,
+                smoothFactor: 2,
+                lineCap: 'round',
+                lineJoin: 'round'
+            }).addTo(trailLayer);
+
+            trail.bindTooltip(`${animal.name}'s movement path`, {
+                permanent: false,
+                direction: 'top',
+                className: 'trail-tooltip'
+            });
+
+            trailMap.set(animal.id, trail);
+        }
+    });
+
+    trailMap.forEach((trail, id) => {
+        if (!activeTrailIds.has(id)) {
+            trailLayer.removeLayer(trail);
+            trailMap.delete(id);
+        }
+    });
+}
+
+function focusMapPreset(preset) {
+    trackingMapPreset = preset;
+    const select = document.getElementById('speciesZoomSelect');
+    if (select) select.value = preset;
+    initializeMap();
+    if (!mapInstance) return;
+
+    if (preset === 'all') {
+        const latLngs = [];
+        Object.values(animalDatabase).flat().forEach(animal => {
+            if (animal.tracking?.enabled &&
+                Number.isFinite(animal.tracking.lat) &&
+                Number.isFinite(animal.tracking.lng)) {
+                latLngs.push([animal.tracking.lat, animal.tracking.lng]);
+            }
+        });
+
+        if (!latLngs.length) {
+            showToast('No live trackers available yet.');
+            return;
+        }
+
+        mapInstance.flyToBounds(L.latLngBounds(latLngs).pad(0.2), { duration: 0.6, maxZoom: 18 });
+        mapNeedsFit = false;
+        return;
+    }
+
+    const presetCluster = trackingClusters[preset];
+    if (!presetCluster) return;
+    const radius = presetCluster.radius ?? 0.0004;
+    const bounds = L.latLngBounds(
+        [presetCluster.lat - radius, presetCluster.lng - radius],
+        [presetCluster.lat + radius, presetCluster.lng + radius]
+    );
+    mapInstance.flyToBounds(bounds, { duration: 0.6, maxZoom: 18 });
+    mapNeedsFit = false;
+}
+
+function recordMovementHistory(animal) {
+    if (!animal.tracking?.enabled ||
+        !Number.isFinite(animal.tracking.lat) ||
+        !Number.isFinite(animal.tracking.lng)) {
+        return;
+    }
+
+    // Validate coordinates are within valid ranges
+    if (
+        Math.abs(animal.tracking.lat) > 90 ||
+        Math.abs(animal.tracking.lng) > 180 ||
+        !Number.isFinite(animal.tracking.lat) ||
+        !Number.isFinite(animal.tracking.lng)
+    ) {
+        return;
+    }
+
+    if (!movementHistory.has(animal.id)) {
+        movementHistory.set(animal.id, []);
+    }
+
+    const history = movementHistory.get(animal.id);
+    const now = Date.now();
+
+    // Only add point if it's different from the last point (avoid duplicates)
+    const minDistance = 0.00001;
+    if (history.length > 0) {
+        const lastPoint = history[history.length - 1];
+        const distance = Math.sqrt(
+            Math.pow(animal.tracking.lat - lastPoint.lat, 2) +
+            Math.pow(animal.tracking.lng - lastPoint.lng, 2)
+        );
+        
+        // Skip if too close to last point (likely duplicate)
+        if (distance < minDistance) {
+            return;
+        }
+    }
+
+    history.push({
+        lat: animal.tracking.lat,
+        lng: animal.tracking.lng,
+        timestamp: now,
+        status: animal.tracking.status
+    });
+
+    const cutoff = now - trailTimeRange;
+    while (history.length > 0 && history[0].timestamp < cutoff) {
+        history.shift();
+    }
+    
+    // Limit history size to prevent memory issues
+    if (history.length > 500) {
+        history.shift();
+    }
+}
+
 // Tracking simulation with realistic movement
 function startTrackingSimulation() {
     if (trackingUpdateInterval) clearInterval(trackingUpdateInterval);
@@ -156,6 +457,13 @@ function startTrackingSimulation() {
         const allAnimals = Object.values(animalDatabase).flat();
         allAnimals.forEach(animal => {
             if (!animal.tracking.enabled) return;
+
+            ensureTrackingDefaults(animal);
+
+            if (animal.tracking.battery !== undefined && animal.tracking.battery > 0) {
+                const drainRate = animal.tracking.status === 'moving' ? 0.15 : 0.08;
+                animal.tracking.battery = Math.max(0, animal.tracking.battery - drainRate);
+            }
 
             if (animal.tracking.status === 'moving' &&
                 Number.isFinite(animal.tracking.lat) &&
@@ -166,10 +474,12 @@ function startTrackingSimulation() {
                 const jitter = radius * 0.6;
                 animal.tracking.lat = clamp(centerLat + (Math.random() - 0.5) * jitter, centerLat - radius, centerLat + radius);
                 animal.tracking.lng = clamp(centerLng + (Math.random() - 0.5) * jitter, centerLng - radius, centerLng + radius);
+
+                recordMovementHistory(animal);
             }
 
             if (Math.random() < (animal.tracking.status === 'moving' ? 0.025 : 0.05)) {
-                    animal.tracking.status = animal.tracking.status === 'moving' ? 'resting' : 'moving';
+                animal.tracking.status = animal.tracking.status === 'moving' ? 'resting' : 'moving';
             }
         });
 
@@ -190,7 +500,8 @@ function renderTracking() {
     const allAnimals = Object.values(animalDatabase).flat();
     const trackedAnimals = allAnimals.filter(a => a.tracking.enabled && trackingFilters.has(a.species));
 
-    renderTrackingLegend(allAnimals);
+    // Legend removed - using filter buttons instead
+    renderSpeciesZoomDropdown();
     renderTrackingStats(trackedAnimals);
 
     const listContainer = document.getElementById('trackingList');
@@ -203,19 +514,30 @@ function renderTracking() {
         if (!trackedAnimals.length) {
             listContainer.innerHTML = `<div class="tracking-empty">No live trackers match the current filters.</div>`;
         } else {
-            listContainer.innerHTML = trackedAnimals.map(animal => `
+            listContainer.innerHTML = trackedAnimals.map(animal => {
+                const battery = animal.tracking.battery ?? 100;
+                const batteryDisplay = battery.toFixed(2);
+                const batteryStatus = battery >= 50 ? 'good' : battery >= 20 ? 'warning' : 'critical';
+                const batteryIcon = battery >= 50 ? '🔋' : battery >= 20 ? '🪫' : '⚠️';
+                return `
                 <div class="tracking-item" onclick="openModal(${animal.id})">
                     <img src="${animal.images[0]}" class="tracking-avatar" alt="${animal.name}">
                     <div class="tracking-info">
                         <div class="tracking-name">${animal.name}</div>
                         <div class="tracking-location">📍 ${animal.tracking.location}</div>
                         <div class="tracking-location">⏱️ Last fed ${animal.lastFed}</div>
+                        <div class="tracking-battery battery-${batteryStatus}">
+                            ${batteryIcon} ${batteryDisplay}% • Charged ${animal.tracking.lastCharge || 'recently'}
+                        </div>
                     </div>
-                    <div class="tracking-status status-${animal.tracking.status}">
-                        ${animal.tracking.status}
+                    <div class="tracking-status-group">
+                        <div class="tracking-status status-${animal.tracking.status}">
+                            ${animal.tracking.status}
+                        </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
     }
 
@@ -232,13 +554,23 @@ function renderTracking() {
     if (!trackedAnimals.length) {
         if (emptyOverlay) emptyOverlay.classList.remove('hidden');
         mapNeedsFit = true;
-        // remove markers if grid is empty
         markerMap.forEach(marker => markerLayer.removeLayer(marker));
         markerMap.clear();
+        if (trailLayer) {
+            trailLayer.clearLayers();
+            trailMap.clear();
+        }
         return;
     }
 
     if (emptyOverlay) emptyOverlay.classList.add('hidden');
+
+    if (trailsEnabled && trailLayer) {
+        renderMovementTrails(trackedAnimals);
+    } else if (trailLayer) {
+        trailLayer.clearLayers();
+        trailMap.clear();
+    }
 
     const activeIds = new Set();
     const latLngs = [];
@@ -274,6 +606,21 @@ function renderTracking() {
         mapInstance.flyToBounds(bounds, { duration: 0.6, maxZoom: 18 });
         mapNeedsFit = false;
     }
+}
+
+// Add animals modal function
+function openAnimalAddModal() {
+    // Show toast notification
+    if (typeof showToast === 'function') {
+        showToast('➕ Add animals feature - Coming soon! You can add new animals to track here.');
+    }
+    
+    // TODO: Implement full add modal functionality
+    // This could open a modal to:
+    // - Add new animals to tracking
+    // - Configure tracking settings for new animals
+    // - Assign tracking devices to animals
+    console.log('Add animals modal - to be implemented');
 }
 
 // Initialize tracking page when page loads

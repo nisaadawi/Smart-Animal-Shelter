@@ -18,19 +18,23 @@ function renderAnimals() {
     const animalList = animalDatabase[currentSpecies] || [];
 
     grid.innerHTML = animalList.map(animal => {
-        const hasAlerts = animal.alerts.length > 0 || animal.health === 'danger';
+        const alerts = Array.isArray(animal.alerts) ? animal.alerts : [];
+        const sensors = animal.sensors || {};
+        const tracking = animal.tracking || {};
+
+        const hasAlerts = alerts.length > 0 || animal.health === 'danger';
         const devices = [];
-        if (animal.sensors.heartRate) devices.push('❤️');
-        if (animal.sensors.temp || animal.sensors.baskingTemp) devices.push('🌡️');
+        if (sensors.heartRate) devices.push('❤️');
+        if (sensors.temp || sensors.baskingTemp) devices.push('🌡️');
         if (animal.cctv) devices.push('📹');
-        if (animal.tracking.enabled) devices.push('📍');
+        if (tracking.enabled) devices.push('📍');
         if (animal.safety) devices.push('🔒');
 
         return `
             <div class="animal-card ${hasAlerts ? 'has-alert' : ''}" onclick="openModal(${animal.id})">
                 <div class="animal-image-wrapper">
                     <img src="${animal.images[0]}" class="animal-image" alt="${animal.name}">
-                    ${animal.tracking.enabled ? '<div class="tracking-badge live">LIVE TRACKING</div>' : ''}
+                    ${tracking.enabled ? '<div class="tracking-badge live">LIVE TRACKING</div>' : ''}
                     <div class="health-badge ${animal.health}">
                         ${animal.health === 'good' ? '✓' : animal.health === 'warning' ? '⚠️' : '🔴'}
                     </div>

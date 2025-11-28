@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animals Management - Smart Animal Shelter</title>
+    <title>PawShelter - Animals Management</title>
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="animals.css">
     <link rel="stylesheet" href="../../css/modal.css">
@@ -18,19 +18,48 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Animals</h1>
+                        <p>Browse and manage all animals by species</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -38,11 +67,6 @@
             <div class="content">
                 <!-- ANIMALS SECTION -->
                 <section class="page-section active" id="animals-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Animals Management</h1>
-                        <p class="section-subtitle">Browse and manage all animals by species</p>
-                    </div>
-
                     <div class="species-tabs">
                         <div class="species-tab active" onclick="filterSpecies('Goat')">🐐 Goats</div>
                         <div class="species-tab" onclick="filterSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
@@ -72,27 +96,18 @@
             <div class="modal-body">
                 <img src="" id="modalImage" class="modal-image" alt="Animal">
 
-                <div id="emergencyPanel"></div>
-
-                <div class="cctv-feed" id="cctvFeed">
-                    <div class="cctv-placeholder">📹</div>
-                    <div class="cctv-overlay">
-                        <span class="rec-dot"></span>
-                        <span>LIVE</span>
-                    </div>
-                </div>
+                <div id="trackingInfo" class="tracking-info-section"></div>
 
                 <div class="sensors-grid" id="modalSensors"></div>
 
-                <div class="notes-section">
-                    <h3 class="notes-title">📝 Recent Activity</h3>
-                    <div id="modalNotes"></div>
+                <div id="alertsSection" class="alerts-section" style="display: none;">
+                    <h3 class="notes-title">⚠️ Active Alerts</h3>
+                    <div id="modalAlerts"></div>
                 </div>
             </div>
 
             <div class="modal-footer" id="modalFooter">
-                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
-                <button class="btn btn-primary" onclick="window.location.href='tracking.html'; closeModal();">📍 Track Location</button>
+                <button class="btn btn-primary" onclick="window.location.href='../tracking/tracking.html'; closeModal();">📍 Track Location</button>
             </div>
         </div>
     </div>
@@ -105,4 +120,5 @@
     <script src="../utils.js"></script>
     <script src="../animals/animal.js"></script>
     <script src="../modal.js"></script>
+</body>
 </html>
