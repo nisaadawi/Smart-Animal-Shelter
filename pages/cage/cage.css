@@ -337,6 +337,18 @@
 .history-btn {
     width: 100%;
     min-width: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border: 1px solid rgba(147, 51, 234, 0.5);
+    color: white;
+}
+
+.history-btn .action-label {
+    color: white;
+}
+
+.history-btn:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    box-shadow: 0 8px 20px rgba(147, 51, 234, 0.4);
 }
 
 .camera-controls-card {
