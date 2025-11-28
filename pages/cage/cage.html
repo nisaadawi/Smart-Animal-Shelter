@@ -74,6 +74,18 @@
                             </div>
 
                             <div class="camera-controls-wrapper">
+                                <!-- Recording Banner -->
+                                <div class="recording-banner" id="recordingBanner" style="display: none;">
+                                    <span class="recording-dot"></span>
+                                    <span class="recording-text">RECORDING</span>
+                                </div>
+                                
+                                <!-- Screenshot Notification -->
+                                <div class="screenshot-notification" id="screenshotNotification" style="display: none;">
+                                    <span class="screenshot-icon">📷</span>
+                                    <span class="screenshot-text">Screenshot Saved!</span>
+                                </div>
+
                                 <div class="camera-controls-card">
                                     <div class="camera-controls">
                                         <div class="control-row">
@@ -106,8 +118,14 @@
                                             <span class="action-label">Record</span>
                                         </button>
                                         <button class="action-btn screenshot-btn" id="screenshotBtn" onclick="takeScreenshot()" title="Take Screenshot">
-                                            <span class="action-icon">📷</span>
+                                            <span class="action-icon">⛶</span>
                                             <span class="action-label">Screenshot</span>
+                                        </button>
+                                    </div>
+                                    <div class="camera-action-buttons">
+                                        <button class="action-btn history-btn" id="historyBtn" title="Recording History">
+                                            <span class="action-icon">💾</span>
+                                            <span class="action-label">Recording History</span>
                                         </button>
                                     </div>
                                 </div>

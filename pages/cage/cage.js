@@ -519,8 +519,8 @@ function checkEnvironmentStatus(species) {
 
 // ========== CAMERA CONTROLS ==========
 
-// Move camera in specified direction
-function moveCamera(direction) {
+// Move camera in specified direction - explicitly attach to window for global access
+window.moveCamera = function moveCamera(direction) {
     const cctvFeed = document.getElementById('cctvFeed');
     const positionIndicator = document.getElementById('cameraPosition');
     const cctvVideo = document.getElementById('cctvVideo');
@@ -569,100 +569,84 @@ function moveCamera(direction) {
     if (typeof showToast === 'function') {
         showToast(`Camera panned: ${direction.toUpperCase()}`);
     }
-}
+};
 
 // Recording state
 let isRecording = false;
 
-// Toggle recording
-function toggleRecording() {
+// Toggle recording - explicitly attach to window for global access
+window.toggleRecording = function toggleRecording() {
     const recordBtn = document.getElementById('recordBtn');
+    const recordingBanner = document.getElementById('recordingBanner');
+    const recordingText = recordingBanner ? recordingBanner.querySelector('.recording-text') : null;
+    const recordingDot = recordingBanner ? recordingBanner.querySelector('.recording-dot') : null;
+    
     isRecording = !isRecording;
     
     if (isRecording) {
         recordBtn.classList.add('recording');
         recordBtn.querySelector('.action-label').textContent = 'Stop';
+        // Show recording banner
+        if (recordingBanner) {
+            recordingBanner.style.display = 'flex';
+            if (recordingText) {
+                recordingText.textContent = 'RECORDING';
+            }
+            if (recordingDot) {
+                recordingDot.style.display = 'inline-block';
+            }
+        }
         if (typeof showToast === 'function') {
             showToast('Recording started');
         }
     } else {
         recordBtn.classList.remove('recording');
         recordBtn.querySelector('.action-label').textContent = 'Record';
-        if (typeof showToast === 'function') {
-            showToast('Recording stopped');
-        }
-    }
-}
-
-// Take screenshot
-function takeScreenshot() {
-    const cctvFeed = document.getElementById('cctvFeed');
-    const cctvVideo = document.getElementById('cctvVideo');
-    
-    if (!cctvFeed) return;
-    
-    try {
-        // Create a canvas element
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Set canvas dimensions to match the feed
-        canvas.width = cctvFeed.offsetWidth;
-        canvas.height = cctvFeed.offsetHeight;
-        
-        // If video is visible, try to capture it
-        if (cctvVideo && !cctvVideo.classList.contains('hidden') && cctvVideo.readyState >= 2) {
-            // Calculate the visible portion of the video based on pan position
-            const video = cctvVideo;
-            const videoWidth = video.videoWidth || video.offsetWidth;
-            const videoHeight = video.videoHeight || video.offsetHeight;
-            const scale = Math.max(canvas.width / videoWidth, canvas.height / videoHeight) * 1.5;
-            
-            // Calculate source rectangle (what part of the video to show)
-            const sourceX = (videoWidth / 2) - (canvas.width / 2 / scale) - (panX / scale);
-            const sourceY = (videoHeight / 2) - (canvas.height / 2 / scale) - (panY / scale);
-            const sourceWidth = canvas.width / scale;
-            const sourceHeight = canvas.height / scale;
-            
-            // Draw the video portion
-            ctx.drawImage(
-                video,
-                sourceX, sourceY, sourceWidth, sourceHeight,
-                0, 0, canvas.width, canvas.height
-            );
-        } else {
-            // Draw black background if no video
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        // Convert to blob and download
-        canvas.toBlob(function(blob) {
-            if (blob) {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `cctv-screenshot-${Date.now()}.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                if (typeof showToast === 'function') {
-                    showToast('Screenshot saved');
-                }
+        // Show "Recording saved" in the same banner location
+        if (recordingBanner && recordingText) {
+            recordingBanner.style.display = 'flex';
+            recordingText.textContent = 'Recording saved';
+            // Hide the dot for saved message
+            if (recordingDot) {
+                recordingDot.style.display = 'none';
             }
-        }, 'image/png');
-    } catch (error) {
-        console.error('Screenshot error:', error);
-        if (typeof showToast === 'function') {
-            showToast('Screenshot failed');
+            // Hide after 3 seconds
+            setTimeout(() => {
+                if (recordingBanner) {
+                    recordingBanner.style.display = 'none';
+                    // Reset text and dot for next recording
+                    if (recordingText) {
+                        recordingText.textContent = 'RECORDING';
+                    }
+                    if (recordingDot) {
+                        recordingDot.style.display = 'inline-block';
+                    }
+                }
+            }, 3000);
         }
     }
-}
+};
 
-// Center camera - reset pan position to center
-function centerCamera() {
+// Take screenshot - explicitly attach to window for global access
+window.takeScreenshot = function takeScreenshot() {
+    // Show screenshot notification
+    const screenshotNotification = document.getElementById('screenshotNotification');
+    if (screenshotNotification) {
+        screenshotNotification.style.display = 'flex';
+        // Hide after 3 seconds
+        setTimeout(() => {
+            screenshotNotification.style.display = 'none';
+        }, 3000);
+    }
+    
+    // Show toast notification
+    if (typeof showToast === 'function') {
+        showToast('Screenshot captured');
+    }
+};
+
+// Center camera - reset pan position to center - explicitly attach to window for global access
+window.centerCamera = function centerCamera() {
     const cctvFeed = document.getElementById('cctvFeed');
     const positionIndicator = document.getElementById('cameraPosition');
     const cctvVideo = document.getElementById('cctvVideo');
@@ -691,7 +675,7 @@ function centerCamera() {
     if (typeof showToast === 'function') {
         showToast('Camera centered');
     }
-}
+};
 
 // ========== ENVIRONMENT CONTROL FUNCTIONS ==========
 

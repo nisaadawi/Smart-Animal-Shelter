@@ -489,10 +489,12 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
         return;
     }
 
-    // Calculate SVG circle values for circular progress meter (larger size)
-    const radius = 120;
+    // Calculate SVG circle values for circular progress meter (responsive)
+    // Use viewBox for responsive scaling - base size is 300x300
     const svgSize = 300;
+    const radius = 120;
     const center = svgSize / 2;
+    const strokeWidth = 20;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (mealPercent / 100) * circumference;
     const initialOffset = circumference; // Start from 0%
@@ -536,14 +538,14 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                             <div class="meal-meter-container">
                                 <div class="circular-meter-shadow food-level-${foodStatus}"></div>
                                 <div class="circular-meter">
-                                    <svg class="circular-meter-svg" width="${svgSize}" height="${svgSize}">
+                                    <svg class="circular-meter-svg" viewBox="0 0 ${svgSize} ${svgSize}" preserveAspectRatio="xMidYMid meet">
                                         <circle
                                             class="circular-meter-background"
                                             cx="${center}"
                                             cy="${center}"
                                             r="${radius}"
                                             stroke="rgba(99, 102, 241, 0.1)"
-                                            stroke-width="20"
+                                            stroke-width="${strokeWidth}"
                                             fill="none"
                                         />
                                         <circle
@@ -552,11 +554,11 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                                             cy="${center}"
                                             r="${radius}"
                                             stroke="url(#gradient-${speciesFilter})"
-                                            stroke-width="20"
+                                            stroke-width="${strokeWidth}"
                                             fill="none"
                                             stroke-linecap="round"
                                             stroke-dasharray="${circumference}"
-                                            stroke-dashoffset="${initialOffset}"
+                                            stroke-dashoffset="${circumference}"
                                             style="--circumference: ${circumference}; --target-offset: ${offset};"
                                             transform="rotate(-90 ${center} ${center})"
                                         />
@@ -749,8 +751,13 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
             progressCircle.style.setProperty('--circumference', circumference.toString());
             progressCircle.style.setProperty('--target-offset', offset.toString());
 
-            // Trigger the animation by adding the animation style
-            progressCircle.style.animation = 'animateProgress 1.5s ease-out forwards';
+            // Ensure initial state
+            progressCircle.style.strokeDashoffset = circumference.toString();
+            
+            // Trigger the animation by adding the animate class
+            requestAnimationFrame(() => {
+                progressCircle.classList.add('animate');
+            });
 
             // Animate the counter from 0 to target percentage
             const duration = 1500; // 1.5 seconds
