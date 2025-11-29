@@ -1,5 +1,6 @@
 // Alerts page functionality
 let alertsInitialized = false;
+let currentAlertSpecies = 'All';
 
 function initializeAlerts() {
     if (alertsInitialized) {
@@ -12,12 +13,17 @@ function initializeAlerts() {
     console.log('typeof animalDatabase:', typeof animalDatabase);
     console.log('typeof severityMeta:', typeof severityMeta);
     console.log('typeof alertFilters:', typeof alertFilters);
-    console.log('typeof renderAlerts:', typeof renderAlerts);
     
     try {
         console.log('Calling renderAlertsPage()...');
         renderAlertsPage();
         console.log('renderAlertsPage() completed successfully');
+        
+        // Update header stats if function exists
+        if (typeof updateHeaderStats === 'function') {
+            updateHeaderStats();
+        }
+        
         alertsInitialized = true;
     } catch (error) {
         console.error('=== ERROR IN initializeAlerts ===');
@@ -42,6 +48,16 @@ function initializeAlerts() {
         }
     }
     console.log('=== ALERTS INITIALIZATION END ===');
+}
+
+function filterAlertsBySpecies(species) {
+    currentAlertSpecies = species;
+    document.querySelectorAll('.species-tab').forEach(t => t.classList.remove('active'));
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+    renderAlertsPage();
+    updateAlertBadge();
 }
 
 function getAllAnimalsForAlerts() {
@@ -79,9 +95,8 @@ function renderAlertsToolbar(allAlerts) {
 
     toolbar.innerHTML = `
         <div class="alert-filters">${filterButtons}</div>
-        <div style="font-weight:700; color:var(--text-secondary);">Filters active: ${alertFilters.size}</div>
+        <div class="filter-status">${alertFilters.size} filter${alertFilters.size !== 1 ? 's' : ''} active</div>
     `;
-    console.log('Toolbar rendered');
 }
 
 function renderAlertsSummary(allAlerts) {
@@ -100,19 +115,24 @@ function renderAlertsSummary(allAlerts) {
 
     summary.innerHTML = `
         <div class="alert-summary-card">
-            <div class="label">Open Alerts</div>
+            <div class="label">Total Alerts</div>
             <div class="value">${allAlerts.length}</div>
-            <div class="meta">${critical} requiring response</div>
+            <div class="meta">${critical > 0 ? `${critical} need attention` : 'All clear'}</div>
         </div>
         <div class="alert-summary-card">
-            <div class="label">Severity Mix</div>
-            <div class="value">${urgent}/${moderate}/${routine}</div>
-            <div class="meta">Urgent / Moderate / Routine</div>
+            <div class="label">Urgent</div>
+            <div class="value" style="color: var(--danger);">${urgent}</div>
+            <div class="meta">Requires immediate action</div>
         </div>
         <div class="alert-summary-card">
-            <div class="label">Active Filters</div>
-            <div class="value">${alertFilters.size}</div>
-            <div class="meta">${Array.from(alertFilters).map(s => severityMeta[s].label).join(', ')}</div>
+            <div class="label">Moderate</div>
+            <div class="value" style="color: var(--warning);">${moderate}</div>
+            <div class="meta">Monitor closely</div>
+        </div>
+        <div class="alert-summary-card">
+            <div class="label">Routine</div>
+            <div class="value" style="color: var(--primary);">${routine}</div>
+            <div class="meta">Scheduled items</div>
         </div>
     `;
 }
@@ -132,6 +152,38 @@ function toggleAlertFilter(severity) {
     renderAlertsPage();
 }
 
+// Count all alerts and update sidebar badge
+function updateAlertBadge() {
+    const allAnimals = Object.values(animalDatabase).flat();
+    let totalAlerts = 0;
+    
+    allAnimals.forEach(animal => {
+        // Count regular alerts
+        totalAlerts += (animal.alerts || []).length;
+        
+        // Count behavioral alerts
+        const behaviorAlert = animal.behaviorProfile?.alert;
+        if (behaviorAlert && behaviorAlert !== 'AI assistant calibrating signals…') {
+            totalAlerts += 1;
+        }
+    });
+    
+    // Add routine alerts (currently 1)
+    totalAlerts += 1;
+    
+    // Update badge in sidebar
+    const alertBadge = document.getElementById('alertBadge');
+    if (alertBadge) {
+        alertBadge.textContent = totalAlerts;
+        // Hide badge if no alerts
+        if (totalAlerts === 0) {
+            alertBadge.style.display = 'none';
+        } else {
+            alertBadge.style.display = 'flex';
+        }
+    }
+}
+
 // Render alerts page
 function renderAlertsPage() {
     console.log('🚨🚨🚨 RENDER ALERTS PAGE CALLED 🚨🚨🚨');
@@ -149,13 +201,33 @@ function renderAlertsPage() {
         return;
     }
     
-    console.log('🔵 Calling getAllAnimalsForAlerts()...');
-    const allAnimals = getAllAnimalsForAlerts();
-    console.log(`🔵 Found ${allAnimals.length} animals`);
+    let animalsToProcess = Object.values(animalDatabase).flat();
+    
+    // Filter by species if not 'All'
+    if (currentAlertSpecies !== 'All') {
+        // Map species names from tab to database keys
+        const speciesMap = {
+            'Goat': 'Goat',
+            'Sugarglider': 'Sugarglider',
+            'Alligator': 'Alligator',
+            'Snail': 'Snail',
+            'Porcupine': 'Porcupine',
+            'Fox': 'Fox'
+        };
+        const dbSpeciesKey = speciesMap[currentAlertSpecies];
+        if (dbSpeciesKey && animalDatabase[dbSpeciesKey]) {
+            animalsToProcess = animalDatabase[dbSpeciesKey];
+        } else {
+            animalsToProcess = [];
+        }
+    }
+    
+    console.log(`🔵 Found ${animalsToProcess.length} animals to process`);
     
     const alerts = [];
 
-    allAnimals.forEach(animal => {
+    animalsToProcess.forEach(animal => {
+        // Add regular alerts
         (animal.alerts || []).forEach(alertText => {
             const severity = animal.health === 'danger' ? 'urgent' : 'moderate';
             alerts.push({
@@ -166,20 +238,45 @@ function renderAlertsPage() {
                 animalId: animal.id,
                 location: animal.tracking?.location || 'Habitat floor',
                 health: animal.health,
-                requiresAction: severity !== 'routine'
+                requiresAction: severity !== 'routine',
+                species: animal.species
             });
         });
+        
+        // Add behavioral alerts
+        const behaviorAlert = animal.behaviorProfile?.alert;
+        if (behaviorAlert && behaviorAlert !== 'AI assistant calibrating signals…') {
+            // Remove "AI: " prefix if present
+            const cleanMessage = behaviorAlert.startsWith('AI: ') 
+                ? behaviorAlert.substring(4) 
+                : behaviorAlert;
+            alerts.push({
+                severity: 'moderate',
+                message: cleanMessage,
+                animal: `${animal.name} (${animal.species})`,
+                time: 'Just now',
+                animalId: animal.id,
+                location: animal.tracking?.location || 'Habitat floor',
+                health: animal.health,
+                requiresAction: true,
+                type: 'behavioral',
+                species: animal.species
+            });
+        }
     });
 
-    // Add routine alerts
-    alerts.push({
-        severity: 'routine',
-        message: 'Fox vaccination due next week',
-        animal: 'Foxes',
-        time: 'Today',
-        location: 'Clinic dashboard',
-        requiresAction: false
-    });
+    // Add routine alerts only when showing 'All' species
+    if (currentAlertSpecies === 'All') {
+        alerts.push({
+            severity: 'routine',
+            message: 'Fox vaccination due next week',
+            animal: 'Foxes',
+            time: 'Today',
+            location: 'Clinic dashboard',
+            requiresAction: false,
+            species: 'Fox'
+        });
+    }
 
     console.log(`🔵 Generated ${alerts.length} total alerts`);
     console.log('🔵 AlertFilters:', alertFilters);
@@ -216,6 +313,7 @@ function renderAlertsPage() {
     console.log('🔵 Rendering alert items...');
     grid.innerHTML = visibleAlerts.map(alert => {
         const meta = severityMeta[alert.severity] || {};
+        const alertTypeLabel = alert.type === 'behavioral' ? '<span class="alert-tag" style="background: rgba(14, 165, 233, 0.12); color: #0ea5e9; border: 1px solid rgba(14, 165, 233, 0.25);">🧩 Behavioral</span>' : '';
         return `
             <div class="alert-item ${alert.severity}">
                 <div class="alert-header">
@@ -223,18 +321,15 @@ function renderAlertsPage() {
                     <span class="alert-time">${alert.time}</span>
                 </div>
                 <div class="alert-message">${alert.message}</div>
-                <div class="alert-animal">${alert.animal}</div>
+                <div class="alert-animal">🐾 ${alert.animal}</div>
                 <div class="alert-meta">
+                    ${alertTypeLabel}
                     <span class="alert-tag">📍 ${alert.location || 'Shelter grounds'}</span>
-                    <span class="alert-tag">❤️ Status: ${alert.health ? alert.health.toUpperCase() : 'OK'}</span>
-                </div>
-                <div class="alert-progress">
-                    <div class="alert-progress-fill" style="--progress:${meta.progress || '60%'}"></div>
+                    ${alert.health ? `<span class="alert-tag">❤️ ${alert.health.toUpperCase()}</span>` : ''}
                 </div>
                 ${alert.animalId ? `
                     <div class="alert-actions">
-                        <button class="btn btn-primary" onclick="openModal(${alert.animalId})">View Details</button>
-                        <button class="btn btn-success" onclick="acknowledgeAlert(this)">Acknowledge</button>
+                        <button class="btn btn-success" onclick="acknowledgeAlert(this)">✓ Acknowledge</button>
                     </div>
                 ` : ''}
             </div>
@@ -248,7 +343,10 @@ function acknowledgeAlert(btn) {
     showToast('✅ Alert acknowledged');
     setTimeout(() => {
         btn.closest('.alert-item').remove();
-        updateDashboardStats();
+        if (typeof updateDashboardStats === 'function') {
+            updateDashboardStats();
+        }
+        updateAlertBadge();
     }, 500);
 }
 
