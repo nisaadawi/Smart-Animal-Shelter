@@ -119,19 +119,19 @@ function renderAlertsSummary(allAlerts) {
             <div class="value">${allAlerts.length}</div>
             <div class="meta">${critical > 0 ? `${critical} need attention` : 'All clear'}</div>
         </div>
-        <div class="alert-summary-card">
+        <div class="alert-summary-card summary-urgent">
             <div class="label">Urgent</div>
-            <div class="value" style="color: var(--danger);">${urgent}</div>
+            <div class="value">${urgent}</div>
             <div class="meta">Requires immediate action</div>
         </div>
-        <div class="alert-summary-card">
+        <div class="alert-summary-card summary-moderate">
             <div class="label">Moderate</div>
-            <div class="value" style="color: var(--warning);">${moderate}</div>
+            <div class="value">${moderate}</div>
             <div class="meta">Monitor closely</div>
         </div>
-        <div class="alert-summary-card">
+        <div class="alert-summary-card summary-routine">
             <div class="label">Routine</div>
-            <div class="value" style="color: var(--primary);">${routine}</div>
+            <div class="value">${routine}</div>
             <div class="meta">Scheduled items</div>
         </div>
     `;

@@ -307,6 +307,19 @@
     margin-bottom: 8px;
 }
 
+/* Color-coded labels */
+.alert-summary-card.summary-urgent .label {
+    color: #ef4444;
+}
+
+.alert-summary-card.summary-moderate .label {
+    color: #f59e0b;
+}
+
+.alert-summary-card.summary-routine .label {
+    color: var(--primary);
+}
+
 .alert-summary-card .value {
     font-size: 32px;
     font-weight: 900;
@@ -321,6 +334,75 @@
 
 .alert-summary-card:hover .value {
     transform: scale(1.1);
+}
+
+/* Urgent Summary Card - Red */
+.alert-summary-card.summary-urgent .value {
+    background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.alert-summary-card.summary-urgent::before {
+    background: linear-gradient(90deg, 
+        #ef4444, 
+        #dc2626, 
+        #ef4444);
+}
+
+.alert-summary-card.summary-urgent:hover {
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 
+        0 8px 24px rgba(239, 68, 68, 0.15),
+        0 4px 12px rgba(220, 38, 38, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Moderate Summary Card - Orange/Yellow */
+.alert-summary-card.summary-moderate .value {
+    background: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.alert-summary-card.summary-moderate::before {
+    background: linear-gradient(90deg, 
+        #f59e0b, 
+        #d97706, 
+        #f59e0b);
+}
+
+.alert-summary-card.summary-moderate:hover {
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow: 
+        0 8px 24px rgba(245, 158, 11, 0.15),
+        0 4px 12px rgba(217, 119, 6, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Routine Summary Card - Purple/Blue */
+.alert-summary-card.summary-routine .value {
+    background: linear-gradient(135deg, var(--primary), var(--purple), #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.alert-summary-card.summary-routine::before {
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+}
+
+.alert-summary-card.summary-routine:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.15),
+        0 4px 12px rgba(139, 92, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .alert-summary-card .meta {
