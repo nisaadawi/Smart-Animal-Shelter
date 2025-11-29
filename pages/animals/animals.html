@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawShelter - Animals Management</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="animals.css">
     <link rel="stylesheet" href="../../css/modal.css">
@@ -76,7 +79,14 @@
                         <div class="species-tab" onclick="filterSpecies('Fox')">🦊 Foxes</div>
                     </div>
 
-                    <div class="animals-grid" id="animalsGrid"></div>
+                    <div class="animals-table-header">
+                        <h2 class="animals-section-title">Animals Management</h2>
+                        <button class="btn-edit-animals" onclick="editAnimalsList()" title="Edit Animals List">
+                            <span class="edit-icon">✏️</span>
+                            <span>Edit</span>
+                        </button>
+                    </div>
+                    <div class="animals-table-container" id="animalsTableContainer"></div>
                 </section>
             </div>
         </main>
@@ -104,9 +114,21 @@
                     <h3 class="notes-title">⚠️ Active Alerts</h3>
                     <div id="modalAlerts"></div>
                 </div>
+
+                <div id="behaviorNotesSection" class="behavior-notes-section" style="display: none;">
+                    <div class="behavior-notes-header">
+                        <div class="behavior-notes-title">
+                            <span class="behavior-icon">⭐</span>
+                            <span>Behavior Notes</span>
+                        </div>
+                        <div class="behavior-notes-subtitle">Temperament, stressors & enrichment</div>
+                    </div>
+                    <div id="behaviorNotesContent"></div>
+                </div>
             </div>
 
             <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-success" onclick="openHealthMonitor()">❤️ View Health Details</button>
                 <button class="btn btn-primary" onclick="window.location.href='../tracking/tracking.html'; closeModal();">📍 Track Location</button>
             </div>
         </div>

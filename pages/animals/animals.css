@@ -397,9 +397,521 @@
     
     .animal-card {
         border-radius: var(--radius-lg);
-    }
-    
+}
+
     .animal-image-wrapper {
         height: 220px;
+    }
+}
+
+/* PROFESSIONAL TABLE LAYOUT */
+.animals-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.animals-section-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 0;
+}
+
+.btn-edit-animals {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95), 
+        rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-edit-animals:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-icon {
+    font-size: 16px;
+}
+
+.animals-table-container {
+    margin-bottom: 32px;
+}
+
+.animals-table-wrapper {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    overflow-x: auto;
+    position: relative;
+}
+
+.animals-table-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.animals-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.animals-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.animals-table thead th {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.08), 
+        rgba(139, 92, 246, 0.06));
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    white-space: nowrap;
+}
+
+.animals-table thead th:first-child {
+    border-top-left-radius: var(--radius-md);
+}
+
+.animals-table thead th:last-child {
+    border-top-right-radius: var(--radius-md);
+}
+
+.animals-table tbody tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.animals-table tbody tr:hover {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.05), 
+        rgba(139, 92, 246, 0.03));
+    transform: translateX(4px);
+}
+
+.animals-table tbody tr.animal-behavior-row:hover {
+    transform: none;
+    background: transparent;
+}
+
+.animals-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.animals-table tbody td {
+    padding: 20px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+/* Animal Table Image */
+.col-image {
+    width: 80px;
+}
+
+.animal-table-image {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-animal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Table Column Styles */
+.animal-table-name,
+.animal-table-species,
+.animal-table-dob,
+.animal-table-sex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.table-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: var(--radius-sm);
+}
+
+.name-value,
+.species-value,
+.age-value,
+.sex-value {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.id-tag,
+.breed-value,
+.dob-value {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Health Status Badge */
+.health-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-status-badge.clickable {
+    cursor: pointer;
+}
+
+.health-status-badge.clickable:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.health-status-badge.good {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.health-status-badge.warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.health-status-badge.danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Table Actions */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-table {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9), 
+        rgba(248, 250, 252, 0.9));
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-table:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-table.btn-view:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+}
+
+.btn-table.btn-track:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+}
+
+/* Inline Behavior Notes in Table */
+.animal-behavior-row {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98), 
+        rgba(248, 250, 252, 0.96));
+    border-top: none !important;
+}
+
+.animal-behavior-row:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98), 
+        rgba(248, 250, 252, 0.96));
+    transform: none;
+}
+
+.animal-behavior-row td {
+    padding: 0 !important;
+    border-top: none;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.behavior-notes-inline {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.03), 
+        rgba(139, 92, 246, 0.02));
+    border-left: 3px solid var(--primary);
+    margin: 0 20px 12px 20px;
+    border-radius: var(--radius-md);
+}
+
+.behavior-notes-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.behavior-notes-title-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.behavior-subtitle {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.behavior-notes-content-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.behavior-notes-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.behavior-icon {
+    font-size: 18px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+.animals-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-xl);
+    border: 1px dashed rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive Table */
+@media (max-width: 1024px) {
+    .animals-table-wrapper {
+        padding: 16px;
+    }
+    
+    .animals-table thead th,
+    .animals-table tbody td {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .animals-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .animals-section-title {
+        font-size: 20px;
+    }
+    
+    .btn-edit-animals {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .animals-table-container {
+        margin-bottom: 24px;
+    }
+    
+    .animals-table-wrapper {
+        padding: 12px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .animals-table {
+        font-size: 12px;
+    }
+    
+    .animals-table thead th {
+        font-size: 10px;
+        padding: 12px 10px;
+    }
+    
+    .animals-table tbody td {
+        padding: 16px 10px;
+    }
+    
+    .name-value,
+    .species-value,
+    .age-value,
+    .sex-value {
+        font-size: 13px;
+    }
+    
+    .id-tag,
+    .breed-value,
+    .dob-value {
+        font-size: 11px;
+    }
+    
+    .table-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+    
+    .animal-table-image {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .behavior-notes-inline {
+        padding: 16px;
+        margin: 0 10px 10px 10px;
+    }
+    
+    .behavior-notes-header-inline {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

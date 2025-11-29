@@ -11,6 +11,7 @@ function openModal(id) {
 
     renderTrackingDetails(animal);
     renderAlerts(animal);
+    renderBehaviorNotes(animal);
 
     // Hide duplicate sensor section since it's now in tracking details
     const modalSensors = document.getElementById('modalSensors');
@@ -52,6 +53,16 @@ function supervisorAlert() {
     showToast(`📢 Supervisor has been alerted about ${selectedAnimal.name}`);
 }
 
+function openHealthMonitor() {
+    if (selectedAnimal) {
+        // Store the selected animal ID in sessionStorage for Health Monitor to pick up
+        sessionStorage.setItem('selectedAnimalId', selectedAnimal.id);
+        sessionStorage.setItem('selectedAnimalSpecies', selectedAnimal.species);
+        closeModal();
+        window.location.href = '../health/health.html';
+    }
+}
+
 function renderTrackingDetails(animal) {
     const trackingInfo = document.getElementById('trackingInfo');
     if (!trackingInfo) return;
@@ -85,31 +96,6 @@ function renderTrackingDetails(animal) {
         { label: 'LAST CHARGED', value: animal.tracking.lastCharge || 'today', icon: '🔋', isLastCharged: true }
     ];
     
-    // Health metrics grid (only important ones)
-    const healthMetrics = [];
-    if (animal.sensors) {
-        const prioritySensors = ['heartRate', 'temp', 'activity', 'airQuality', 'weight'];
-        prioritySensors.forEach(key => {
-            if (animal.sensors[key]) {
-                const sensor = animal.sensors[key];
-                const value = sensor.unit ? `${sensor.value}${sensor.unit}` : sensor.value;
-                const colorMap = {
-                    'heartRate': '#ef4444',
-                    'temp': '#ec4899',
-                    'activity': '#10b981',
-                    'airQuality': '#06b6d4',
-                    'weight': '#f59e0b'
-                };
-                healthMetrics.push({
-                    label: sensor.label.toUpperCase(),
-                    value: value,
-                    icon: sensor.icon,
-                    color: colorMap[key] || '#64748b'
-                });
-            }
-        });
-    }
-
     // Recent Activity from notes
     let recentActivityHtml = '';
     if (animal.notes && animal.notes.length > 0) {
@@ -165,21 +151,6 @@ function renderTrackingDetails(animal) {
                 </div>
             </div>
             
-            <!-- Health Metrics Grid -->
-            ${healthMetrics.length > 0 ? `
-                <div class="health-metrics-grid">
-                    ${healthMetrics.map(metric => `
-                        <div class="health-metric-card" style="--metric-color: ${metric.color}">
-                            <div class="health-card-icon">${metric.icon}</div>
-                            <div class="health-card-content">
-                                <div class="health-card-label">${metric.label}</div>
-                                <div class="health-card-value">${metric.value}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-            
             <!-- Recent Activity -->
             ${recentActivityHtml}
         </div>
@@ -233,6 +204,54 @@ function renderAlerts(animal) {
             </div>
         </div>
     `;
+}
+
+function renderBehaviorNotes(animal) {
+    const behaviorSection = document.getElementById('behaviorNotesSection');
+    const behaviorContent = document.getElementById('behaviorNotesContent');
+    if (!behaviorSection || !behaviorContent) return;
+
+    const behaviorNotes = animal.behaviorNotes || null;
+    const temperament = animal.temperament || null;
+    const aiAlert = animal.aiAlert || null;
+
+    if (!behaviorNotes && !aiAlert) {
+        behaviorSection.style.display = 'none';
+        behaviorContent.innerHTML = '';
+        return;
+    }
+
+    behaviorSection.style.display = 'block';
+    
+    let html = '<div class="behavior-notes-content-wrapper">';
+    
+    if (temperament) {
+        html += `
+            <div class="behavior-tag">
+                ${temperament}
+            </div>
+        `;
+    }
+    
+    if (behaviorNotes) {
+        html += `
+            <div class="behavior-notes-text">
+                <strong>${animal.name}:</strong> ${behaviorNotes}
+            </div>
+        `;
+    }
+    
+    if (aiAlert) {
+        html += `
+            <div class="behavior-ai-alert">
+                <span class="ai-label">AI:</span>
+                <span class="ai-message">${aiAlert}</span>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    behaviorContent.innerHTML = html;
 }
 
 function acknowledgeModalAlert(btn) {

@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawShelter - Health Monitor</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="health.css">
     <link rel="stylesheet" href="../feeding/feeding.css">
@@ -69,25 +72,41 @@
             <div class="content">
                 <!-- HEALTH SECTION -->
                 <section class="page-section active" id="health-section">
-                    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 28px; border-radius: var(--radius-xl); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.5);">
-                        <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 800; color: var(--text-primary);">💉 Vaccination Schedule</h3>
-                        <div class="schedule-grid">
-                            <div class="schedule-item">
-                                <div class="schedule-time">🩺</div>
-                                <div class="schedule-details">
-                                    <div class="schedule-animal">Foxes - Rabies Vaccine</div>
-                                    <div class="schedule-meal">Due: Next week</div>
-                                </div>
-                                <div class="schedule-status status-pending">Upcoming</div>
+                    <!-- Species Tabs -->
+                    <div class="species-tabs-container">
+                        <div class="species-tabs">
+                            <div class="species-tab active" onclick="filterHealthSpecies('Goat')">🐐 Goats</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Alligator')">🐊 Alligators</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Snail')">🐌 Snails</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Porcupine')">🦔 Porcupines</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Fox')">🦊 Foxes</div>
+                        </div>
+                    </div>
+
+                    <!-- Animal Selection Grid (if no animal selected) -->
+                    <div id="animalSelectionGrid" class="animals-grid"></div>
+
+                    <!-- Detailed Health View (if animal selected) -->
+                    <div id="healthDetailView" class="health-detail-view" style="display: none;">
+                        <!-- Animal Header with Integrated Back Button -->
+                        <div class="health-animal-header" id="healthAnimalHeader">
+                            <!-- Back button and header content will be rendered by JavaScript -->
+                        </div>
+                        
+                        <!-- Health Metrics Grid -->
+                        <div class="health-stats-grid" id="healthMetricsGrid"></div>
+
+                        <!-- Health Charts -->
+                        <div class="health-charts-grid" id="healthChartsGrid"></div>
+
+                        <!-- Vaccination Schedule -->
+                        <div class="health-schedule-card">
+                            <div class="health-schedule-header">
+                                <span class="health-schedule-icon">💉</span>
+                                <h3 class="health-schedule-title">Vaccination Schedule</h3>
                             </div>
-                            <div class="schedule-item">
-                                <div class="schedule-time">💊</div>
-                                <div class="schedule-details">
-                                    <div class="schedule-animal">Nanny - Antibiotics</div>
-                                    <div class="schedule-meal">Twice daily for 5 days</div>
-                                </div>
-                                <div class="schedule-status status-pending">Active</div>
-                            </div>
+                            <div class="schedule-grid" id="vaccinationSchedule"></div>
                         </div>
                     </div>
                 </section>
@@ -101,5 +120,7 @@
     <script src="../data.js"></script>
     <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script src="health.js"></script>
 </body>
 </html>
