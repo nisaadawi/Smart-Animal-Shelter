@@ -62,8 +62,8 @@ body {
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
-    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: margin-left;
+    transition: none;
+    will-change: auto;
     min-height: 100vh;
     padding-top: 0; /* No fixed header on dashboard */
 }
@@ -538,6 +538,11 @@ body {
 .page-section.active {
     display: block;
     animation: fadeInUp 0.4s ease;
+}
+
+/* Exclude feeding page from animation */
+#feeding-section.active {
+    animation: none;
 }
 
 @keyframes fadeInUp {

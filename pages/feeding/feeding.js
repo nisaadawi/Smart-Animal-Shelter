@@ -17,12 +17,12 @@ const speciesPortionInfo = {
 
 // Daily food intake recommendations (per day)
 const speciesDailyIntake = {
-    'Goat': { amount: 2000, unit: 'g', meals: 2 },
-    'Sugarglider': { amount: 150, unit: 'g', meals: 3 },
-    'Alligator': { amount: 3000, unit: 'g', meals: 1 },
-    'Snail': { amount: 50, unit: 'g', meals: 1 },
-    'Porcupine': { amount: 400, unit: 'g', meals: 2 },
-    'Fox': { amount: 600, unit: 'g', meals: 2 }
+    'Goat': { amount: 2000, unit: 'g', meals: 3 },
+    'Sugarglider': { amount: 150, unit: 'g', meals: 4 },
+    'Alligator': { amount: 3000, unit: 'g', meals: 3 },
+    'Snail': { amount: 50, unit: 'g', meals: 3 },
+    'Porcupine': { amount: 400, unit: 'g', meals: 3 },
+    'Fox': { amount: 600, unit: 'g', meals: 3 }
 };
 
 // Normal intake per kg of animal weight (g/kg per day)
@@ -46,13 +46,14 @@ const speciesQuantity = {
 };
 
 // Today's food added (in grams) - this would normally come from a database
+// Values are capped to be less than total daily intake
 let todayFoodAdded = {
-    'Goat': 3500,
-    'Sugarglider': 450,
-    'Alligator': 7200,
-    'Snail': 280,
-    'Porcupine': 950,
-    'Fox': 1800
+    'Goat': 1500,      // Less than 2000g total
+    'Sugarglider': 100, // Less than 150g total
+    'Alligator': 2500,  // Less than 3000g total
+    'Snail': 30,        // Less than 50g total
+    'Porcupine': 300,   // Less than 400g total
+    'Fox': 400          // Less than 600g total
 };
 
 // Auto feeder schedules (feeding times per species with amounts) - can be edited
@@ -177,6 +178,110 @@ function getStatusColor(status) {
     }
 }
 
+// Render animal selection HTML
+function renderAnimalSelection(activeSpecies = null, displayName = null, icon = null) {
+    const speciesList = ['Goat', 'Sugarglider', 'Alligator', 'Snail', 'Porcupine', 'Fox'];
+    const speciesIcons = {
+        'Goat': '🐐',
+        'Sugarglider': '🐿️',
+        'Alligator': '🐊',
+        'Snail': '🐌',
+        'Porcupine': '🦔',
+        'Fox': '🦊'
+    };
+    const speciesDisplayNames = {
+        'Goat': 'Goats',
+        'Sugarglider': 'Sugar Gliders',
+        'Alligator': 'Alligators',
+        'Snail': 'Snails',
+        'Porcupine': 'Porcupines',
+        'Fox': 'Foxes'
+    };
+
+    activeSpecies = activeSpecies || currentSelectedSpecies || 'Goat';
+    displayName = displayName || speciesDisplayNames[activeSpecies] || activeSpecies;
+    icon = icon || speciesIcons[activeSpecies] || '';
+    
+    // Get food levels for all species and sort by priority (most critical first)
+    const speciesWithLevels = speciesList.map(species => {
+        const mealPercent = getSpeciesMealPercent(species);
+        const status = getFoodStatus(mealPercent);
+        return { species, mealPercent, status };
+    });
+    
+    // Sort: very-low first (most critical), then low, then good, then excellent (least critical)
+    speciesWithLevels.sort((a, b) => {
+        const priority = { 'very-low': 0, 'low': 1, 'good': 2, 'excellent': 3 };
+        const priorityDiff = priority[a.status] - priority[b.status];
+        
+        // If same priority, sort by mealPercent (lower is more critical)
+        if (priorityDiff === 0) {
+            return a.mealPercent - b.mealPercent;
+        }
+        
+        return priorityDiff;
+    });
+    
+    const createTabHTML = (item) => {
+        const { species, mealPercent, status } = item;
+        const statusColor = getStatusColor(status);
+        const isActive = species === activeSpecies;
+        const warningEmoji = (status === 'very-low' || status === 'low') ? '⚠️ ' : '';
+        const pulseClass = (status === 'very-low') ? 'food-low-pulse' : '';
+        
+        // Get status label
+        const statusLabel = status === 'very-low' ? 'Very Low' : 
+                           status === 'low' ? 'Low' : 
+                           status === 'good' ? 'Good' : 'Excellent';
+        
+        return `
+            <div class="species-tab ${isActive ? 'active' : ''} ${pulseClass}" 
+                 onclick="filterFeedersBySpecies('${species}')" 
+                 data-species="${species}"
+                 data-status="${status}"
+                 style="${isActive ? `--status-color: ${statusColor};` : ''}"
+                 title="${speciesDisplayNames[species]}: ${statusLabel} (${Math.round(mealPercent)}%)">
+                <div class="species-tab-content-wrapper">
+                    <span class="species-tab-content">
+                        ${speciesIcons[species]} ${speciesDisplayNames[species]}
+                    </span>
+                    <span class="species-food-badge" style="background-color: ${statusColor}20; color: ${statusColor};">
+                        <span class="species-status-dot" style="background-color: ${statusColor}"></span>
+                        ${warningEmoji}${Math.round(mealPercent)}%
+                    </span>
+                </div>
+                <div class="species-progress-bar">
+                    <div class="species-progress-fill" style="width: ${mealPercent}%; background-color: ${statusColor};"></div>
+                </div>
+            </div>
+        `;
+    };
+    
+    // Split into three rows: 2 per row
+    const firstRow = speciesWithLevels.slice(0, 2);
+    const secondRow = speciesWithLevels.slice(2, 4);
+    const thirdRow = speciesWithLevels.slice(4);
+    
+    return `
+        <div class="animal-selection-card">
+            <div class="card-header">
+                <h3 class="card-title">Animal Selection</h3>
+            </div>
+            <div class="animal-selection-content">
+                <div class="species-tabs-row">
+                    ${firstRow.map(createTabHTML).join('')}
+                </div>
+                <div class="species-tabs-row">
+                    ${secondRow.map(createTabHTML).join('')}
+                </div>
+                <div class="species-tabs-row">
+                    ${thirdRow.map(createTabHTML).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Update species tabs with status indicators
 function updateSpeciesTabs() {
     const speciesList = ['Goat', 'Sugarglider', 'Alligator', 'Snail', 'Porcupine', 'Fox'];
@@ -197,12 +302,16 @@ function updateSpeciesTabs() {
         'Fox': 'Foxes'
     };
 
-    const tabsContainer = document.querySelector('.species-tabs');
+    const tabsContainer = document.querySelector('.species-tabs-container');
     if (!tabsContainer) return;
 
     const activeSpecies = currentSelectedSpecies || 'Goat';
     
-    tabsContainer.innerHTML = speciesList.map(species => {
+    // Split species into 2 rows (3 per row)
+    const firstRow = speciesList.slice(0, 3);
+    const secondRow = speciesList.slice(3);
+    
+    const createTabHTML = (species) => {
         const mealPercent = getSpeciesMealPercent(species);
         const status = getFoodStatus(mealPercent);
         const statusColor = getStatusColor(status);
@@ -217,7 +326,16 @@ function updateSpeciesTabs() {
                 ${warningEmoji}${speciesIcons[species]} ${speciesDisplayNames[species]}
             </div>
         `;
-    }).join('');
+    };
+    
+    tabsContainer.innerHTML = `
+        <div class="species-tabs-row">
+            ${firstRow.map(createTabHTML).join('')}
+        </div>
+        <div class="species-tabs-row">
+            ${secondRow.map(createTabHTML).join('')}
+        </div>
+    `;
 }
 
 // Generate schedule list HTML for a species
@@ -245,9 +363,12 @@ function generateScheduleList(species) {
         return '<div class="no-schedule-items">No schedule set for this animal</div>';
     }
 
-    // Get portion info for this species to calculate portions
-    const portionInfo = speciesPortionInfo[species] || { grams: 100, unit: 'g' };
-    const gramsPerPortion = portionInfo.grams;
+    // Get standardized portion info for this species (calculated from daily intake)
+    const dailyIntake = speciesDailyIntake[species] || { amount: 100, unit: 'g', meals: 1 };
+    const totalRequired = dailyIntake.amount;
+    const mealsPerDay = dailyIntake.meals;
+    const gramsPerPortion = mealsPerDay > 0 ? Math.round(totalRequired / mealsPerDay) : totalRequired;
+    const portionInfo = { grams: gramsPerPortion, unit: dailyIntake.unit || 'g' };
 
     // Helper function to render a schedule item
     const renderScheduleItem = (schedule) => {
@@ -457,8 +578,8 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
             icon: '🦊',
             species: 'Fox',
             status: 'active',
-            foodLevel: 85,
-            mealPercent: 92,
+            foodLevel: 20,
+            mealPercent: 20,
             nextFeeding: '18:00',
             lastFeeding: '06:00',
             dailyCount: 2,
@@ -471,8 +592,8 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
             icon: '🐊',
             species: 'Alligator',
             status: 'maintenance',
-            foodLevel: 50,
-            mealPercent: 55,
+            foodLevel: 20,
+            mealPercent: 20,
             nextFeeding: '18:00',
             lastFeeding: '06:00',
             dailyCount: 1,
@@ -516,15 +637,23 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
     const displayName = speciesDisplayNames[speciesFilter] || speciesFilter;
     const icon = speciesIcons[speciesFilter] || '';
     const foodName = speciesFoodNames[speciesFilter] || 'Standard Feed';
-    const portionInfo = speciesPortionInfo[speciesFilter] || { grams: 100, unit: 'g' };
     const dailyIntake = speciesDailyIntake[speciesFilter] || { amount: 100, unit: 'g', meals: 1 };
 
     // Get intake information
     const intakePerKg = speciesIntakePerKg[speciesFilter] || 50;
     const quantity = speciesQuantity[speciesFilter] || 1;
-    // Total requirement = daily intake per animal × quantity of animals
-    const totalRequired = dailyIntake.amount * quantity;
-    const todayAdded = todayFoodAdded[speciesFilter] || 0;
+    // Total requirement is now the total food for the day (user input, not multiplied by quantity)
+    const totalRequired = dailyIntake.amount;
+    const mealsPerDay = dailyIntake.meals;
+    
+    // Calculate portion size from total food divided by meals per day (standardized)
+    const calculatedPortionGrams = mealsPerDay > 0 ? Math.round(totalRequired / mealsPerDay) : totalRequired;
+    const portionInfo = { grams: calculatedPortionGrams, unit: dailyIntake.unit || 'g' };
+    
+    // Update speciesPortionInfo to match calculated value (for consistency)
+    speciesPortionInfo[speciesFilter] = portionInfo;
+    
+    const todayAdded = Math.min(todayFoodAdded[speciesFilter] || 0, totalRequired); // Cap at total required
     const progressPercent = Math.min(100, Math.round((todayAdded / totalRequired) * 100));
 
     // Initialize portion count if not set
@@ -573,31 +702,37 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
     }
 
     // Calculate SVG circle values for circular progress meter (responsive)
-    // Use viewBox for responsive scaling - base size is 300x300
-    const svgSize = 300;
-    const radius = 120;
+    // Use viewBox for responsive scaling - base size is 180x180 (reduced by 40%)
+    const svgSize = 180;
+    const radius = 72;
     const center = svgSize / 2;
-    const strokeWidth = 20;
+    const strokeWidth = 12;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (mealPercent / 100) * circumference;
     const initialOffset = circumference; // Start from 0%
 
     // Determine food level status and color
-    let foodStatus = 'good';
+    const foodStatus = getFoodStatus(mealPercent);
     let statusLabel = 'Good';
-    let statusColor = '#10b981'; // Green
-    let gradientColors = ['#10b981', '#34d399']; // Green gradient
+    let statusColor = '#3b82f6'; // Blue
+    let gradientColors = ['#3b82f6', '#60a5fa']; // Blue gradient
 
-    if (mealPercent <= 30) {
-        foodStatus = 'low';
-        statusLabel = 'Low';
+    if (foodStatus === 'very-low') {
+        statusLabel = 'Very Low';
         statusColor = '#ef4444'; // Red
         gradientColors = ['#ef4444', '#f87171']; // Red gradient
-    } else if (mealPercent <= 60) {
-        foodStatus = 'moderate';
-        statusLabel = 'Moderate';
-        statusColor = '#f97316'; // Orange
-        gradientColors = ['#f97316', '#fb923c']; // Orange gradient
+    } else if (foodStatus === 'low') {
+        statusLabel = 'Low';
+        statusColor = '#fbbf24'; // Yellow
+        gradientColors = ['#fbbf24', '#fcd34d']; // Yellow gradient
+    } else if (foodStatus === 'good') {
+        statusLabel = 'Good';
+        statusColor = '#3b82f6'; // Blue
+        gradientColors = ['#3b82f6', '#60a5fa']; // Blue gradient
+    } else if (foodStatus === 'excellent') {
+        statusLabel = 'Excellent';
+        statusColor = '#10b981'; // Green
+        gradientColors = ['#10b981', '#34d399']; // Green gradient
     }
 
     // Ensure auto feeder variables are defined (for template string)
@@ -610,10 +745,142 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
     // Render only the selected species as one big content area
     dashboard.innerHTML = `
         <div class="species-feeder-section slide-up-animate" data-species="${speciesFilter}">
-            <div class="species-feeder-content">
-                <div class="meter-control-container">
+            <div class="feeding-layout-container">
+                <!-- LEFT SIDE: Scrollable Content -->
+                <div class="feeding-left-content">
+                    <!-- Manual Feed Controller and Animal Selection Container -->
+                    <div class="manual-feed-animal-selection-container">
+                        <!-- Animal Name Title Row -->
+                        <div class="animal-feeding-title-row">
+                            <div class="animal-selection-title">
+                                <span class="animal-selection-title-icon">${icon}</span>
+                                <span class="animal-selection-title-text">${displayName} Feeding</span>
+                            </div>
+                        </div>
+                        <!-- Cards Row -->
+                        <div class="animal-feeding-cards-row">
+                            <!-- Animal Selection Column -->
+                            <div class="animal-selection-column">
+                                ${renderAnimalSelection(speciesFilter, displayName, icon)}
+                            </div>
+                            <!-- Manual Feed Controller Column -->
+                            <div class="manual-feed-column">
+                            <div class="portion-control-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Manual Feeding Controller</h3>
+                            <button class="edit-control-btn" onclick="toggleEditPortionControl('${speciesFilter}')" id="edit-control-btn-${speciesFilter}">
+                                Edit Amount
+                            </button>
+                        </div>
+                        
+                        <!-- Normal View -->
+                        <div class="portion-control-content" id="portion-control-content-${speciesFilter}">
+                            <div class="portion-info">
+                                <div class="portion-label">1 Portion =</div>
+                                <div class="portion-amount" id="portion-amount-display-${speciesFilter}">${portionInfo.grams}${portionInfo.unit}</div>
+                            </div>
+                            <div class="portion-controls">
+                                <button class="portion-btn minus-btn" onclick="adjustPortions('${speciesFilter}', -1)">−</button>
+                                <div class="portion-count" id="portion-count-${speciesFilter}">${currentPortions}</div>
+                                <button class="portion-btn plus-btn" onclick="adjustPortions('${speciesFilter}', 1)">+</button>
+                            </div>
+                            <div class="portion-total">
+                                Total: <span class="portion-total-amount" id="portion-total-${speciesFilter}">${totalAmount}</span>${portionInfo.unit}
+                            </div>
+                            <div class="portion-daily-info">
+                                <div class="portion-daily-item">
+                                    <span class="portion-daily-label">Total Food Today:</span>
+                                    <span class="portion-daily-value" id="portion-daily-total-${speciesFilter}">${Math.min(todayAdded, totalRequired)}${dailyIntake.unit} / ${totalRequired}${dailyIntake.unit}</span>
+                                </div>
+                                <div class="portion-daily-item">
+                                    <span class="portion-daily-label">Meal Times:</span>
+                                    <span class="portion-daily-value" id="portion-meal-times-${speciesFilter}">${dailyIntake.meals} meal${dailyIntake.meals > 1 ? 's' : ''} per day</span>
+                                </div>
+                            </div>
+                            <div class="feed-button-container">
+                                <button class="feed-button" onclick="feedAnimals('${speciesFilter}')">
+                                    Feed Now
+                                </button>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="auto-feeder-schedule-card">
+                <div class="auto-feeder-header-title">
+                    <h2 class="auto-feeder-title">Auto Feeder Controller for ${displayName} ${icon}</h2>
+                    <div class="auto-feeder-toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-feeder-toggle-${speciesFilter}" ${autoFeederOn ? 'checked' : ''} onchange="toggleAutoFeeder('${speciesFilter}')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">${autoFeederOn ? 'ON' : 'OFF'}</span>
+                    </div>
+                </div>
+                
+                <div class="auto-feeder-info-banner ${autoFeederOn ? 'banner-on' : 'banner-off'}">
+                    <div class="info-banner-text">
+                        ${autoFeederOn 
+                            ? '🛈︎ AUTO FEEDER IS ACTIVE <br> Please configure your feeding schedule with accurate times and portion amounts to ensure proper automatic feeding.' 
+                            : '🛈︎ AUTO FEEDER IS DISABLED <br> Make sure to turn on the toggle to enable the automation.'}
+                    </div>
+                </div>
+                
+                <div class="schedule-content-container">
+                    <div class="schedule-header-actions">
+                        <h3 class="schedule-title">Feeding Schedule</h3>
+                        ${autoFeederOn ? `
+                            <button class="edit-schedule-btn">
+                                Edit Schedule
+                            </button>
+                        ` : ''}
+                    </div>
+                    ${autoFeederOn ? `
+                        <div class="schedule-grid" id="schedule-list-${speciesFilter}">
+                            ${generateScheduleList(speciesFilter)}
+                        </div>
+                    ` : `
+                        <div class="schedule-disabled-message">
+                            <div class="schedule-disabled-icon">🔒</div>
+                            <div class="schedule-disabled-text">Enable auto feeder to view and manage feeding schedule</div>
+                        </div>
+                    `}
+                </div>
+            </div>
+                
+            <div class="feeder-history-card">
+                <div class="card-header">
+                    <h3 class="card-title">Feeding History</h3>
+                </div>
+                <div class="history-filter-container">
+                    <div class="date-filter-group">
+                        <label class="filter-label">Date:</label>
+                        <input type="date" class="date-filter-input" id="history-date-${speciesFilter}" value="" onchange="filterHistoryByDate('${speciesFilter}')">
+                    </div>
+                    <div class="day-filter-group">
+                        <label class="filter-label">Day:</label>
+                        <select class="day-filter-select" id="history-day-${speciesFilter}" onchange="filterHistoryByDay('${speciesFilter}')">
+                            <option value="all" selected>All Days</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="this-week">This Week</option>
+                            <option value="this-month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="history-list" id="history-list-${speciesFilter}">
+                    ${renderFeederHistory(speciesFilter, null, null)}
+                </div>
+            </div>
+            </div>
+                
+            <!-- RIGHT SIDE: Fixed Meal Meter -->
+            <div class="feeding-right-sidebar">
                     <div class="meal-meter-card">
-                        <h3 class="meal-meter-title">Food Level</h3>
+                        <h3 class="meal-meter-title">${displayName}' Food Level</h3>
                         <div class="meal-meter-wrapper">
                             <div class="food-name-container">
                                 <div class="food-name">${foodName}</div>
@@ -666,7 +933,7 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                         <div class="food-progress-section">
                             <div class="food-progress-label">
                                 <span>Today's Food Added</span>
-                                <span class="food-progress-amount" id="food-progress-amount-${speciesFilter}">${todayAdded}${dailyIntake.unit} / ${totalRequired}${dailyIntake.unit}</span>
+                                <span class="food-progress-amount" id="food-progress-amount-${speciesFilter}">${Math.min(todayAdded, totalRequired)}${dailyIntake.unit} / ${totalRequired}${dailyIntake.unit}</span>
                             </div>
                             <div class="food-progress-bar">
                                 <div class="food-progress-fill" id="food-progress-fill-${speciesFilter}" style="width: ${progressPercent}%"></div>
@@ -674,140 +941,43 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
                             <div class="food-progress-percent" id="food-progress-percent-${speciesFilter}">${progressPercent}%</div>
                         </div>
                     </div>
-                    <div class="portion-control-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Manual Feeding Controller</h3>
-                            <button class="edit-control-btn" onclick="toggleEditPortionControl('${speciesFilter}')" id="edit-control-btn-${speciesFilter}">
-                                Edit Amount
-                            </button>
+                    
+                    <!-- Smart Assistant Card -->
+                    <div class="daily-intake-section">
+                        <div class="card-header daily-intake-header">
+                            <h3 class="card-title">🤖 SMART FEEDING ASSISTANT</h3>
+                            <div class="ai-badge">
+                                <span class="ai-spark-icon">✨</span>
+                                <span class="ai-badge-text">AI-Driven</span>
+                            </div>
                         </div>
-                        
-                        <!-- Normal View -->
-                        <div class="portion-control-content" id="portion-control-content-${speciesFilter}">
-                            <div class="portion-info">
-                                <div class="portion-label">1 Portion =</div>
-                                <div class="portion-amount" id="portion-amount-display-${speciesFilter}">${portionInfo.grams}${portionInfo.unit}</div>
-                            </div>
-                            <div class="portion-controls">
-                                <button class="portion-btn minus-btn" onclick="adjustPortions('${speciesFilter}', -1)">−</button>
-                                <div class="portion-count" id="portion-count-${speciesFilter}">${currentPortions}</div>
-                                <button class="portion-btn plus-btn" onclick="adjustPortions('${speciesFilter}', 1)">+</button>
-                            </div>
-                            <div class="portion-total">
-                                Total: <span class="portion-total-amount" id="portion-total-${speciesFilter}">${totalAmount}</span>${portionInfo.unit}
-                            </div>
-                            <div class="feed-button-container">
-                                <button class="feed-button" onclick="feedAnimals('${speciesFilter}')">
-                                    Feed Now
+                        <div class="ai-chat-container">
+                            <div class="ai-chat-input-container">
+                                <input 
+                                    type="text" 
+                                    class="ai-chat-input" 
+                                    id="ai-chat-input-${speciesFilter}" 
+                                    placeholder="Ask me anything about feeding for ${displayName}..."
+                                    onkeypress="if(event.key === 'Enter') submitAIChat('${speciesFilter}')"
+                                >
+                                <button class="ai-chat-submit-btn" onclick="submitAIChat('${speciesFilter}')">
+                                    Send
                                 </button>
                             </div>
-                        </div>
-                        <div class="daily-intake-section">
-                            <div class="card-header daily-intake-header">
-                                <h3 class="card-title">SMART FEEDING ASSISTANT</h3>
-                                <div class="ai-badge">
-                                    <span class="ai-spark-icon">✨</span>
-                                    <span class="ai-badge-text">AI-Driven</span>
-                                </div>
-                            </div>
-                            <div class="ai-chat-container">
-                                <div class="ai-chat-input-container">
-                                    <input 
-                                        type="text" 
-                                        class="ai-chat-input" 
-                                        id="ai-chat-input-${speciesFilter}" 
-                                        placeholder="Ask me anything about feeding for ${displayName}..."
-                                        onkeypress="if(event.key === 'Enter') submitAIChat('${speciesFilter}')"
-                                    >
-                                    <button class="ai-chat-submit-btn" onclick="submitAIChat('${speciesFilter}')">
-                                        Send
-                                    </button>
-                                </div>
-                                <div class="ai-chat-response" id="ai-chat-response-${speciesFilter}">
-                                    <div class="ai-welcome-message">
-                                        <div class="info-label">Information:</div>
-                                        <div class="info-text">
-                                            A normal intake of a <strong>${displayName}</strong> is <strong>${intakePerKg} g</strong> of food per day.
-                                        </div>
-                                        <div class="info-text">
-                                            There are <strong>${quantity} ${displayName}</strong> in the cage, hence the cage requires approximately <strong>${totalRequired}${dailyIntake.unit}</strong> of food per day.
-                                        </div>
-                                        <div class="info-text" style="margin-top: 12px; font-style: italic; opacity: 0.9;">
-                                            Ask me anything about feeding requirements, schedules, or nutrition for ${displayName}!
-                                        </div>
+                            <div class="ai-chat-response" id="ai-chat-response-${speciesFilter}">
+                                <div class="ai-welcome-message">
+                                    <div class="info-label">Information:</div>
+                                    <div class="info-text">
+                                        A normal intake of a <strong>${displayName}</strong> is <strong>${intakePerKg} g</strong> of food per day.
+                                    </div>
+                                    <div class="info-text">
+                                        There are <strong>${quantity} ${displayName}</strong> in the cage, hence the cage requires approximately <strong>${totalRequired}${dailyIntake.unit}</strong> of food per day.
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            
-            <div class="auto-feeder-schedule-card">
-                <div class="auto-feeder-header-title">
-                    <h2 class="auto-feeder-title">Auto Feeder Controller for ${displayName} ${icon}</h2>
-                    <div class="auto-feeder-toggle-container">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="auto-feeder-toggle-${speciesFilter}" ${autoFeederOn ? 'checked' : ''} onchange="toggleAutoFeeder('${speciesFilter}')">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span class="toggle-label">${autoFeederOn ? 'ON' : 'OFF'}</span>
-                    </div>
-                </div>
-                
-                <div class="auto-feeder-info-banner ${autoFeederOn ? 'banner-on' : 'banner-off'}">
-                    <div class="info-banner-text">
-                        ${autoFeederOn 
-                            ? '🛈︎ AUTO FEEDER IS ACTIVE <br> Please configure your feeding schedule with accurate times and portion amounts to ensure proper automatic feeding.' 
-                            : '🛈︎ AUTO FEEDER IS DISABLED <br> Make sure to turn on the toggle to enable the automation.'}
-                    </div>
-                </div>
-                
-                <div class="schedule-content-container">
-                    <div class="schedule-header-actions">
-                        <h3 class="schedule-title">Feeding Schedule</h3>
-                        ${autoFeederOn ? `
-                            <button class="edit-schedule-btn">
-                                Edit Schedule
-                            </button>
-                        ` : ''}
-                    </div>
-                    ${autoFeederOn ? `
-                        <div class="schedule-grid" id="schedule-list-${speciesFilter}">
-                            ${generateScheduleList(speciesFilter)}
-                        </div>
-                    ` : `
-                        <div class="schedule-disabled-message">
-                            <div class="schedule-disabled-icon">🔒</div>
-                            <div class="schedule-disabled-text">Enable auto feeder to view and manage feeding schedule</div>
-                        </div>
-                    `}
-                </div>
-            </div>
-                
-            <div class="feeder-history-card">
-                <div class="card-header">
-                    <h3 class="card-title">Feeder History</h3>
-                </div>
-                <div class="history-filter-container">
-                    <div class="date-filter-group">
-                        <label class="filter-label">Date:</label>
-                        <input type="date" class="date-filter-input" id="history-date-${speciesFilter}" value="" onchange="filterHistoryByDate('${speciesFilter}')">
-                    </div>
-                    <div class="day-filter-group">
-                        <label class="filter-label">Day:</label>
-                        <select class="day-filter-select" id="history-day-${speciesFilter}" onchange="filterHistoryByDay('${speciesFilter}')">
-                            <option value="all" selected>All Days</option>
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="this-week">This Week</option>
-                            <option value="this-month">This Month</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="history-list" id="history-list-${speciesFilter}">
-                    ${renderFeederHistory(speciesFilter, null, null)}
-                </div>
-            </div>
             </div>
         </div>
     `;
@@ -882,7 +1052,13 @@ function adjustPortions(species, change) {
     const totalElement = document.getElementById(`portion-total-${species}`);
 
     if (countElement && totalElement) {
-        const portionInfo = speciesPortionInfo[species] || { grams: 100, unit: 'g' };
+        // Get standardized portion (calculated from daily intake)
+        const dailyIntake = speciesDailyIntake[species] || { amount: 100, unit: 'g', meals: 1 };
+        const totalRequired = dailyIntake.amount;
+        const mealsPerDay = dailyIntake.meals;
+        const portionGrams = mealsPerDay > 0 ? Math.round(totalRequired / mealsPerDay) : totalRequired;
+        const portionInfo = { grams: portionGrams, unit: dailyIntake.unit || 'g' };
+        
         const currentPortions = portionCounts[species];
         const totalAmount = currentPortions * portionInfo.grams;
 
@@ -893,7 +1069,13 @@ function adjustPortions(species, change) {
 
 // Feed animals function
 function feedAnimals(species) {
-    const portionInfo = speciesPortionInfo[species] || { grams: 100, unit: 'g' };
+    // Get standardized portion (calculated from daily intake)
+    const dailyIntake = speciesDailyIntake[species] || { amount: 100, unit: 'g', meals: 1 };
+    const totalRequired = dailyIntake.amount;
+    const mealsPerDay = dailyIntake.meals;
+    const portionGrams = mealsPerDay > 0 ? Math.round(totalRequired / mealsPerDay) : totalRequired;
+    const portionInfo = { grams: portionGrams, unit: dailyIntake.unit || 'g' };
+    
     const currentPortions = portionCounts[species] || 1;
     const feedAmount = currentPortions * portionInfo.grams;
 
@@ -905,9 +1087,7 @@ function feedAnimals(species) {
 
     // Update meal meter percentage based on food added
     // Assume the feeder capacity is based on daily requirement
-    const dailyIntake = speciesDailyIntake[species] || { amount: 100 };
-    const quantity = speciesQuantity[species] || 1;
-    const totalRequired = dailyIntake.amount * quantity;
+    // Total requirement is already calculated above (totalRequired)
 
     // Calculate percentage increase: (feedAmount / totalRequired) * 100
     // But we need to consider current meal percent and add to it
@@ -1165,8 +1345,8 @@ function toggleEditPortionControl(species) {
     // Get current values
     const portionInfo = speciesPortionInfo[species] || { grams: 100, unit: 'g' };
     const dailyIntake = speciesDailyIntake[species] || { amount: 100, unit: 'g', meals: 1 };
-    const quantity = speciesQuantity[species] || 1;
-    const totalRequired = dailyIntake.amount * quantity;
+    // totalRequired is now the total food for the day (not multiplied by quantity)
+    const totalRequired = dailyIntake.amount;
 
     // Set modal subtitle
     const displayName = species.replace(/([A-Z])/g, ' $1').trim();
@@ -1175,18 +1355,19 @@ function toggleEditPortionControl(species) {
     // Generate modal content
     modalBody.innerHTML = `
         <div class="edit-control-item">
-            <label class="edit-control-label">Grams per Portion:</label>
-            <input type="number" class="edit-control-input" id="modal-edit-portion-grams-${species}" value="${portionInfo.grams}" min="1" oninput="updatePortionControlPreviewModal('${species}')">
+            <label class="edit-control-label">Total Food for the Day (grams):</label>
+            <input type="number" class="edit-control-input" id="modal-edit-total-food-${species}" value="${totalRequired}" min="1" oninput="updatePortionControlPreviewModal('${species}')">
         </div>
         <div class="edit-control-item">
-            <label class="edit-control-label">Total Required (grams):</label>
-            <input type="number" class="edit-control-input" id="modal-edit-cage-required-${species}" value="${totalRequired}" min="1" oninput="updatePortionControlPreviewModal('${species}')">
+            <label class="edit-control-label">Meals per Day:</label>
+            <input type="number" class="edit-control-input" id="modal-edit-meals-per-day-${species}" value="${dailyIntake.meals}" min="1" oninput="updatePortionControlPreviewModal('${species}')">
         </div>
         <div class="edit-preview-section">
-            <div class="edit-preview-label">Preview:</div>
+            <div class="edit-preview-label">Suggested Portion Size:</div>
             <div class="edit-preview-values">
-                <div>1 Portion = <strong id="modal-preview-portion-grams-${species}">${portionInfo.grams}${portionInfo.unit}</strong></div>
-                <div>Total Food Required = <strong id="modal-preview-cage-required-${species}">${totalRequired}${dailyIntake.unit}</strong></div>
+                <div>1 Portion = <strong id="modal-preview-portion-grams-${species}">${Math.round(totalRequired / dailyIntake.meals)}${portionInfo.unit}</strong> (Total ÷ Meals)</div>
+                <div>Total Food per Day = <strong id="modal-preview-total-food-${species}">${totalRequired}${dailyIntake.unit}</strong></div>
+                <div>Meals per Day = <strong id="modal-preview-meals-${species}">${dailyIntake.meals}</strong></div>
             </div>
         </div>
     `;
@@ -1211,26 +1392,33 @@ function closeEditPortionModal() {
 
 // Update preview when editing values in modal
 function updatePortionControlPreviewModal(species) {
-    const portionGramsInput = document.getElementById(`modal-edit-portion-grams-${species}`);
-    const cageRequiredInput = document.getElementById(`modal-edit-cage-required-${species}`);
+    const totalFoodInput = document.getElementById(`modal-edit-total-food-${species}`);
+    const mealsPerDayInput = document.getElementById(`modal-edit-meals-per-day-${species}`);
 
-    if (!portionGramsInput || !cageRequiredInput) return;
+    if (!totalFoodInput || !mealsPerDayInput) return;
 
-    const newPortionGrams = parseInt(portionGramsInput.value) || 0;
-    const newCageRequired = parseInt(cageRequiredInput.value) || 0;
+    const totalFood = parseInt(totalFoodInput.value) || 0;
+    const mealsPerDay = parseInt(mealsPerDayInput.value) || 1;
 
     const dailyIntake = speciesDailyIntake[species] || { unit: 'g' };
     const portionInfo = speciesPortionInfo[species] || { unit: 'g' };
 
+    // Calculate suggested portion size
+    const suggestedPortionSize = mealsPerDay > 0 ? Math.round(totalFood / mealsPerDay) : 0;
+
     // Update preview values
     const previewPortionGrams = document.getElementById(`modal-preview-portion-grams-${species}`);
-    const previewCageRequired = document.getElementById(`modal-preview-cage-required-${species}`);
+    const previewTotalFood = document.getElementById(`modal-preview-total-food-${species}`);
+    const previewMeals = document.getElementById(`modal-preview-meals-${species}`);
 
     if (previewPortionGrams) {
-        previewPortionGrams.textContent = `${newPortionGrams}${portionInfo.unit}`;
+        previewPortionGrams.textContent = `${suggestedPortionSize}${portionInfo.unit} (Total ÷ Meals)`;
     }
-    if (previewCageRequired) {
-        previewCageRequired.textContent = `${newCageRequired}${dailyIntake.unit}`;
+    if (previewTotalFood) {
+        previewTotalFood.textContent = `${totalFood}${dailyIntake.unit}`;
+    }
+    if (previewMeals) {
+        previewMeals.textContent = `${mealsPerDay}`;
     }
 }
 
@@ -1258,35 +1446,47 @@ function updatePortionControlPreview(species) {
     }
 
     // Get current values for preview updates in the content section
+    const dailyIntake = speciesDailyIntake[species] || { amount: 100, unit: 'g', meals: 1 };
+    const totalRequired = dailyIntake.amount; // Use standardized total from dailyIntake
     const portionCount = portionCounts[species] || 1;
-    const todayAdded = todayFoodAdded[species] || 0;
+    const todayAdded = Math.min(todayFoodAdded[species] || 0, totalRequired); // Cap at total required
     const newTotalAmount = portionCount * newPortionGrams;
-    const newProgressPercent = Math.min(100, Math.round((todayAdded / newCageRequired) * 100));
+    const progressPercent = Math.min(100, Math.round((todayAdded / totalRequired) * 100));
 
     // Update preview elements in content section (if they exist)
     const progressAmount = document.getElementById(`food-progress-amount-${species}`);
     const progressFill = document.getElementById(`food-progress-fill-${species}`);
-    const progressPercent = document.getElementById(`food-progress-percent-${species}`);
+    const progressPercentEl = document.getElementById(`food-progress-percent-${species}`);
     const portionAmountDisplay = document.getElementById(`portion-amount-display-${species}`);
     const portionTotal = document.getElementById(`portion-total-${species}`);
 
     if (progressAmount) {
-        const dailyIntake = speciesDailyIntake[species] || { unit: 'g' };
-        progressAmount.textContent = `${todayAdded}${dailyIntake.unit} / ${newCageRequired}${dailyIntake.unit}`;
+        const cappedTodayAdded = Math.min(todayAdded, totalRequired);
+        progressAmount.textContent = `${cappedTodayAdded}${dailyIntake.unit} / ${totalRequired}${dailyIntake.unit}`;
     }
     if (progressFill) {
-        progressFill.style.width = `${newProgressPercent}%`;
+        progressFill.style.width = `${progressPercent}%`;
     }
-    if (progressPercent) {
-        progressPercent.textContent = `${newProgressPercent}%`;
+    if (progressPercentEl) {
+        progressPercentEl.textContent = `${progressPercent}%`;
     }
     if (portionAmountDisplay) {
-        const portionInfo = speciesPortionInfo[species] || { unit: 'g' };
-        portionAmountDisplay.textContent = `${newPortionGrams}${portionInfo.unit}`;
+        portionAmountDisplay.textContent = `${newPortionGrams}${dailyIntake.unit}`;
     }
     if (portionTotal) {
-        const portionInfo = speciesPortionInfo[species] || { unit: 'g' };
         portionTotal.textContent = newTotalAmount;
+    }
+    
+    // Update daily info fields
+    const portionDailyTotal = document.getElementById(`portion-daily-total-${species}`);
+    const portionMealTimes = document.getElementById(`portion-meal-times-${species}`);
+    
+    if (portionDailyTotal) {
+        const cappedTodayAdded = Math.min(todayAdded, totalRequired);
+        portionDailyTotal.textContent = `${cappedTodayAdded}${dailyIntake.unit} / ${totalRequired}${dailyIntake.unit}`;
+    }
+    if (portionMealTimes) {
+        portionMealTimes.textContent = `${dailyIntake.meals} meal${dailyIntake.meals > 1 ? 's' : ''} per day`;
     }
 }
 
@@ -1298,22 +1498,25 @@ function submitEditPortionControlModal() {
     const species = modal.dataset.currentSpecies;
     if (!species) return;
 
-    const portionGramsInput = document.getElementById(`modal-edit-portion-grams-${species}`);
-    const cageRequiredInput = document.getElementById(`modal-edit-cage-required-${species}`);
+    const totalFoodInput = document.getElementById(`modal-edit-total-food-${species}`);
+    const mealsPerDayInput = document.getElementById(`modal-edit-meals-per-day-${species}`);
 
-    if (!portionGramsInput || !cageRequiredInput) return;
+    if (!totalFoodInput || !mealsPerDayInput) return;
 
-    const newPortionGrams = parseInt(portionGramsInput.value) || 0;
-    const newCageRequired = parseInt(cageRequiredInput.value) || 0;
+    const totalFood = parseInt(totalFoodInput.value) || 0;
+    const mealsPerDay = parseInt(mealsPerDayInput.value) || 1;
 
-    if (newPortionGrams <= 0 || newCageRequired <= 0) {
+    if (totalFood <= 0 || mealsPerDay <= 0) {
         alert('Please enter valid positive numbers');
         return;
     }
 
+    // Calculate portion size (total food divided by meals per day)
+    const portionSize = Math.round(totalFood / mealsPerDay);
+
     // Update the data (in a real app, this would save to backend)
-    speciesPortionInfo[species] = { grams: newPortionGrams, unit: 'g' };
-    speciesDailyIntake[species] = { ...speciesDailyIntake[species], amount: newCageRequired };
+    speciesPortionInfo[species] = { grams: portionSize, unit: 'g' };
+    speciesDailyIntake[species] = { ...speciesDailyIntake[species], amount: totalFood, meals: mealsPerDay };
 
     // Close modal
     closeEditPortionModal();
