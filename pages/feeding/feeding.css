@@ -66,7 +66,29 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     display: flex;
     align-items: center;
     gap: 20px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.schedule-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.schedule-item:hover::before {
+    transform: scaleY(1);
+}
+
+.schedule-item-upcoming {
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
 }
 
 .schedule-item-upcoming {
