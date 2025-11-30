@@ -3,71 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feeding Schedule - Smart Animal Shelter</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <title>PawShelter - Feeding Schedule</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/modal.css">
+    <link rel="stylesheet" href="feeding.css">
 </head>
 <body>
     <div class="app">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon">🐾</div>
-                <div class="logo-text">
-                    <h1>Smart Shelter</h1>
-                    <p>Khairul Johari</p>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Main</div>
-                <div class="nav-item active" onclick="window.location.href='../dashboard/dashboard.html'">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../animals/animals.html'">
-                    <span class="nav-icon">🐾</span>
-                    <span>Animals</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../tracking/tracking.html'">
-                    <span class="nav-icon">📍</span>
-                    <span>Live Tracking</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../alerts/alerts.html'">
-                    <span class="nav-icon">🚨</span>
-                    <span>Alerts</span>
-                    <span class="nav-badge" id="alertBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Operations</div>
-                <div class="nav-item" onclick="window.location.href='feeding.html'">
-                    <span class="nav-icon">🍽️</span>
-                    <span>Feeding</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../health/health.html'">
-                    <span class="nav-icon">❤️</span>
-                    <span>Health Monitor</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../environment/environment.html'">
-                    <span class="nav-icon">🌡️</span>
-                    <span>Environment</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../inventory/inventory.html'">
-                    <span class="nav-icon">📦</span>
-                    <span>Inventory</span>
-                    <span class="nav-badge" id="inventoryBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">System</div>
-                <div class="nav-item" onclick="window.location.href='../reports/reports.html'">
-                    <span class="nav-icon">📈</span>
-                    <span>Reports</span>
-                </div>
-            </div>
-        </aside>
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
@@ -75,19 +21,48 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Feeding</h1>
+                        <p>Manage feeding schedules and auto feeders</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -95,23 +70,48 @@
             <div class="content">
                 <!-- FEEDING SECTION -->
                 <section class="page-section active" id="feeding-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Feeding Schedule</h1>
-                        <p class="section-subtitle">Today's feeding times and meal plans</p>
+                    <!-- AUTO FEEDER DASHBOARD -->
+                    <div class="species-tabs-container">
+                        <div class="species-tabs">
+                            <div class="species-tab active" onclick="filterFeedersBySpecies('Goat')" data-species="Goat">🐐 Goats</div>
+                            <div class="species-tab" onclick="filterFeedersBySpecies('Sugarglider')" data-species="Sugarglider">🐿️ Sugar Gliders</div>
+                            <div class="species-tab" onclick="filterFeedersBySpecies('Alligator')" data-species="Alligator">🐊 Alligators</div>
+                            <div class="species-tab" onclick="filterFeedersBySpecies('Snail')" data-species="Snail">🐌 Snails</div>
+                            <div class="species-tab" onclick="filterFeedersBySpecies('Porcupine')" data-species="Porcupine">🦔 Porcupines</div>
+                            <div class="species-tab" onclick="filterFeedersBySpecies('Fox')" data-species="Fox">🦊 Foxes</div>
+                        </div>
                     </div>
-
-                    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 24px; border-radius: var(--radius-xl); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.5);">
-                        <div class="schedule-grid" id="feedingSchedule"></div>
-                    </div>
+                    <div class="feeder-dashboard-container" id="feederDashboard"></div>
                 </section>
             </div>
         </main>
+    </div>
+
+    <!-- EDIT PORTION CONTROL MODAL -->
+    <div class="modal" id="editPortionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Edit Portion Control</div>
+                    <div class="modal-subtitle" id="edit-modal-subtitle">Adjust feeding parameters</div>
+                </div>
+                <button class="modal-close" onclick="closeEditPortionModal()">×</button>
+            </div>
+            <div class="modal-body" id="edit-portion-modal-body">
+                <!-- Content will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditPortionModal()">Cancel</button>
+                <button class="btn btn-primary" id="submit-edit-portion-btn" onclick="submitEditPortionControlModal()">Submit</button>
+            </div>
+        </div>
     </div>
 
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
     <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
     <script src="../feeding/feeding.js"></script>
 </body>

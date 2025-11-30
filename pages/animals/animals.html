@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawShelter - Animals Management</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="animals.css">
+    <link rel="stylesheet" href="../../css/modal.css">
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                    <div class="header-page-title">
+                        <h1>PawShelter Animals</h1>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
+                        🔔
+                        <span class="notification-badge" id="notificationBadge"></span>
+                    </button>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- ANIMALS SECTION -->
+                <section class="page-section active" id="animals-section">
+                    <div class="species-tabs">
+                        <div class="species-tab active" onclick="filterSpecies('All')">🐾 All Species</div>
+                        <div class="species-tab" onclick="filterSpecies('Goat')">🐐 Goats</div>
+                        <div class="species-tab" onclick="filterSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                        <div class="species-tab" onclick="filterSpecies('Alligator')">🐊 Alligators</div>
+                        <div class="species-tab" onclick="filterSpecies('Snail')">🐌 Snails</div>
+                        <div class="species-tab" onclick="filterSpecies('Porcupine')">🦔 Porcupines</div>
+                        <div class="species-tab" onclick="filterSpecies('Fox')">🦊 Foxes</div>
+                    </div>
+
+                    <div class="animals-table-header">
+                        <h2 class="animals-section-title"> Smart Animals Management</h2>
+                        <div class="header-actions">
+                            <button class="btn-header-action btn-edit-header" id="editSelectedAnimal" onclick="editSelectedAnimal()" title="Edit Selected Animal" disabled>
+                                <span>✏️</span>
+                            </button>
+                            <button class="btn-header-action btn-delete-header" id="deleteSelectedAnimal" onclick="deleteSelectedAnimal()" title="Delete Selected Animal" disabled>
+                                <span>🗑️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="animals-table-container" id="animalsTableContainer"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ANIMAL DETAIL MODAL -->
+    <div class="modal" id="animalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Animal Name</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Species</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <img src="" id="modalImage" class="modal-image" alt="Animal">
+
+                <div id="trackingInfo" class="tracking-info-section"></div>
+
+                <div class="sensors-grid" id="modalSensors"></div>
+
+                <div id="alertsSection" class="alerts-section" style="display: none;">
+                    <h3 class="notes-title">⚠️ Active Alerts</h3>
+                    <div id="modalAlerts"></div>
+                </div>
+
+                <div id="behaviorNotesSection" class="behavior-notes-section" style="display: none;">
+                    <div class="behavior-notes-header">
+                        <div class="behavior-notes-title">
+                            <span class="behavior-icon">⭐</span>
+                            <span>Behavior Notes</span>
+                        </div>
+                        <div class="behavior-notes-subtitle">Temperament, stressors & enrichment</div>
+                    </div>
+                    <div id="behaviorNotesContent"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-success" onclick="openHealthMonitor()">❤️ View Health Details</button>
+                <button class="btn btn-primary" onclick="window.location.href='../tracking/tracking.html'; closeModal();">📍 Track Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT ANIMAL MODAL -->
+    <div class="modal" id="editAnimalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Edit Animal</div>
+                    <div class="modal-subtitle" id="editAnimalSubtitle">Update animal information</div>
+                </div>
+                <button class="modal-close" onclick="closeEditModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editAnimalForm" onsubmit="saveAnimalEdit(event)">
+                    <div class="form-group">
+                        <label for="editAnimalName">Name *</label>
+                        <input type="text" id="editAnimalName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAnimalSpecies">Species *</label>
+                        <select id="editAnimalSpecies" name="species" required>
+                            <option value="Goat">Goat</option>
+                            <option value="Sugarglider">Sugar Glider</option>
+                            <option value="Alligator">Alligator</option>
+                            <option value="Snail">Snail</option>
+                            <option value="Porcupine">Porcupine</option>
+                            <option value="Fox">Fox</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAnimalBreed">Breed</label>
+                        <input type="text" id="editAnimalBreed" name="breed">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAnimalDOB">Date of Birth</label>
+                        <input type="date" id="editAnimalDOB" name="dob">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAnimalSex">Sex *</label>
+                        <select id="editAnimalSex" name="sex" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Unknown">Unknown</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAnimalHealth">Health Status *</label>
+                        <select id="editAnimalHealth" name="health" required>
+                            <option value="good">Good</option>
+                            <option value="warning">Warning</option>
+                            <option value="danger">Danger</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="editAnimalId" name="id">
+                    <input type="hidden" id="editAnimalOriginalSpecies" name="originalSpecies">
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('editAnimalForm').requestSubmit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
+    <script src="../utils.js"></script>
+    <script src="../animals/animal.js"></script>
+    <script src="../modal.js"></script>
+</body>
+</html>

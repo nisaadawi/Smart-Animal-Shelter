@@ -1,0 +1,1130 @@
+/* HEALTH SPECIFIC STYLES - ENHANCED */
+
+/* Health page uses schedule-grid from feeding.css */
+/* Additional health-specific styles */
+
+/* Species Tabs (matching animals page style) */
+.species-tabs-container {
+    margin-bottom: 28px;
+    padding-top: 4px;
+    overflow: visible;
+}
+
+.species-tabs {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 10px;
+    padding-top: 4px;
+}
+
+.species-tabs::-webkit-scrollbar {
+    height: 6px;
+}
+
+.species-tabs::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--primary), var(--purple));
+    border-radius: 3px;
+}
+
+.species-tabs::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, var(--purple), var(--primary));
+}
+
+.species-tab {
+    padding: 12px 20px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.species-tab::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.species-tab:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.species-tab:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.species-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    animation: filterPulse 2s ease-in-out infinite;
+}
+
+@keyframes filterPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 24px rgba(99, 102, 241, 0.4), 
+            0 4px 12px rgba(139, 92, 246, 0.3), 
+            0 0 0 1px rgba(255, 255, 255, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+    }
+    50% { 
+        box-shadow: 
+            0 10px 28px rgba(99, 102, 241, 0.5), 
+            0 6px 16px rgba(139, 92, 246, 0.4), 
+            0 0 0 1px rgba(255, 255, 255, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3); 
+    }
+}
+
+/* Animal Selection Grid */
+.animals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+    margin-top: 32px;
+}
+
+.health-animal-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 
+        0 4px 20px rgba(99, 102, 241, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.health-animal-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.03) 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.health-animal-card:hover::after {
+    opacity: 1;
+}
+
+.health-animal-card::before {
+    display: none;
+}
+
+.health-animal-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 
+        0 12px 40px rgba(99, 102, 241, 0.15),
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.health-animal-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    margin-bottom: 0;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.health-animal-card:hover .health-animal-image {
+    transform: scale(1.08);
+}
+
+.health-animal-card-content {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.health-animal-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.health-animal-species {
+    font-size: 15px;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: capitalize;
+}
+
+.health-animal-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.health-animal-status.good {
+    background: linear-gradient(135deg, #86efac, #4ade80, #22c55e);
+    color: white;
+    border: none;
+}
+
+.health-animal-status.good::before {
+    content: '✓';
+    font-size: 16px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+}
+
+.health-animal-status.warning {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    color: white;
+    border: none;
+}
+
+.health-animal-status.warning::before {
+    content: '⚠';
+    font-size: 16px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+}
+
+.health-animal-status.danger {
+    background: linear-gradient(135deg, #f87171, #ef4444, #dc2626);
+    color: white;
+    border: none;
+}
+
+.health-animal-status.danger::before {
+    content: '🔴';
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.health-animal-status.danger::before {
+    content: '🔴';
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+/* Health Detail View */
+.health-detail-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+
+/* Health Back Button - Integrated in Header */
+.health-back-button {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1.5px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.1),
+        0 1px 4px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.health-back-button:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+    transform: translateX(-3px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.35),
+        0 3px 10px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.health-back-icon {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    line-height: 1;
+    display: inline-block;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.health-back-button:hover .health-back-icon {
+    color: white;
+    transform: translateX(-2px);
+}
+
+/* Health Animal Image Wrapper */
+.health-animal-image-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Health Navigation Arrows - Positioned on Image */
+.health-nav-arrows {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+.health-nav-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1.5px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.health-nav-arrow:hover:not(.disabled) {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+    transform: scale(1.1);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.35),
+        0 3px 10px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.health-nav-arrow.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Health Animal Header */
+.health-animal-header {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-xl);
+    padding: 40px 40px 40px 80px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: visible;
+}
+
+.health-animal-header-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 36px;
+    width: 100%;
+}
+
+.health-animal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.health-animal-header-image {
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    display: block;
+}
+
+.health-animal-header-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.health-animal-header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.health-animal-header-name {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    letter-spacing: -0.8px;
+    line-height: 1.2;
+}
+
+.health-animal-header-species {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+
+.health-animal-header-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.health-animal-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-top: 24px;
+    margin-top: 12px;
+    border-top: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.health-animal-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(248, 250, 252, 0.8) 100%);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    transition: all 0.3s ease;
+}
+
+.health-animal-meta-item:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.9) 100%);
+    border-color: rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.health-meta-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.health-meta-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.health-meta-value {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.health-animal-header-status.good {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+    color: #059669;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.health-animal-header-status.warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+    color: #d97706;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+.health-animal-header-status.danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    color: #dc2626;
+    border: 2px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Health Charts Grid */
+.health-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 24px;
+    margin-bottom: 0;
+}
+
+.health-chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+    max-height: 350px;
+}
+
+.health-chart-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+}
+
+.health-chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.health-chart-header {
+    margin-bottom: 16px;
+}
+
+.health-chart-card canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+.health-chart-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.health-chart-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Health Schedule Card */
+.health-schedule-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    margin-top: 20px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+.health-schedule-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.health-schedule-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.health-schedule-icon {
+    font-size: 24px;
+}
+
+.health-schedule-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+/* Back Button */
+.btn-secondary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: var(--text-primary);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.98));
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+    .health-animal-header {
+        padding: 28px 28px 28px 72px;
+    }
+    
+    .health-nav-arrows {
+        bottom: 10px;
+        left: 10px;
+        gap: 6px;
+    }
+    
+    .health-nav-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+    
+    .health-animal-header-content {
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .health-back-button {
+        top: 24px;
+        left: 24px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .health-back-icon {
+        font-size: 16px;
+    }
+    
+    .health-animal-header-image {
+        width: 140px;
+        height: 140px;
+        align-self: center;
+    }
+    
+    .health-animal-image-wrapper {
+        align-self: center;
+    }
+    
+    .health-animal-header-info {
+        gap: 18px;
+    }
+    
+    .health-animal-header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .health-animal-header-name {
+        font-size: 28px;
+        margin-bottom: 6px;
+    }
+    
+    .health-animal-header-meta {
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 16px;
+    }
+    
+    .health-animal-meta-item {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .health-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .health-charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .health-chart-container {
+        height: 200px;
+    }
+    
+    .animals-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .health-stat-card {
+        padding: 16px;
+    }
+    
+    .health-stat-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+    }
+    
+    .health-stat-value {
+        font-size: 24px;
+    }
+}
+
+.health-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+    margin-bottom: 32px;
+}
+
+.health-stat-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-xl);
+    padding: 24px 20px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.health-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.health-stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 16px 48px rgba(99, 102, 241, 0.2),
+        0 4px 16px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.health-stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.health-stat-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    opacity: 0.1;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 70%);
+}
+
+.health-stat-card:hover .health-stat-icon {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Heart Rate - Pink/Red gradient */
+.health-stat-icon.heart-rate,
+.health-stat-icon.heart-rate.good,
+.health-stat-icon.heart-rate.warning,
+.health-stat-icon.heart-rate.danger { 
+    background: linear-gradient(135deg, #ec4899, #db2777, #be185d) !important;
+    box-shadow: 
+        0 6px 20px rgba(236, 72, 153, 0.4),
+        0 2px 8px rgba(219, 39, 119, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.heart-rate {
+    box-shadow: 
+        0 10px 35px rgba(236, 72, 153, 0.5),
+        0 4px 12px rgba(219, 39, 119, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Temperature - Red/Orange gradient */
+.health-stat-icon.temperature,
+.health-stat-icon.temperature.good,
+.health-stat-icon.temperature.warning,
+.health-stat-icon.temperature.danger { 
+    background: linear-gradient(135deg, #f97316, #ea580c, #dc2626) !important;
+    box-shadow: 
+        0 6px 20px rgba(249, 115, 22, 0.4),
+        0 2px 8px rgba(234, 88, 12, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.temperature {
+    box-shadow: 
+        0 10px 35px rgba(249, 115, 22, 0.5),
+        0 4px 12px rgba(234, 88, 12, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Activity - Blue/Purple gradient */
+.health-stat-icon.activity,
+.health-stat-icon.activity.good,
+.health-stat-icon.activity.warning,
+.health-stat-icon.activity.danger { 
+    background: linear-gradient(135deg, #3b82f6, #2563eb, #6366f1) !important;
+    box-shadow: 
+        0 6px 20px rgba(59, 130, 246, 0.4),
+        0 2px 8px rgba(37, 99, 235, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.activity {
+    box-shadow: 
+        0 10px 35px rgba(59, 130, 246, 0.5),
+        0 4px 12px rgba(37, 99, 235, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Air Quality - Cyan/Blue gradient */
+.health-stat-icon.air-quality,
+.health-stat-icon.air-quality.good,
+.health-stat-icon.air-quality.warning,
+.health-stat-icon.air-quality.danger { 
+    background: linear-gradient(135deg, #06b6d4, #0891b2, #0e7490) !important;
+    box-shadow: 
+        0 6px 20px rgba(6, 182, 212, 0.4),
+        0 2px 8px rgba(8, 145, 178, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.air-quality {
+    box-shadow: 
+        0 10px 35px rgba(6, 182, 212, 0.5),
+        0 4px 12px rgba(8, 145, 178, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Weight - Golden/Yellow gradient */
+.health-stat-icon.weight,
+.health-stat-icon.weight.good,
+.health-stat-icon.weight.warning,
+.health-stat-icon.weight.danger { 
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706) !important;
+    box-shadow: 
+        0 6px 20px rgba(251, 191, 36, 0.4),
+        0 2px 8px rgba(245, 158, 11, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.weight {
+    box-shadow: 
+        0 10px 35px rgba(251, 191, 36, 0.5),
+        0 4px 12px rgba(245, 158, 11, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Humidity - Light Blue/Cyan gradient */
+.health-stat-icon.humidity,
+.health-stat-icon.humidity.good,
+.health-stat-icon.humidity.warning,
+.health-stat-icon.humidity.danger { 
+    background: linear-gradient(135deg, #22d3ee, #06b6d4, #0891b2) !important;
+    box-shadow: 
+        0 6px 20px rgba(34, 211, 238, 0.4),
+        0 2px 8px rgba(6, 182, 212, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.health-stat-card:hover .health-stat-icon.humidity {
+    box-shadow: 
+        0 10px 35px rgba(34, 211, 238, 0.5),
+        0 4px 12px rgba(6, 182, 212, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Status-based styles (only for icons without specific iconType - using purple theme instead of green) */
+.health-stat-icon.good:not(.heart-rate):not(.temperature):not(.activity):not(.air-quality):not(.weight):not(.humidity) { 
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.4),
+        0 2px 8px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.health-stat-icon.warning:not(.heart-rate):not(.temperature):not(.activity):not(.air-quality):not(.weight):not(.humidity) { 
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+.health-stat-icon.danger:not(.heart-rate):not(.temperature):not(.activity):not(.air-quality):not(.weight):not(.humidity) { 
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.health-stat-value {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--text-primary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    word-break: break-word;
+    letter-spacing: -0.5px;
+}
+
+.health-stat-card:hover .health-stat-value {
+    transform: scale(1.05);
+}
+
+.health-stat-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .health-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .animals-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+        margin-top: 24px;
+    }
+    
+    .health-animal-card {
+        border-radius: 16px;
+    }
+    
+    .health-animal-image {
+        height: 200px;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .health-animal-card-content {
+        padding: 16px 20px 20px;
+        gap: 6px;
+    }
+    
+    .health-animal-name {
+        font-size: 20px;
+    }
+    
+    .health-animal-species {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .health-animal-status {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .animals-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .health-animal-image {
+        height: 180px;
+    }
+}

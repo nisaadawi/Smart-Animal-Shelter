@@ -3,72 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Tracking - Smart Animal Shelter</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <title>PawShelter - Live Tracking</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="tracking.css">
+    <link rel="stylesheet" href="../../css/modal.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
     <div class="app">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon">🐾</div>
-                <div class="logo-text">
-                    <h1>Smart Shelter</h1>
-                    <p>Khairul Johari</p>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Main</div>
-                <div class="nav-item active" onclick="window.location.href='../dashboard/dashboard.html'">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../animals/animals.html'">
-                    <span class="nav-icon">🐾</span>
-                    <span>Animals</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='tracking.html'">
-                    <span class="nav-icon">📍</span>
-                    <span>Live Tracking</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../alerts/alerts.html'">
-                    <span class="nav-icon">🚨</span>
-                    <span>Alerts</span>
-                    <span class="nav-badge" id="alertBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Operations</div>
-                <div class="nav-item" onclick="window.location.href='../feeding/feeding.html'">
-                    <span class="nav-icon">🍽️</span>
-                    <span>Feeding</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../health/health.html'">
-                    <span class="nav-icon">❤️</span>
-                    <span>Health Monitor</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../environment/environment.html'">
-                    <span class="nav-icon">🌡️</span>
-                    <span>Environment</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../inventory/inventory.html'">
-                    <span class="nav-icon">📦</span>
-                    <span>Inventory</span>
-                    <span class="nav-badge" id="inventoryBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">System</div>
-                <div class="nav-item" onclick="window.location.href='../reports/reports.html'">
-                    <span class="nav-icon">📈</span>
-                    <span>Reports</span>
-                </div>
-            </div>
-        </aside>
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
@@ -76,19 +22,48 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Live Tracking</h1>
+                        <p>Real-time location and movement monitoring</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -96,14 +71,15 @@
             <div class="content">
                 <!-- TRACKING SECTION -->
                 <section class="page-section active" id="tracking-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Live Animal Tracking</h1>
-                        <p class="section-subtitle">Real-time GPS tracking with automatic position updates</p>
-                    </div>
-
                     <div class="tracking-panel">
                         <div class="tracking-toolbar" id="trackingToolbar"></div>
                         <div class="tracking-stats" id="trackingStats"></div>
+                        <div class="map-zoom-controls">
+                            <label for="speciesZoomSelect" class="zoom-label">📍 Quick Zoom:</label>
+                            <select id="speciesZoomSelect" class="species-zoom-select" onchange="handleSpeciesZoom(this.value)">
+                                <option value="all">🌍 Whole Site</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="tracking-container">
@@ -115,7 +91,6 @@
                                     Enable a species filter to populate the map.
                                 </div>
                             </div>
-                            <div class="map-legend" id="trackingLegend"></div>
                         </div>
 
                         <div class="tracking-list">
@@ -142,27 +117,14 @@
             <div class="modal-body">
                 <img src="" id="modalImage" class="modal-image" alt="Animal">
 
-                <div id="emergencyPanel"></div>
-
-                <div class="cctv-feed" id="cctvFeed">
-                    <div class="cctv-placeholder">📹</div>
-                    <div class="cctv-overlay">
-                        <span class="rec-dot"></span>
-                        <span>LIVE</span>
-                    </div>
-                </div>
+                <div id="trackingInfo" class="tracking-info-section"></div>
 
                 <div class="sensors-grid" id="modalSensors"></div>
 
-                <div class="notes-section">
-                    <h3 class="notes-title">📝 Recent Activity</h3>
-                    <div id="modalNotes"></div>
+                <div id="alertsSection" class="alerts-section" style="display: none;">
+                    <h3 class="notes-title">⚠️ Active Alerts</h3>
+                    <div id="modalAlerts"></div>
                 </div>
-            </div>
-
-            <div class="modal-footer" id="modalFooter">
-                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
-                <button class="btn btn-primary" onclick="closeModal();">📍 Track Location</button>
             </div>
         </div>
     </div>
@@ -172,7 +134,9 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
     <script src="../tracking/tracking.js"></script>
     <script src="../modal.js"></script>
+</body>
 </html>

@@ -3,71 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management - Smart Animal Shelter</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <title>PawShelter - Inventory Management</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="inventory.css">
 </head>
 <body>
     <div class="app">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon">🐾</div>
-                <div class="logo-text">
-                    <h1>Smart Shelter</h1>
-                    <p>Khairul Johari</p>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Main</div>
-                <div class="nav-item active" onclick="window.location.href='../dashboard/dashboard.html'">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../animals/animals.html'">
-                    <span class="nav-icon">🐾</span>
-                    <span>Animals</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../tracking/tracking.html'">
-                    <span class="nav-icon">📍</span>
-                    <span>Live Tracking</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../alerts/alerts.html'">
-                    <span class="nav-icon">🚨</span>
-                    <span>Alerts</span>
-                    <span class="nav-badge" id="alertBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Operations</div>
-                <div class="nav-item" onclick="window.location.href='../feeding/feeding.html'">
-                    <span class="nav-icon">🍽️</span>
-                    <span>Feeding</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../health/health.html'">
-                    <span class="nav-icon">❤️</span>
-                    <span>Health Monitor</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../environment/environment.html'">
-                    <span class="nav-icon">🌡️</span>
-                    <span>Environment</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='inventory.html'">
-                    <span class="nav-icon">📦</span>
-                    <span>Inventory</span>
-                    <span class="nav-badge" id="inventoryBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">System</div>
-                <div class="nav-item" onclick="window.location.href='../reports/reports.html'">
-                    <span class="nav-icon">📈</span>
-                    <span>Reports</span>
-                </div>
-            </div>
-        </aside>
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
@@ -75,19 +20,48 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Inventory</h1>
+                        <p>Manage supplies and equipment</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -96,8 +70,12 @@
                 <!-- INVENTORY SECTION -->
                 <section class="page-section active" id="inventory-section">
                     <div class="section-header">
-                        <h1 class="section-title">Inventory Management</h1>
-                        <p class="section-subtitle">Track supplies and stock levels</p>
+                        <!-- Shopping List Button moved here -->
+                        <button class="shopping-list-section-btn" id="shoppingListBtn">
+                            <span class="shopping-list-icon">📋</span>
+                            Shopping List
+                            <span class="shopping-count" id="shoppingCount">0</span>
+                        </button>
                     </div>
 
                     <div class="inventory-grid" id="inventoryGrid"></div>
@@ -106,10 +84,63 @@
         </main>
     </div>
 
+    <!-- INVENTORY DETAIL MODAL -->
+    <div class="modal" id="inventoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Inventory Details</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="inventory-detail-header">
+                    <div class="detail-icon" id="detailIcon"></div>
+                    <div class="detail-info">
+                        <h3 id="detailName"></h3>
+                        <p id="detailCategory"></p>
+                        <div class="stock-summary" id="stockSummary"></div>
+                    </div>
+                </div>
+                <div class="inventory-items-list" id="inventoryItemsList">
+                    <!-- Items will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOPPING LIST MODAL -->
+    <div class="modal" id="shoppingListModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Shopping List</h2>
+                <button class="close-btn" id="closeShoppingList">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shopping-summary">
+                    <p>Items in list: <span id="totalShoppingItems">0</span></p>
+                </div>
+                <div class="shopping-items-list" id="shoppingItemsList">
+                    <!-- Shopping items will be populated here -->
+                </div>
+                <div class="shopping-actions">
+                    <button class="btn btn-outline" id="clearShoppingListBtn">Clear All</button>
+                    <button class="btn btn-primary" id="savePdfBtn">
+                        <span class="icon">📄</span>
+                        Save as PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
     <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
     <script src="../inventory/inventory.js"></script>
 </body>

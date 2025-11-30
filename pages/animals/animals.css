@@ -1,69 +1,233 @@
-/* ANIMALS SPECIFIC STYLES */
+/* ANIMALS SPECIFIC STYLES - ENHANCED */
 
 .species-tabs {
     display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 8px;
+    margin-bottom: 12px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    overflow-y: visible;
+    padding-bottom: 6px;
+    padding-top: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding: 0 16px;
+    /* Hide scrollbar on mobile for cleaner look */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
 }
 
+/* Webkit scrollbar styling for desktop */
 .species-tabs::-webkit-scrollbar {
     height: 6px;
 }
 
 .species-tabs::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(90deg, var(--primary), var(--purple));
     border-radius: 3px;
 }
 
+.species-tabs::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, var(--purple), var(--primary));
+}
+
+/* Hide scrollbar on mobile devices and enhance sliding */
+@media (max-width: 768px) {
+    .species-tabs {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-left: -16px;
+        margin-right: -16px;
+        scroll-snap-type: x mandatory;
+        /* Smooth momentum scrolling on iOS */
+        -webkit-overflow-scrolling: touch;
+        /* Add fade effect at edges to indicate scrollability */
+        mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 20px,
+            black calc(100% - 20px),
+            transparent 100%
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 20px,
+            black calc(100% - 20px),
+            transparent 100%
+        );
+    }
+    
+    .species-tabs::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    
+    /* Add first and last tab padding for better scroll experience */
+    .species-tabs::before,
+    .species-tabs::after {
+        content: '';
+        flex-shrink: 0;
+        width: 0;
+    }
+}
+
 .species-tab {
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: var(--radius-md);
-    cursor: pointer;
+    padding: 8px 16px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     font-weight: 700;
+    font-size: 12px;
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
     white-space: nowrap;
-    font-size: 14px;
+    flex-shrink: 0;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    /* Enable snap scrolling on mobile */
+    scroll-snap-align: start;
+    /* Better touch target on mobile */
+    min-width: fit-content;
+    touch-action: pan-x;
+}
+
+/* Enhanced mobile touch targets */
+@media (max-width: 768px) {
+    .species-tab {
+        padding: 10px 18px;
+        font-size: 12px;
+        min-width: auto;
+        /* Ensure tabs are large enough for easy tapping */
+        min-height: 40px;
+    }
+    
+    .species-tabs {
+        margin-bottom: 10px;
+    }
+}
+
+.species-tab::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.species-tab:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .species-tab:hover {
-    border-color: var(--primary);
+    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(255, 255, 255, 1);
     transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .species-tab.active {
     background: linear-gradient(135deg, var(--primary), var(--purple));
     color: white;
-    border-color: transparent;
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    animation: filterPulse 2s ease-in-out infinite;
+}
+
+@keyframes filterPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 24px rgba(99, 102, 241, 0.4), 
+            0 4px 12px rgba(139, 92, 246, 0.3), 
+            0 0 0 1px rgba(255, 255, 255, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+    }
+    50% { 
+        box-shadow: 
+            0 10px 28px rgba(99, 102, 241, 0.5), 
+            0 6px 16px rgba(139, 92, 246, 0.4), 
+            0 0 0 1px rgba(255, 255, 255, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3); 
+    }
 }
 
 .animals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
+    gap: 28px;
 }
 
 .animal-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-xl);
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: all 0.4s ease;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
 }
 
+.animal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 .animal-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 48px rgba(99, 102, 241, 0.25),
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .animal-card.has-alert::after {
@@ -71,21 +235,23 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    font-size: 28px;
+    font-size: 32px;
     z-index: 10;
     animation: alertPulse 2s infinite;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 8px rgba(239, 68, 68, 0.4));
 }
 
 @keyframes alertPulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.15); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 0.9; }
 }
 
 .animal-image-wrapper {
     position: relative;
-    height: 240px;
-    background: linear-gradient(135deg, #e0e7ff, #f3e8ff);
+    height: 260px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.1));
     overflow: hidden;
 }
 
@@ -93,38 +259,44 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animal-card:hover .animal-image {
-    transform: scale(1.08);
+    transform: scale(1.12);
 }
 
 .tracking-badge {
     position: absolute;
-    top: 14px;
-    left: 14px;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(10px);
+    top: 16px;
+    left: 16px;
+    background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.85), 
+        rgba(0, 0, 0, 0.75));
+    backdrop-filter: blur(20px) saturate(180%);
     color: white;
-    padding: 7px 14px;
-    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 800;
     display: flex;
     align-items: center;
-    gap: 7px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    gap: 8px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tracking-badge.live::before {
     content: '';
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: var(--success);
     border-radius: 50%;
     animation: liveBlink 1.5s infinite;
-    box-shadow: 0 0 8px var(--success);
+    box-shadow: 0 0 12px var(--success);
 }
 
 @keyframes liveBlink {
@@ -134,183 +306,857 @@
 
 .health-badge {
     position: absolute;
-    bottom: 14px;
-    right: 14px;
-    width: 44px;
-    height: 44px;
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-size: 24px;
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2);
     border: 3px solid white;
+    z-index: 2;
+    transition: all 0.3s ease;
 }
 
-.health-badge.good { background: var(--success); }
-.health-badge.warning { background: var(--warning); }
-.health-badge.danger { background: var(--danger); }
+.animal-card:hover .health-badge {
+    transform: scale(1.1);
+}
+
+.health-badge.good { 
+    background: linear-gradient(135deg, var(--success), #059669);
+}
+.health-badge.warning { 
+    background: linear-gradient(135deg, var(--warning), #d97706);
+}
+.health-badge.danger { 
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+}
 
 .animal-content {
-    padding: 20px;
+    padding: 24px;
 }
 
 .animal-header {
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: flex-start;
+    margin-bottom: 18px;
 }
 
 .animal-name {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 4px;
+    font-size: 24px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
     letter-spacing: -0.3px;
 }
 
 .animal-species {
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-weight: 600;
-    margin-bottom: 14px;
-}
-
-.id-tag {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primary);
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-}
-
-.health-chip {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    color: white;
-}
-
-.health-chip.good { background: var(--success); }
-.health-chip.warning { background: var(--warning); color: #3b2f04; }
-.health-chip.danger { background: var(--danger); }
-
-.animal-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 14px;
-}
-
-.meta-card {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04), rgba(139, 92, 246, 0.04));
-    border: 1px solid rgba(99, 102, 241, 0.1);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.meta-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    color: var(--text-light);
-    font-weight: 800;
-}
-
-.meta-value {
     font-size: 15px;
+    color: var(--text-secondary);
     font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.3;
 }
 
-.animal-content .behavior-chip {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12));
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 12px 16px;
+.animal-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.stat-item {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    padding: 14px;
     border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.stat-item:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 1) 0%, 
+        rgba(255, 255, 255, 0.98) 100%);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.stat-item-label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    font-weight: 800;
+}
+
+.stat-item-value {
+    font-size: 18px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .animal-devices {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 10px;
+    margin-bottom: 18px;
     flex-wrap: wrap;
 }
 
-.animal-devices:empty {
-    display: none;
-}
-
 .device-icon {
-    font-size: 18px;
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-    border-radius: var(--radius-sm);
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s ease;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .device-icon:hover {
-    transform: scale(1.15);
+    transform: scale(1.2) rotate(5deg);
     background: linear-gradient(135deg, var(--primary), var(--purple));
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-}
-
-.ai-alert {
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(59, 130, 246, 0.08));
-    border: 1px dashed rgba(14, 165, 233, 0.5);
-    border-radius: var(--radius-md);
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.ai-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #0ea5e9;
-    font-weight: 800;
-}
-
-.ai-text {
-    font-size: 14px;
-    color: var(--text-primary);
-    font-weight: 600;
-    line-height: 1.4;
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .animal-actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 @media (max-width: 768px) {
     .animals-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .animal-meta-grid {
+    .animal-stats {
         grid-template-columns: 1fr;
+    }
+    
+    .animal-card {
+        border-radius: var(--radius-lg);
+}
+
+    .animal-image-wrapper {
+        height: 220px;
     }
 }
 
+/* PROFESSIONAL TABLE LAYOUT */
+.animals-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 16px;
+}
+
+.animals-section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 0;
+    flex: 1;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-header-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95), 
+        rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-header-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-header-action:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-header-action.btn-edit-header:not(:disabled):hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-color: #f59e0b;
+}
+
+.btn-header-action.btn-delete-header:not(:disabled):hover {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+    border-color: var(--danger);
+}
+
+.btn-header-action span:first-child {
+    font-size: 14px;
+}
+
+.btn-edit-animals {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95), 
+        rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-edit-animals:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-icon {
+    font-size: 16px;
+}
+
+.animals-table-container {
+    margin-bottom: 16px;
+}
+
+.animals-table-wrapper {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    overflow-x: auto;
+    position: relative;
+}
+
+.animals-table-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.animals-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.animals-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.animals-table thead th {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.08), 
+        rgba(139, 92, 246, 0.06));
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    white-space: nowrap;
+}
+
+.animals-table thead th:first-child {
+    border-top-left-radius: var(--radius-md);
+}
+
+.animals-table thead th:last-child {
+    border-top-right-radius: var(--radius-md);
+}
+
+.animals-table tbody tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.animals-table tbody tr:hover {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.05), 
+        rgba(139, 92, 246, 0.03));
+    transform: translateX(4px);
+}
+
+.animals-table tbody tr.selected {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.15), 
+        rgba(139, 92, 246, 0.12));
+    border-left: 3px solid var(--primary);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.2),
+        inset 0 0 0 1px rgba(99, 102, 241, 0.1);
+}
+
+.animals-table tbody tr.selected:hover {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.18), 
+        rgba(139, 92, 246, 0.15));
+}
+
+.animals-table tbody tr.animal-behavior-row:hover {
+    transform: none;
+    background: transparent;
+}
+
+.animals-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.animals-table tbody td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+/* Animal Table Select Column */
+.col-select {
+    width: 60px;
+    text-align: center;
+}
+
+.animal-select-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+    transition: all 0.2s ease;
+}
+
+.animal-select-checkbox:hover {
+    transform: scale(1.1);
+}
+
+/* Animal Table Image */
+.col-image {
+    width: 60px;
+}
+
+.animal-table-image {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1.5px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-animal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Table Column Styles */
+.animal-table-name,
+.animal-table-species,
+.animal-table-dob,
+.animal-table-sex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: var(--radius-sm);
+}
+
+.name-value,
+.species-value,
+.age-value,
+.sex-value {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.id-tag,
+.breed-value,
+.dob-value {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Health Status Badge */
+.health-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-status-badge.clickable {
+    cursor: pointer;
+}
+
+.health-status-badge.clickable:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.health-status-badge.good {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.health-status-badge.warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.health-status-badge.danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Table Actions */
+.col-actions {
+    text-align: center;
+}
+
+.table-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-table {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9), 
+        rgba(248, 250, 252, 0.9));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 
+        0 1px 4px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-table:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-table.btn-view:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+}
+
+.btn-table.btn-track:hover {
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-color: var(--primary);
+}
+
+.btn-table.btn-edit:hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: #f59e0b;
+    color: white;
+}
+
+.btn-table.btn-delete:hover {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    border-color: var(--danger);
+    color: white;
+}
+
+/* Inline Behavior Notes in Table */
+.animal-behavior-row {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98), 
+        rgba(248, 250, 252, 0.96));
+    border-top: none !important;
+}
+
+.animal-behavior-row:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98), 
+        rgba(248, 250, 252, 0.96));
+    transform: none;
+}
+
+.animal-behavior-row td {
+    padding: 0 !important;
+    border-top: none;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.behavior-notes-inline {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.03), 
+        rgba(139, 92, 246, 0.02));
+    border-left: 3px solid var(--primary);
+    margin: 0 20px 12px 20px;
+    border-radius: var(--radius-md);
+}
+
+.behavior-notes-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.behavior-notes-title-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.behavior-subtitle {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.behavior-notes-content-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.behavior-notes-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.behavior-icon {
+    font-size: 18px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+.animals-empty {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-lg);
+    border: 1px dashed rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive Table */
+@media (max-width: 1024px) {
+    .animals-table-wrapper {
+        padding: 16px;
+    }
+    
+    .animals-table thead th,
+    .animals-table tbody td {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .animals-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .animals-section-title {
+        font-size: 20px;
+    }
+    
+    .btn-edit-animals {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .animals-table-container {
+        margin-bottom: 24px;
+    }
+    
+    .animals-table-wrapper {
+        padding: 12px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .animals-table {
+        font-size: 12px;
+    }
+    
+    .animals-table thead th {
+        font-size: 10px;
+        padding: 12px 10px;
+    }
+    
+    .animals-table tbody td {
+        padding: 16px 10px;
+    }
+    
+    .name-value,
+    .species-value,
+    .age-value,
+    .sex-value {
+        font-size: 13px;
+    }
+    
+    .id-tag,
+    .breed-value,
+    .dob-value {
+        font-size: 11px;
+    }
+    
+    .table-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+    
+    .animal-table-image {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .behavior-notes-inline {
+        padding: 16px;
+        margin: 0 10px 10px 10px;
+    }
+    
+    .behavior-notes-header-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Edit Animal Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.form-group input[type="text"]:hover,
+.form-group input[type="date"]:hover,
+.form-group select:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95), 
+        rgba(248, 250, 252, 0.95));
+    color: var(--text-primary);
+    border: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, 
+        rgba(226, 232, 240, 0.95), 
+        rgba(203, 213, 225, 0.95));
+    border-color: rgba(99, 102, 241, 0.3);
+}

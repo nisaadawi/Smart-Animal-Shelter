@@ -3,71 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - Smart Animal Shelter</title>
-    <link rel="stylesheet" href="../../css/styles.css">
+    <title>PawShelter - Health Monitor</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="health.css">
+    <link rel="stylesheet" href="../feeding/feeding.css">
 </head>
 <body>
     <div class="app">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-icon">🐾</div>
-                <div class="logo-text">
-                    <h1>Smart Shelter</h1>
-                    <p>Khairul Johari</p>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Main</div>
-                <div class="nav-item active" onclick="window.location.href='../dashboard/dashboard.html'">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../animals/animals.html'">
-                    <span class="nav-icon">🐾</span>
-                    <span>Animals</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../tracking/tracking.html'">
-                    <span class="nav-icon">📍</span>
-                    <span>Live Tracking</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../alerts/alerts.html'">
-                    <span class="nav-icon">🚨</span>
-                    <span>Alerts</span>
-                    <span class="nav-badge" id="alertBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Operations</div>
-                <div class="nav-item" onclick="window.location.href='../feeding/feeding.html'">
-                    <span class="nav-icon">🍽️</span>
-                    <span>Feeding</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='health.html'">
-                    <span class="nav-icon">❤️</span>
-                    <span>Health Monitor</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../environment/environment.html'">
-                    <span class="nav-icon">🌡️</span>
-                    <span>Environment</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='../inventory/inventory.html'">
-                    <span class="nav-icon">📦</span>
-                    <span>Inventory</span>
-                    <span class="nav-badge" id="inventoryBadge">0</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">System</div>
-                <div class="nav-item" onclick="window.location.href='../reports/reports.html'">
-                    <span class="nav-icon">📈</span>
-                    <span>Reports</span>
-                </div>
-            </div>
-        </aside>
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
@@ -75,47 +21,92 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Health Monitor</h1>
+                        <p>Monitor animal health and vital signs</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
+            
+
             <!-- CONTENT -->
             <div class="content">
-                <!-- REPORTS SECTION -->
-                <section class="page-section active" id="reports-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Reports & Analytics</h1>
-                        <p class="section-subtitle">Performance metrics and trends</p>
+                <!-- HEALTH SECTION -->
+                <section class="page-section active" id="health-section">
+                    <!-- Species Tabs -->
+                    <div class="species-tabs-container">
+                        <div class="species-tabs">
+                            <div class="species-tab active" onclick="filterHealthSpecies('Goat')">🐐 Goats</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Alligator')">🐊 Alligators</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Snail')">🐌 Snails</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Porcupine')">🦔 Porcupines</div>
+                            <div class="species-tab" onclick="filterHealthSpecies('Fox')">🦊 Foxes</div>
+                        </div>
                     </div>
 
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">Feeding Compliance</div>
+                    <!-- Animal Selection Grid (if no animal selected) -->
+                    <div id="animalSelectionGrid" class="animals-grid"></div>
+
+                    <!-- Detailed Health View (if animal selected) -->
+                    <div id="healthDetailView" class="health-detail-view" style="display: none;">
+                        <!-- Animal Header with Integrated Back Button -->
+                        <div class="health-animal-header" id="healthAnimalHeader">
+                            <!-- Back button and header content will be rendered by JavaScript -->
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-value">95%</div>
-                            <div class="stat-label">Health Score</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">CCTV Cameras</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">100%</div>
-                            <div class="stat-label">System Uptime</div>
+                        
+                        <!-- Health Metrics Grid -->
+                        <div class="health-stats-grid" id="healthMetricsGrid"></div>
+
+                        <!-- Health Charts -->
+                        <div class="health-charts-grid" id="healthChartsGrid"></div>
+
+                        <!-- Vaccination Schedule -->
+                        <div class="health-schedule-card">
+                            <div class="health-schedule-header">
+                                <span class="health-schedule-icon">💉</span>
+                                <h3 class="health-schedule-title">Vaccination Schedule</h3>
+                            </div>
+                            <div class="schedule-grid" id="vaccinationSchedule"></div>
                         </div>
                     </div>
                 </section>
@@ -127,6 +118,9 @@
     <div class="toast" id="toast"></div>
 
     <script src="../data.js"></script>
+    <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script src="health.js"></script>
 </body>
 </html>

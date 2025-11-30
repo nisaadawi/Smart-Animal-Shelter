@@ -1,46 +1,36 @@
-const insightCharts = {};
-const countdownTimers = {};
-const insightColors = {
-    vitals: {
-        border: 'rgba(99, 102, 241, 1)',
-        fillStart: 'rgba(99, 102, 241, 0.25)',
-        fillEnd: 'rgba(99, 102, 241, 0.05)'
-    },
-    weight: {
-        border: 'rgba(16, 185, 129, 1)',
-        fillStart: 'rgba(16, 185, 129, 0.25)',
-        fillEnd: 'rgba(16, 185, 129, 0.05)'
-    }
-};
-
 // Modal functions
 function openModal(id) {
     const allAnimals = Object.values(animalDatabase).flat();
     const animal = allAnimals.find(a => a.id === id);
     if (!animal) return;
 
-    resetSmartInsights();
     selectedAnimal = animal;
-    setText('modalTitle', animal.name);
-    setText('modalSubtitle', animal.species);
-    const modalImage = document.getElementById('modalImage');
-    if (modalImage) {
-        modalImage.src = animal.images[0];
-        modalImage.style.objectPosition = animal.imageFocus || 'center';
+    document.getElementById('modalTitle').textContent = animal.name;
+    document.getElementById('modalSubtitle').textContent = animal.species;
+    document.getElementById('modalImage').src = animal.images[0];
+
+    renderTrackingDetails(animal);
+    renderAlerts(animal);
+    renderBehaviorNotes(animal);
+
+    // Hide duplicate sensor section since it's now in tracking details
+    const modalSensors = document.getElementById('modalSensors');
+    if (modalSensors) {
+        modalSensors.innerHTML = '';
+        modalSensors.style.display = 'none';
     }
 
-    renderEmergencyPanel(animal);
-    populateIdentity(animal);
-    renderSensors(animal);
-    renderBehavior(animal);
-    renderSmartInsights(animal);
-    renderNotes(animal);
+    // Hide duplicate notes section - will be shown in tracking details if available
+    const modalNotes = document.getElementById('modalNotes');
+    if (modalNotes) {
+        modalNotes.innerHTML = '';
+        modalNotes.style.display = 'none';
+    }
 
     document.getElementById('animalModal').classList.add('active');
 }
 
 function closeModal() {
-    resetSmartInsights();
     document.getElementById('animalModal').classList.remove('active');
 }
 
@@ -63,215 +53,218 @@ function supervisorAlert() {
     showToast(`📢 Supervisor has been alerted about ${selectedAnimal.name}`);
 }
 
-function renderEmergencyPanel(animal) {
-    const emergencyPanel = document.getElementById('emergencyPanel');
-    if (!emergencyPanel) return;
+function openHealthMonitor() {
+    if (selectedAnimal) {
+        // Store the selected animal ID in sessionStorage for Health Monitor to pick up
+        sessionStorage.setItem('selectedAnimalId', selectedAnimal.id);
+        sessionStorage.setItem('selectedAnimalSpecies', selectedAnimal.species);
+        closeModal();
+        window.location.href = '../health/health.html';
+    }
+}
 
-    if (animal.safety) {
-        emergencyPanel.innerHTML = `
-            <div class="emergency-panel">
-                <div class="emergency-title">⚠️ Safety Controls</div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-danger" onclick="emergencyLock()">🔒 Emergency Lock</button>
-                    <button class="btn btn-danger" onclick="supervisorAlert()">📢 Alert Supervisor</button>
+function renderTrackingDetails(animal) {
+    const trackingInfo = document.getElementById('trackingInfo');
+    if (!trackingInfo) return;
+
+    if (!animal.tracking?.enabled) {
+        trackingInfo.innerHTML = `
+            <div class="tracking-info-placeholder">
+                <span>📡 Tracker offline</span>
+                <p>This animal does not have a live tracker assigned.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const battery = animal.tracking.battery ?? 100;
+    const batteryColor = battery >= 50 ? '#10b981' : battery >= 20 ? '#f59e0b' : '#ef4444';
+    const status = (animal.tracking.status || 'Unknown').toLowerCase();
+    const statusIcon = status === 'moving' ? '🏃' : '🚶';
+    const isMoving = status === 'moving';
+    const isResting = status === 'resting';
+    
+    // Top row: LOCATION and STATUS
+    const topRowMetrics = [
+        { label: 'LOCATION', value: animal.tracking.location || 'Unknown', icon: '📍' },
+        { label: 'STATUS', value: status, icon: statusIcon, highlightMoving: isMoving, highlightResting: isResting }
+    ];
+    
+    // Bottom row: BATTERY and LAST CHARGED
+    const bottomRowMetrics = [
+        { label: 'BATTERY', value: `${battery.toFixed(2)}%`, icon: '🔋', color: batteryColor },
+        { label: 'LAST CHARGED', value: animal.tracking.lastCharge || 'today', icon: '🔋', isLastCharged: true }
+    ];
+    
+    // Recent Activity from notes
+    let recentActivityHtml = '';
+    if (animal.notes && animal.notes.length > 0) {
+        const recentNotes = animal.notes.slice(0, 3);
+        recentActivityHtml = `
+            <div class="recent-activity-section">
+                <div class="recent-activity-header">
+                    <span class="recent-activity-icon">📝</span>
+                    <h3 class="recent-activity-title">Recent Activity</h3>
+                </div>
+                <div class="recent-activity-list">
+                    ${recentNotes.map(note => `
+                        <div class="recent-activity-item">
+                            <span class="activity-time">${note.time}:</span>
+                            <span class="activity-text">${note.text}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         `;
-    } else {
-        emergencyPanel.innerHTML = '';
-    }
-}
-
-function populateIdentity(animal) {
-    const profile = animal.profile || {};
-    const idTag = profile.idTag || 'ID pending';
-    const speciesBreed = `${animal.species}${profile.breed ? ` • ${profile.breed}` : ''}`;
-    const dobAge = profile.age && profile.dob
-        ? `${profile.age} • ${profile.dob}`
-        : profile.age || profile.dob || '—';
-
-    setText('identityNameTag', `${animal.name} • ${idTag}`);
-    setText('identitySpecies', speciesBreed);
-    setText('identityAge', dobAge);
-    setText('identitySex', profile.sex || '—');
-    setText('identityZone', profile.enclosure || 'Assigning habitat…');
-}
-
-function renderSensors(animal) {
-    const sensorsContainer = document.getElementById('modalSensors');
-    if (!sensorsContainer) return;
-
-    const excludedSensors = ['heartRate', 'temp', 'baskingTemp', 'waterTemp'];
-    if (!animal.sensors) {
-        sensorsContainer.innerHTML = '<div class="sensor-empty">Sensors offline – awaiting sync.</div>';
-        return;
     }
 
-    const sensorCards = Object.entries(animal.sensors)
-        .filter(([key]) => !excludedSensors.includes(key))
-        .map(([, sensor]) => `
-            <div class="sensor-card">
-                <div class="sensor-icon">${sensor.icon}</div>
-                <div class="sensor-label">${sensor.label}</div>
-                <div class="sensor-value">${sensor.value}${sensor.unit}</div>
+    trackingInfo.innerHTML = `
+        <div class="tracking-info-container">
+            <!-- Tracking Info: Background Container with 2x2 Grid Layout -->
+            <div class="tracking-info-wrapper">
+                <div class="tracking-info-grid">
+                    <!-- Top Row: LOCATION and STATUS -->
+                    <div class="tracking-info-row">
+                        ${topRowMetrics.map(metric => `
+                            <div class="tracking-info-card">
+                                <div class="tracking-card-icon">${metric.icon}</div>
+                                <div class="tracking-card-content">
+                                    <div class="tracking-card-label">${metric.label}</div>
+                                    <div class="tracking-card-value ${metric.highlightMoving ? 'status-moving' : ''} ${metric.highlightResting ? 'status-resting' : ''}">${metric.value}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Bottom Row: BATTERY and LAST CHARGED -->
+                    <div class="tracking-info-row">
+                        ${bottomRowMetrics.map(metric => `
+                            <div class="tracking-info-card">
+                                <div class="tracking-card-icon">${metric.icon}</div>
+                                <div class="tracking-card-content">
+                                    <div class="tracking-card-label">${metric.label}</div>
+                                    <div class="tracking-card-value ${metric.color === '#10b981' ? 'battery-good' : metric.color === '#f59e0b' ? 'battery-warning' : metric.color === '#ef4444' ? 'battery-low' : ''} ${metric.isLastCharged ? 'last-charged' : ''}">${metric.value}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
             </div>
-        `)
-        .join('');
-
-    sensorsContainer.innerHTML = sensorCards || '<div class="sensor-empty">Live vitals removed for privacy.</div>';
+            
+            <!-- Recent Activity -->
+            ${recentActivityHtml}
+        </div>
+    `;
 }
 
-function renderBehavior(animal) {
-    const behavior = animal.behaviorProfile || {};
-    const summary = behavior.summary || 'Behavioral insights syncing…';
-    const alert = behavior.alert || 'AI assistant calibrating signals…';
-    const mood = summary.split(/[.!?]/)[0] || 'Behavior syncing…';
+function renderAlerts(animal) {
+    const alertsSection = document.getElementById('alertsSection');
+    const modalAlerts = document.getElementById('modalAlerts');
+    if (!alertsSection || !modalAlerts) return;
 
-    setText('behaviorSummary', summary);
-    setText('behaviorAlert', alert);
-    setText('behaviorMood', mood);
-}
-
-function renderSmartInsights(animal) {
-    const metrics = animal.smartMetrics || {};
-    renderTrendChart(
-        'vitalTrendChart',
-        metrics.trendLabels,
-        metrics.vitalTrend,
-        insightColors.vitals
-    );
-    renderTrendChart(
-        'weightTrendChart',
-        metrics.trendLabels,
-        metrics.weightCurve,
-        insightColors.weight
-    );
-
-    startCountdownTimer('feedingTimer', metrics.feedingMinutes);
-    startCountdownTimer('medTimer', metrics.medicationMinutes);
-}
-
-function renderNotes(animal) {
-    const notesContainer = document.getElementById('modalNotes');
-    if (!notesContainer) return;
-
-    if (!Array.isArray(animal.notes) || !animal.notes.length) {
-        notesContainer.innerHTML = '<div class="note-item">No recent activity logged.</div>';
+    if (!animal.alerts || animal.alerts.length === 0) {
+        alertsSection.style.display = 'none';
+        modalAlerts.innerHTML = '';
         return;
     }
 
-    notesContainer.innerHTML = animal.notes.map(n =>
-        `<div class="note-item"><span class="note-time">${n.time}:</span> ${n.text}</div>`
-    ).join('');
+    alertsSection.style.display = 'block';
+    
+    // Determine severity based on health status
+    const severity = animal.health === 'danger' ? 'urgent' : 
+                     animal.health === 'warning' ? 'moderate' : 'routine';
+    const meta = typeof severityMeta !== 'undefined' ? severityMeta[severity] : 
+                 { label: 'Alert', icon: '⚠️', progress: '60%' };
+    
+    // Get alert message (first alert or default)
+    const alertMessage = animal.alerts[0] || 'Health alert detected';
+    const location = animal.tracking?.location || 'Unknown location';
+    const healthStatus = animal.health ? animal.health.toUpperCase() : 'OK';
+    
+    modalAlerts.innerHTML = `
+        <div class="modal-alert-card ${severity}">
+            <div class="modal-alert-header">
+                <span class="modal-alert-pill ${severity}">
+                    ${meta.icon || '⚠️'} ${meta.label || 'ALERT'}
+                </span>
+                <span class="modal-alert-time">Just now</span>
+            </div>
+            <div class="modal-alert-message">${alertMessage}</div>
+            <div class="modal-alert-animal">${animal.name} (${animal.species})</div>
+            <div class="modal-alert-meta">
+                <span class="modal-alert-tag">📍 ${location}</span>
+                <span class="modal-alert-tag">❤️ Status: ${healthStatus}</span>
+            </div>
+            <div class="modal-alert-progress">
+                <div class="modal-alert-progress-fill" style="--progress: ${meta.progress || '60%'}"></div>
+            </div>
+            <div class="modal-alert-actions">
+                <button class="btn btn-primary" onclick="closeModal(); if(typeof renderTracking === 'function') renderTracking();">View Details</button>
+                <button class="btn btn-success" onclick="acknowledgeModalAlert(this)">Acknowledge</button>
+            </div>
+        </div>
+    `;
 }
 
-function renderTrendChart(canvasId, labels = [], values = [], colors) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return;
+function renderBehaviorNotes(animal) {
+    const behaviorSection = document.getElementById('behaviorNotesSection');
+    const behaviorContent = document.getElementById('behaviorNotesContent');
+    if (!behaviorSection || !behaviorContent) return;
 
-    const card = canvas.closest('.insight-card');
-    const hasData = Array.isArray(labels) && labels.length && Array.isArray(values) && values.length;
+    const behaviorNotes = animal.behaviorNotes || null;
+    const temperament = animal.temperament || null;
+    const aiAlert = animal.aiAlert || null;
 
-    if (!hasData || typeof Chart === 'undefined') {
-        if (card) card.classList.add('insight-card--empty');
-        destroyChart(canvasId);
+    if (!behaviorNotes && !aiAlert) {
+        behaviorSection.style.display = 'none';
+        behaviorContent.innerHTML = '';
         return;
     }
 
-    if (card) card.classList.remove('insight-card--empty');
-    destroyChart(canvasId);
+    behaviorSection.style.display = 'block';
+    
+    let html = '<div class="behavior-notes-content-wrapper">';
+    
+    if (temperament) {
+        html += `
+            <div class="behavior-tag">
+                ${temperament}
+            </div>
+        `;
+    }
+    
+    if (behaviorNotes) {
+        html += `
+            <div class="behavior-notes-text">
+                <strong>${animal.name}:</strong> ${behaviorNotes}
+            </div>
+        `;
+    }
+    
+    if (aiAlert) {
+        html += `
+            <div class="behavior-ai-alert">
+                <span class="ai-label">AI:</span>
+                <span class="ai-message">${aiAlert}</span>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    behaviorContent.innerHTML = html;
+}
 
-    const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, colors.fillStart);
-    gradient.addColorStop(1, colors.fillEnd);
-
-    insightCharts[canvasId] = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                data: values,
-                tension: 0.4,
-                borderColor: colors.border,
-                backgroundColor: gradient,
-                borderWidth: 3,
-                fill: true,
-                pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    display: false
-                }
+function acknowledgeModalAlert(btn) {
+    const alertCard = btn.closest('.modal-alert-card');
+    if (alertCard) {
+        alertCard.style.opacity = '0.5';
+        alertCard.style.pointerEvents = 'none';
+        showToast('✅ Alert acknowledged');
+        setTimeout(() => {
+            const alertsSection = document.getElementById('alertsSection');
+            if (alertsSection) {
+                alertsSection.style.display = 'none';
             }
-        }
-    });
-}
-
-function startCountdownTimer(elementId, minutes) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-
-    if (countdownTimers[elementId]) {
-        clearInterval(countdownTimers[elementId]);
-    }
-
-    if (typeof minutes !== 'number') {
-        el.textContent = '—';
-        return;
-    }
-
-    const target = Date.now() + minutes * 60000;
-    const update = () => {
-        const diff = target - Date.now();
-        if (diff <= 0) {
-            el.textContent = 'Due now';
-            clearInterval(countdownTimers[elementId]);
-            return;
-        }
-
-        el.textContent = formatCountdown(diff);
-    };
-
-    update();
-    countdownTimers[elementId] = setInterval(update, 1000);
-}
-
-function formatCountdown(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    const hourPart = hours > 0 ? `${hours}h ` : '';
-    return `${hourPart}${minutes}m ${seconds.toString().padStart(2, '0')}s`;
-}
-
-function resetSmartInsights() {
-    Object.keys(insightCharts).forEach(key => destroyChart(key));
-    Object.keys(countdownTimers).forEach(key => {
-        clearInterval(countdownTimers[key]);
-        delete countdownTimers[key];
-    });
-}
-
-function destroyChart(key) {
-    if (insightCharts[key]) {
-        insightCharts[key].destroy();
-        delete insightCharts[key];
-    }
-}
-
-function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) {
-        el.textContent = value;
+        }, 500);
     }
 }
