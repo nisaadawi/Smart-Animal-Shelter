@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerts - Smart Animal Shelter</title>
+    <title>PawShelter - Alerts</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="alerts.css">
-    <link rel="stylesheet" href="../../css/modal.css">
 </head>
 <body>
     <div class="app">
@@ -18,19 +20,48 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <h1>PawShelter Alerts</h1>
+                        <p>Critical alerts and system notifications</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -38,9 +69,16 @@
             <div class="content">
                 <!-- ALERTS SECTION -->
                 <section class="page-section active" id="alerts-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Alerts & Notifications</h1>
-                        <p class="section-subtitle">Critical alerts and system notifications</p>
+                    <div class="species-tabs-container">
+                        <div class="species-tabs">
+                            <div class="species-tab active" onclick="filterAlertsBySpecies('All')">All Species</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Goat')">🐐 Goats</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Sugarglider')">🐿️ Sugar Gliders</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Alligator')">🐊 Alligators</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Snail')">🐌 Snails</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Porcupine')">🦔 Porcupines</div>
+                            <div class="species-tab" onclick="filterAlertsBySpecies('Fox')">🦊 Foxes</div>
+                        </div>
                     </div>
 
                     <div class="alerts-panel">
@@ -48,49 +86,12 @@
                         <div class="alerts-summary" id="alertsSummary"></div>
                     </div>
 
-                    <div class="alerts-grid" id="alertsGrid"></div>
+                    <div class="alerts-container">
+                        <div class="alerts-grid" id="alertsGrid"></div>
+                    </div>
                 </section>
             </div>
         </main>
-    </div>
-
-    <!-- ANIMAL DETAIL MODAL -->
-    <div class="modal" id="animalModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>
-                    <div class="modal-title" id="modalTitle">Animal Name</div>
-                    <div class="modal-subtitle" id="modalSubtitle">Species</div>
-                </div>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-
-            <div class="modal-body">
-                <img src="" id="modalImage" class="modal-image" alt="Animal">
-
-                <div id="emergencyPanel"></div>
-
-                <div class="cctv-feed" id="cctvFeed">
-                    <div class="cctv-placeholder">📹</div>
-                    <div class="cctv-overlay">
-                        <span class="rec-dot"></span>
-                        <span>LIVE</span>
-                    </div>
-                </div>
-
-                <div class="sensors-grid" id="modalSensors"></div>
-
-                <div class="notes-section">
-                    <h3 class="notes-title">📝 Recent Activity</h3>
-                    <div id="modalNotes"></div>
-                </div>
-            </div>
-
-            <div class="modal-footer" id="modalFooter">
-                <button class="btn btn-success" onclick="feedAnimal()">🍽️ Feed Now</button>
-                <button class="btn btn-primary" onclick="window.location.href='tracking.html'; closeModal();">📍 Track Location</button>
-            </div>
-        </div>
     </div>
 
     <!-- TOAST -->
@@ -99,7 +100,6 @@
     <script src="../data.js"></script>
     <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
-    <script src="../alerts/alerts.js"></script>
-    <script src="../modal.js"></script>
+    <script src="alerts.js"></script>
 </body>
 </html>

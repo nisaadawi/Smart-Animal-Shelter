@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - Smart Animal Shelter</title>
+    <title>PawShelter - Reports</title>
+    <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
+    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="reports.css">
     <link rel="stylesheet" href="../dashboard/dashboard.css">
@@ -18,19 +21,51 @@
             <header class="header">
                 <div class="header-left">
                     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" class="search-input" placeholder="Search animals, rooms...">
+                    <div class="header-page-title">
+                        <div class="header-title-with-icon">
+                            <img src="../../images/icon/PawShelter.png" alt="PawShelter" class="header-icon">
+                            <h1>PawShelter Reports</h1>
+                        </div>
+                        <p>Generate and view system reports</p>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <button class="header-btn">
+                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
                         🔔
-                        <span class="notification-dot"></span>
+                        <span class="notification-badge" id="notificationBadge"></span>
                     </button>
-                    <button class="header-btn">⚙️</button>
-                    <div class="user-avatar">KJ</div>
+                    <div class="settings-menu-container">
+                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="settings-menu-item" onclick="openSettingsProfile()">
+                                <span class="settings-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
+                                <span class="settings-menu-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
+                                <span class="settings-menu-icon">🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item" onclick="openSettingsHelp()">
+                                <span class="settings-menu-icon">❓</span>
+                                <span>Help & Support</span>
+                            </div>
+                            <div class="settings-menu-item" onclick="openSettingsAbout()">
+                                <span class="settings-menu-icon">ℹ️</span>
+                                <span>About</span>
+                            </div>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
+                                <span class="settings-menu-icon">🚪</span>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -38,27 +73,85 @@
             <div class="content">
                 <!-- REPORTS SECTION -->
                 <section class="page-section active" id="reports-section">
-                    <div class="section-header">
-                        <h1 class="section-title">Reports & Analytics</h1>
-                        <p class="section-subtitle">Performance metrics and trends</p>
-                    </div>
-
+                    <!-- Quick Stats -->
                     <div class="stats-grid">
                         <div class="stat-card">
+                            <div class="stat-icon">📊</div>
                             <div class="stat-value">98%</div>
                             <div class="stat-label">Feeding Compliance</div>
                         </div>
                         <div class="stat-card">
+                            <div class="stat-icon">❤️</div>
                             <div class="stat-value">95%</div>
                             <div class="stat-label">Health Score</div>
                         </div>
                         <div class="stat-card">
+                            <div class="stat-icon">📹</div>
                             <div class="stat-value">24</div>
                             <div class="stat-label">CCTV Cameras</div>
                         </div>
                         <div class="stat-card">
+                            <div class="stat-icon">⚡</div>
                             <div class="stat-value">100%</div>
                             <div class="stat-label">System Uptime</div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Reports Section -->
+                    <div class="reports-panel">
+                        <div class="report-header">
+                            <h2 class="report-title">📋 Generate Reports</h2>
+                        </div>
+                        <div class="report-cards-grid">
+                            <div class="report-card" onclick="generateReport('health')">
+                                <div class="report-card-icon">❤️</div>
+                                <h3 class="report-card-title">Health Report</h3>
+                                <p class="report-card-desc">Generate comprehensive health status report for all animals</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('feeding')">
+                                <div class="report-card-icon">🍽️</div>
+                                <h3 class="report-card-title">Feeding Report</h3>
+                                <p class="report-card-desc">View feeding schedules and compliance statistics</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('tracking')">
+                                <div class="report-card-icon">📍</div>
+                                <h3 class="report-card-title">Tracking Report</h3>
+                                <p class="report-card-desc">Animal movement patterns and location history</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('alerts')">
+                                <div class="report-card-icon">🚨</div>
+                                <h3 class="report-card-title">Alerts Report</h3>
+                                <p class="report-card-desc">Summary of all alerts and notifications</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('inventory')">
+                                <div class="report-card-icon">📦</div>
+                                <h3 class="report-card-title">Inventory Report</h3>
+                                <p class="report-card-desc">Stock levels and inventory management data</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('system')">
+                                <div class="report-card-icon">⚙️</div>
+                                <h3 class="report-card-title">System Report</h3>
+                                <p class="report-card-desc">System performance and device status overview</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Reports Section -->
+                    <div class="reports-panel">
+                        <div class="report-header">
+                            <h2 class="report-title">📁 Recent Reports</h2>
+                            <div class="report-actions">
+                                <button class="report-action-btn" onclick="refreshReports()">🔄 Refresh</button>
+                            </div>
+                        </div>
+                        <div class="reports-list" id="reportsList">
+                            <!-- Reports will be dynamically generated here -->
                         </div>
                     </div>
                 </section>
@@ -72,5 +165,6 @@
     <script src="../data.js"></script>
     <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>
+    <script src="reports.js"></script>
 </body>
 </html>

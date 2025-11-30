@@ -2,6 +2,10 @@
 
 .species-tabs-container {
     margin-bottom: 24px;
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    padding-top: 4px;
 }
 
 .species-tabs {
@@ -9,7 +13,9 @@
     gap: 12px;
     margin-bottom: 24px;
     overflow-x: auto;
+    overflow-y: visible;
     padding-bottom: 8px;
+    padding-top: 4px;
 }
 
 .species-tabs::-webkit-scrollbar {
@@ -17,34 +23,94 @@
 }
 
 .species-tabs::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(90deg, var(--primary), var(--purple));
     border-radius: 3px;
 }
 
+.species-tabs::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, var(--purple), var(--primary));
+}
+
 .species-tab {
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: var(--radius-md);
-    cursor: pointer;
+    padding: 12px 20px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     font-weight: 700;
+    font-size: 13px;
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
     white-space: nowrap;
-    font-size: 14px;
+    flex-shrink: 0;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.species-tab::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.species-tab:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .species-tab:hover {
-    border-color: var(--primary);
+    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(255, 255, 255, 1);
     transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .species-tab.active {
     background: linear-gradient(135deg, var(--primary), var(--purple));
     color: white;
-    border-color: transparent;
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    animation: filterPulse 2s ease-in-out infinite;
+}
+
+@keyframes filterPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 24px rgba(99, 102, 241, 0.4), 
+            0 4px 12px rgba(139, 92, 246, 0.3), 
+            0 0 0 1px rgba(255, 255, 255, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+    }
+    50% { 
+        box-shadow: 
+            0 10px 28px rgba(99, 102, 241, 0.5), 
+            0 6px 16px rgba(139, 92, 246, 0.4), 
+            0 0 0 1px rgba(255, 255, 255, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3); 
+    }
 }
 
 /* MAIN CAGE MONITOR TITLE */
@@ -71,6 +137,12 @@
     background-clip: text;
 }
 
+/* Remove underline line for cage section titles */
+.cage-condition-container .section-title::after,
+.controller-container .section-title::after {
+    display: none;
+}
+
 .CCTV-header {
     text-align: left;
     margin-bottom: 20px;
@@ -87,12 +159,40 @@
 }
 
 .cctv-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-xl);
-    padding: 28px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 32px;
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+.cctv-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .cctv-display-wrapper {
@@ -305,16 +405,48 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .action-btn:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.action-btn:hover::before {
+    opacity: 1;
 }
 
 .action-icon {
@@ -352,17 +484,25 @@
 }
 
 .camera-controls-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: 50%;
     padding: 24px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     width: 200px;
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .camera-controls {
@@ -420,11 +560,17 @@
 
 /* CAGE CONDITION CONTAINER */
 .cage-condition-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-xl);
     padding: 32px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.6);
     margin-top: 24px;
     position: relative;
@@ -448,13 +594,19 @@
 }
 
 .condition-card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-lg);
     padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -463,8 +615,12 @@
 }
 
 .condition-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 
+        0 12px 32px rgba(99, 102, 241, 0.15),
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.3);
 }
 
 .condition-card::before {
@@ -472,10 +628,20 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    right: 0;
     height: 3px;
-    background: linear-gradient(135deg, var(--primary), var(--purple));
-    opacity: 0.7;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.condition-card:hover::before {
+    opacity: 1;
 }
 
 .condition-icon {
@@ -544,11 +710,17 @@
 
 /* CONTROLLER CONTAINER */
 .controller-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-xl);
     padding: 32px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.6);
     margin-top: 24px;
     position: relative;
@@ -574,13 +746,19 @@
 }
 
 .controller-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(15px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border-radius: var(--radius-lg);
     padding: 28px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     text-align: center;
@@ -591,9 +769,12 @@
 }
 
 .controller-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 
+        0 16px 40px rgba(99, 102, 241, 0.2),
+        0 4px 16px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.4);
 }
 
 .controller-card::before {
@@ -601,10 +782,20 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(135deg, var(--primary), var(--purple));
-    opacity: 0.8;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.controller-card:hover::before {
+    opacity: 1;
 }
 
 .controller-header {
@@ -657,13 +848,19 @@
     flex: 1;
     padding: 14px 8px;
     border: 1px solid rgba(99, 102, 241, 0.2);
-    background: rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 20px;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
     color: var(--text-primary);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .preset-btn:hover {
@@ -690,7 +887,11 @@
     flex: 1;
     padding: 18px 8px;
     border: 1px solid rgba(99, 102, 241, 0.2);
-    background: rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 13px;
@@ -698,8 +899,10 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    backdrop-filter: blur(10px);
     color: var(--text-primary);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .fan-btn:hover:not(.active) {
