@@ -135,6 +135,89 @@ const feederHistoryData = {
 // Feeding page functionality
 function initializeFeeding() {
     renderFeederDashboard('Goat'); // Start with Goat selected
+    updateSpeciesTabs(); // Update tabs with status indicators
+}
+
+// Get meal percentage for a species
+function getSpeciesMealPercent(species) {
+    const filteredFeeders = allFeeders.filter(feeder => feeder.species === species);
+    if (filteredFeeders.length === 0) {
+        return 0;
+    }
+    const totalPercent = filteredFeeders.reduce((sum, feeder) => sum + (feeder.mealPercent || 0), 0);
+    return Math.round(totalPercent / filteredFeeders.length);
+}
+
+// Get food status for a meal percentage
+function getFoodStatus(mealPercent) {
+    if (mealPercent < 25) {
+        return 'very-low';
+    } else if (mealPercent < 50) {
+        return 'low';
+    } else if (mealPercent < 75) {
+        return 'good';
+    } else {
+        return 'excellent';
+    }
+}
+
+// Get status color for a meal percentage
+function getStatusColor(status) {
+    switch(status) {
+        case 'very-low':
+            return '#ef4444'; // Red
+        case 'low':
+            return '#fbbf24'; // Yellow
+        case 'good':
+            return '#3b82f6'; // Blue
+        case 'excellent':
+            return '#10b981'; // Green
+        default:
+            return '#6b7280'; // Gray
+    }
+}
+
+// Update species tabs with status indicators
+function updateSpeciesTabs() {
+    const speciesList = ['Goat', 'Sugarglider', 'Alligator', 'Snail', 'Porcupine', 'Fox'];
+    const speciesIcons = {
+        'Goat': '🐐',
+        'Sugarglider': '🐿️',
+        'Alligator': '🐊',
+        'Snail': '🐌',
+        'Porcupine': '🦔',
+        'Fox': '🦊'
+    };
+    const speciesDisplayNames = {
+        'Goat': 'Goats',
+        'Sugarglider': 'Sugar Gliders',
+        'Alligator': 'Alligators',
+        'Snail': 'Snails',
+        'Porcupine': 'Porcupines',
+        'Fox': 'Foxes'
+    };
+
+    const tabsContainer = document.querySelector('.species-tabs');
+    if (!tabsContainer) return;
+
+    const activeSpecies = currentSelectedSpecies || 'Goat';
+    
+    tabsContainer.innerHTML = speciesList.map(species => {
+        const mealPercent = getSpeciesMealPercent(species);
+        const status = getFoodStatus(mealPercent);
+        const statusColor = getStatusColor(status);
+        const isActive = species === activeSpecies;
+        const warningEmoji = (status === 'very-low' || status === 'low') ? '⚠️ ' : '';
+        
+        return `
+            <div class="species-tab ${isActive ? 'active' : ''}" 
+                 onclick="filterFeedersBySpecies('${species}')" 
+                 data-species="${species}">
+                <span class="species-status-dot" style="background-color: ${statusColor}"></span>
+                ${warningEmoji}${speciesIcons[species]} ${speciesDisplayNames[species]}
+            </div>
+        `;
+    }).join('');
 }
 
 // Generate schedule list HTML for a species
@@ -779,6 +862,9 @@ function renderFeederDashboard(speciesFilter = 'Goat') {
             animateCounter();
         }
     }, 50);
+    
+    // Update tabs to reflect current meal percentages
+    updateSpeciesTabs();
 }
 
 // Adjust portion count
@@ -853,6 +939,9 @@ function feedAnimals(species) {
 
     // Re-render the dashboard to update progress and meal meter
     renderFeederDashboard(species);
+    
+    // Update tabs to reflect new meal percentages
+    updateSpeciesTabs();
 }
 
 // Toggle auto feeder on/off
@@ -1318,14 +1407,13 @@ function generateAIResponse(question, displayName, portionInfo, dailyIntake, int
 
 // Filter feeders by species
 function filterFeedersBySpecies(species) {
-    // Update active tab
-    document.querySelectorAll('.species-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    document.querySelector(`[data-species="${species}"]`).classList.add('active');
-
+    currentSelectedSpecies = species;
+    
     // Re-render dashboard with filtered feeders
     renderFeederDashboard(species);
+    
+    // Update tabs to reflect active state
+    updateSpeciesTabs();
 }
 
 // Initialize feeding page when page loads
