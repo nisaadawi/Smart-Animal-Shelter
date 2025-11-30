@@ -1,8 +1,5 @@
 // Initialize dashboard
-let speciesChartInstance = null;
 let healthStatusChartInstance = null;
-let feedingProgressChartInstance = null;
-let alertDistributionChartInstance = null;
 let dashboardMiniMap = null;
 let dashboardMarkerLayer = null;
 let dashboardMarkerMap = new Map();
@@ -13,10 +10,7 @@ function initializeDashboard() {
     if (typeof updateHeaderStats === 'function') {
         updateHeaderStats();
     }
-    renderSpeciesChart();
     renderHealthStatusChart();
-    renderFeedingProgressChart();
-    renderAlertDistributionChart();
     renderCriticalAlerts();
     renderUpcomingFeedings();
     renderLowStock();
@@ -53,12 +47,64 @@ function initializeDashboard() {
         }
         updateNextFeedingTime();
     }, 1000);
+    
+    // Update greeting every hour (in case user stays on page)
+    setInterval(() => {
+        updateGreeting();
+    }, 3600000); // Every hour
+}
+
+// Update personalized greeting based on time of day
+function updateGreeting() {
+    const now = new Date();
+    const hours = now.getHours();
+    
+    const greetingTimeEl = document.getElementById('greetingTime');
+    const greetingSubtitleEl = document.getElementById('greetingSubtitle');
+    
+    if (!greetingTimeEl) return;
+    
+    let greeting, subtitle;
+    
+    if (hours >= 5 && hours < 12) {
+        greeting = 'Good Morning';
+        subtitle = 'Your Dashboard is updated';
+    } else if (hours >= 12 && hours < 17) {
+        greeting = 'Good Afternoon';
+        subtitle = 'Your Dashboard is updated';
+    } else if (hours >= 17 && hours < 21) {
+        greeting = 'Good Evening';
+        subtitle = 'Your Dashboard is updated';
+    } else {
+        greeting = 'Good Night';
+        subtitle = 'Your Dashboard is updated';
+    }
+    
+    // Smooth transition animation
+    if (greetingTimeEl.textContent !== greeting) {
+        greetingTimeEl.style.opacity = '0';
+        greetingTimeEl.style.transform = 'translateY(-5px)';
+        setTimeout(() => {
+            greetingTimeEl.textContent = greeting;
+            greetingTimeEl.style.opacity = '1';
+            greetingTimeEl.style.transform = 'translateY(0)';
+        }, 150);
+    } else {
+        greetingTimeEl.textContent = greeting;
+    }
+    
+    if (greetingSubtitleEl) {
+        greetingSubtitleEl.textContent = subtitle;
+    }
 }
 
 // Update sidebar greeting with date, time, and quick stats
 function updateHeaderInfo() {
     const now = new Date();
     const hours = now.getHours();
+    
+    // Update dashboard greeting
+    updateGreeting();
     
     const timeOfDayEl = document.getElementById('sidebarTimeOfDay');
     if (timeOfDayEl) {
@@ -591,110 +637,6 @@ function renderEnvironmentalStatus() {
 
 // PROFESSIONAL CHARTS
 
-function renderSpeciesChart() {
-    const canvas = document.getElementById('speciesChart');
-    if (!canvas || !window.Chart) return;
-
-    const allAnimals = Object.values(animalDatabase).flat();
-    const counts = {};
-    allAnimals.forEach(animal => {
-        counts[animal.species] = (counts[animal.species] || 0) + 1;
-    });
-
-    const labels = Object.keys(counts);
-    const data = labels.map(label => counts[label]);
-    const colors = labels.map(label => trackingSpeciesMeta[label]?.color || '#6366f1');
-
-    if (speciesChartInstance) speciesChartInstance.destroy();
-    speciesChartInstance = new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Animals',
-                data,
-                backgroundColor: colors.map(c => {
-                    // Create professional gradient effect
-                    return c + '50';
-                }),
-                borderColor: colors,
-                borderWidth: 2.5,
-                borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
-                borderSkipped: false,
-                barThickness: 48,
-                maxBarThickness: 52
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    top: 8,
-                    bottom: 4,
-                    left: 4,
-                    right: 4
-                }
-            },
-            plugins: { 
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.98)',
-                    padding: 16,
-                    titleFont: { size: 13, weight: '700', family: 'system-ui, -apple-system, sans-serif' },
-                    bodyFont: { size: 14, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                    cornerRadius: 12,
-                    displayColors: true,
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                    borderWidth: 1.5,
-                    titleColor: '#f1f5f9',
-                    bodyColor: '#e2e8f0',
-                    titleSpacing: 8,
-                    bodySpacing: 6,
-                    callbacks: {
-                        label: function(context) {
-                            return ` ${context.parsed.y} animal${context.parsed.y !== 1 ? 's' : ''}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { 
-                        color: '#64748b', 
-                        stepSize: 1,
-                        font: { size: 11, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                        padding: 12,
-                        precision: 0
-                    },
-                    grid: { 
-                        color: 'rgba(148, 163, 184, 0.12)', 
-                        drawBorder: false,
-                        lineWidth: 1,
-                        drawTicks: false
-                    }
-                },
-                x: {
-                    ticks: { 
-                        color: '#475569',
-                        font: { size: 11, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                        padding: 10
-                    },
-                    grid: { 
-                        display: false,
-                        drawBorder: false
-                    }
-                }
-            },
-            animation: {
-                duration: 1400,
-                easing: 'easeOutQuart'
-            }
-        }
-    });
-}
-
 function renderHealthStatusChart() {
     const canvas = document.getElementById('healthStatusChart');
     if (!canvas || !window.Chart) return;
@@ -778,193 +720,6 @@ function renderHealthStatusChart() {
             animation: {
                 animateRotate: true,
                 duration: 1600,
-                easing: 'easeOutQuart'
-            }
-        }
-    });
-}
-
-function renderFeedingProgressChart() {
-    const canvas = document.getElementById('feedingProgressChart');
-    if (!canvas || !window.Chart) return;
-
-    const total = feedingSchedule.length;
-    const completed = feedingSchedule.filter(f => f.status === 'completed').length;
-    const pending = total - completed;
-    const percentage = total > 0 ? (completed / total * 100).toFixed(1) : 0;
-
-    if (feedingProgressChartInstance) feedingProgressChartInstance.destroy();
-    feedingProgressChartInstance = new Chart(canvas, {
-        type: 'doughnut',
-        data: {
-            labels: ['Completed', 'Pending'],
-            datasets: [{
-                data: [completed, pending],
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.9)',
-                    'rgba(226, 232, 240, 0.6)'
-                ],
-                borderColor: [
-                    '#22c55e',
-                    '#cbd5e1'
-                ],
-                borderWidth: 3,
-                hoverBorderWidth: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '70%',
-            layout: {
-                padding: {
-                    top: 5,
-                    bottom: 5
-                }
-            },
-            plugins: {
-                legend: { 
-                    position: 'bottom',
-                    align: 'center',
-                    labels: { 
-                        color: '#475569',
-                        font: { size: 12, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                        padding: 20,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        boxWidth: 10,
-                        boxHeight: 10,
-                        boxPadding: 8
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.98)',
-                    padding: 16,
-                    titleFont: { size: 13, weight: '700', family: 'system-ui, -apple-system, sans-serif' },
-                    bodyFont: { size: 14, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                    cornerRadius: 12,
-                    displayColors: true,
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                    borderWidth: 1.5,
-                    titleColor: '#f1f5f9',
-                    bodyColor: '#e2e8f0',
-                    titleSpacing: 8,
-                    bodySpacing: 6,
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                            return ` ${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            },
-            animation: {
-                animateRotate: true,
-                duration: 1600,
-                easing: 'easeOutQuart'
-            }
-        }
-    });
-}
-
-function renderAlertDistributionChart() {
-    const canvas = document.getElementById('alertDistributionChart');
-    if (!canvas || !window.Chart) return;
-
-    const allAnimals = Object.values(animalDatabase).flat();
-    const urgent = allAnimals.filter(a => 
-        a.health === 'danger' || (a.alerts && a.alerts.length > 0 && a.alerts.some(() => true))
-    ).length;
-    const moderate = allAnimals.filter(a => a.health === 'warning').length;
-    const routine = allAnimals.filter(a => 
-        a.health === 'good' && (!a.alerts || a.alerts.length === 0)
-    ).length;
-
-    if (alertDistributionChartInstance) alertDistributionChartInstance.destroy();
-    alertDistributionChartInstance = new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels: ['Routine', 'Moderate', 'Urgent'],
-            datasets: [{
-                label: 'Alerts',
-                data: [routine, moderate, urgent],
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.75)',
-                    'rgba(251, 191, 36, 0.75)',
-                    'rgba(239, 68, 68, 0.75)'
-                ],
-                borderColor: [
-                    '#22c55e',
-                    '#fbbf24',
-                    '#ef4444'
-                ],
-                borderWidth: 2.5,
-                borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
-                borderSkipped: false,
-                barThickness: 50,
-                maxBarThickness: 55
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    top: 10,
-                    bottom: 5,
-                    left: 5,
-                    right: 5
-                }
-            },
-            plugins: { 
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.98)',
-                    padding: 16,
-                    titleFont: { size: 13, weight: '700', family: 'system-ui, -apple-system, sans-serif' },
-                    bodyFont: { size: 14, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                    cornerRadius: 12,
-                    displayColors: true,
-                    borderColor: 'rgba(255, 255, 255, 0.15)',
-                    borderWidth: 1.5,
-                    titleColor: '#f1f5f9',
-                    bodyColor: '#e2e8f0',
-                    titleSpacing: 8,
-                    bodySpacing: 6
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { 
-                        color: '#64748b', 
-                        stepSize: 1,
-                        font: { size: 11, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                        padding: 12,
-                        precision: 0
-                    },
-                    grid: { 
-                        color: 'rgba(148, 163, 184, 0.12)', 
-                        drawBorder: false,
-                        lineWidth: 1,
-                        drawTicks: false
-                    }
-                },
-                x: {
-                    ticks: { 
-                        color: '#475569',
-                        font: { size: 11, weight: '600', family: 'system-ui, -apple-system, sans-serif' },
-                        padding: 10
-                    },
-                    grid: { 
-                        display: false,
-                        drawBorder: false
-                    }
-                }
-            },
-            animation: {
-                duration: 1400,
                 easing: 'easeOutQuart'
             }
         }

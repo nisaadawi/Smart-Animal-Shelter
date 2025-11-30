@@ -18,63 +18,42 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
-            <!-- HEADER -->
-            <header class="header">
-                <div class="header-left">
-                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="header-page-title">
-                        <div class="header-title-with-icon">
-                            <img src="../../images/icon/PawShelter.png" alt="PawShelter" class="header-icon">
-                            <h1>PawShelter Dashboard</h1>
-                        </div>
-                        <p>Real-time shelter management and monitoring</p>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
-                        🔔
-                        <span class="notification-badge" id="notificationBadge"></span>
-                    </button>
-                    <div class="settings-menu-container">
-                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
-                        <div class="settings-menu" id="settingsMenu">
-                            <div class="settings-menu-item" onclick="openSettingsProfile()">
-                                <span class="settings-menu-icon">👤</span>
-                                <span>Profile</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
-                                <span class="settings-menu-icon">⚙️</span>
-                                <span>Preferences</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
-                                <span class="settings-menu-icon">🔔</span>
-                                <span>Notifications</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item" onclick="openSettingsHelp()">
-                                <span class="settings-menu-icon">❓</span>
-                                <span>Help & Support</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsAbout()">
-                                <span class="settings-menu-icon">ℹ️</span>
-                                <span>About</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
-                                <span class="settings-menu-icon">🚪</span>
-                                <span>Log Out</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
             <!-- CONTENT -->
             <div class="content">
                 <!-- DASHBOARD SECTION -->
                 <section class="page-section active" id="dashboard-section">
-                    <!-- ENHANCED STAT CARDS -->
+                    <!-- PERSONALIZED GREETING -->
+                    <div class="dashboard-greeting-simple">
+                        <div class="greeting-main-text">
+                            <span class="greeting-time" id="greetingTime">Good Morning</span>
+                            <span class="greeting-name" id="greetingName">Khairul Johari</span>
+                            <span class="greeting-welcome">, Welcome back</span>
+                        </div>
+                        <h2 class="greeting-subtitle" id="greetingSubtitle">Your Dashboard is updated</h2>
+                    </div>
+
+                    <!-- CRITICAL ALERT BANNER (Highest Priority - First) -->
+                    <div class="critical-alert-banner" id="criticalAlertBanner" style="display: none;">
+                        <div class="alert-banner-content">
+                            <div class="alert-banner-icon">
+                                <span class="alert-icon-emoji">🚨</span>
+                            </div>
+                            <div class="alert-banner-text">
+                                <div class="alert-banner-title" id="alertBannerTitle">Critical Alert</div>
+                                <div class="alert-banner-message" id="alertBannerMessage">No critical alerts</div>
+                            </div>
+                            <div class="alert-banner-actions">
+                                <button class="alert-action-btn" id="alertActionBtn" onclick="handleAlertAction()" title="Take Action">
+                                    <span>Action</span>
+                                </button>
+                                <button class="alert-dismiss-btn" onclick="dismissCriticalAlert()" title="Dismiss">
+                                    <span>×</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KEY METRICS (Priority 1: Overview Stats) -->
                     <div class="stats-grid">
                         <div class="stat-card" onclick="window.location.href='../animals/animals.html'">
                             <div class="stat-icon blue">🐾</div>
@@ -102,32 +81,9 @@
                         </div>
                     </div>
 
-                    <!-- CRITICAL ALERT BANNER (Full Width) -->
-                    <div class="critical-alert-banner" id="criticalAlertBanner" style="display: none;">
-                        <div class="alert-banner-content">
-                            <div class="alert-banner-icon">
-                                <span class="alert-icon-emoji">🚨</span>
-                            </div>
-                            <div class="alert-banner-text">
-                                <div class="alert-banner-title" id="alertBannerTitle">Critical Alert</div>
-                                <div class="alert-banner-message" id="alertBannerMessage">No critical alerts</div>
-                            </div>
-                            <div class="alert-banner-actions">
-                                <button class="alert-action-btn" id="alertActionBtn" onclick="handleAlertAction()" title="Take Action">
-                                    <span>Action</span>
-                                </button>
-                                <button class="alert-dismiss-btn" onclick="dismissCriticalAlert()" title="Dismiss">
-                                    <span>×</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CRITICAL INFORMATION CARDS -->
+                    <!-- PRIORITY 2: ACTIONABLE ITEMS (Feedings, Inventory, Map) -->
                     <div class="info-cards-container">
-                        <!-- Left side: 2 info cards -->
                         <div class="info-cards-left">
-
                             <!-- Upcoming Feedings Card -->
                             <div class="info-card feeding-card">
                                 <div class="info-card-header">
@@ -145,7 +101,7 @@
                             <div class="info-card stock-card">
                                 <div class="info-card-header">
                                     <span class="info-card-icon warning">📦</span>
-                                    <h3 class="info-card-title">Low Stock Items</h3>
+                                    <h3 class="info-card-title">Inventory</h3>
                                     <span class="info-card-badge" id="lowStockCount">0</span>
                                 </div>
                                 <div class="info-card-content" id="lowStockList">
@@ -155,7 +111,7 @@
                             </div>
                         </div>
 
-                        <!-- Right side: Mini Map Card (wider) -->
+                        <!-- Live Animal Locations Map -->
                         <div class="info-card map-mini-card">
                             <div class="info-card-header">
                                 <span class="info-card-icon">📍</span>
@@ -174,53 +130,20 @@
                         </div>
                     </div>
 
-                    <!-- CHARTS SECTION -->
-                    <div class="dashboard-graphs">
+                    <!-- PRIORITY 3: ANALYTICS & MONITORING (Health Chart, Activity, Environment) -->
+                    <div class="dashboard-graphs compact-grid">
+                        <!-- Health Status Chart -->
                         <div class="graph-card">
                             <div class="graph-card-header">
                                 <div>
-                            <h3>Species Distribution</h3>
-                                    <p>Population across shelter</p>
-                                </div>
-                            </div>
-                            <canvas id="speciesChart"></canvas>
-                        </div>
-                        <div class="graph-card">
-                            <div class="graph-card-header">
-                                <div>
-                                    <h3>Health Status Overview</h3>
-                                    <p>Animal wellness metrics</p>
+                                    <h3>Health Status</h3>
+                                    <p>Animal wellness</p>
                                 </div>
                             </div>
                             <canvas id="healthStatusChart"></canvas>
                         </div>
-                    </div>
 
-                    <!-- SECONDARY CHARTS -->
-                    <div class="dashboard-graphs">
-                        <div class="graph-card">
-                            <div class="graph-card-header">
-                                <div>
-                                    <h3>Feeding Progress</h3>
-                                    <p>Daily schedule completion</p>
-                                </div>
-                            </div>
-                            <canvas id="feedingProgressChart"></canvas>
-                        </div>
-                        <div class="graph-card">
-                            <div class="graph-card-header">
-                                <div>
-                                    <h3>Alert Distribution</h3>
-                                    <p>By severity level</p>
-                                </div>
-                            </div>
-                            <canvas id="alertDistributionChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- ACTIVITY & ENVIRONMENT SECTION -->
-                    <div class="dashboard-graphs">
-                        <!-- Activity Timeline -->
+                        <!-- Recent Activity -->
                         <div class="info-card timeline-card">
                             <div class="info-card-header">
                                 <span class="info-card-icon">📅</span>
@@ -241,7 +164,7 @@
                         <div class="info-card environment-card">
                             <div class="info-card-header">
                                 <span class="info-card-icon">🌡️</span>
-                                <h3 class="info-card-title">Environmental Status</h3>
+                                <h3 class="info-card-title">Environment</h3>
                             </div>
                             <div class="info-card-content" id="environmentStatus">
                                 <div class="environment-summary">
@@ -266,31 +189,6 @@
                         </div>
                     </div>
 
-                    <!-- QUICK ACTIONS -->
-                    <div class="quick-actions-card">
-                        <div class="quick-actions-header">
-                            <span class="quick-actions-icon">🎯</span>
-                            <h2 class="quick-actions-title">Quick Actions</h2>
-                        </div>
-                        <div class="quick-actions-grid">
-                            <button class="quick-action-btn" onclick="window.location.href='../feeding/feeding.html'">
-                                <span class="action-icon">🍽️</span>
-                                <span class="action-text">Feeding Schedule</span>
-                            </button>
-                            <button class="quick-action-btn" onclick="window.location.href='../alerts/alerts.html'">
-                                <span class="action-icon">🚨</span>
-                                <span class="action-text">Check Alerts</span>
-                            </button>
-                            <button class="quick-action-btn" onclick="window.location.href='../tracking/tracking.html'">
-                                <span class="action-icon">📍</span>
-                                <span class="action-text">Live Tracking</span>
-                            </button>
-                            <button class="quick-action-btn" onclick="window.location.href='../cage/cage.html'">
-                                <span class="action-icon">🏠</span>
-                                <span class="action-text">Cage Monitor</span>
-                            </button>
-                        </div>
-                    </div>
                 </section>
             </div>
         </main>

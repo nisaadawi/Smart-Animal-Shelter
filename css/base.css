@@ -33,7 +33,7 @@
     --radius-lg: 16px;
     --radius-xl: 20px;
 
-    --sidebar-width: 280px;
+    --sidebar-width: 220px;
 }
 
 body {
@@ -65,7 +65,7 @@ body {
     transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: margin-left;
     min-height: 100vh;
-    padding-top: 88px; /* Space for fixed header */
+    padding-top: 0; /* No fixed header on dashboard */
 }
 
 .main-content.expanded {
@@ -79,7 +79,7 @@ body {
         rgba(255, 255, 255, 0.95) 100%);
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
-    padding: 20px 32px;
+    padding: 14px 20px;
     border-bottom: 1px solid rgba(226, 232, 240, 0.5);
     display: flex;
     justify-content: space-between;
@@ -250,15 +250,15 @@ body {
 }
 
 .header-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     flex-shrink: 0;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .header-page-title h1 {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 900;
     background: linear-gradient(135deg, var(--text-primary), var(--primary));
     -webkit-background-clip: text;
@@ -273,7 +273,7 @@ body {
 }
 
 .header-page-title p {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
     margin: 0;
@@ -527,8 +527,8 @@ body {
 
 /* CONTENT */
 .content {
-    padding: 32px;
-    padding-top: 56px; /* Extra space from fixed header */
+    padding: 20px;
+    padding-top: 16px; /* Extra space from fixed header */
 }
 
 .page-section {

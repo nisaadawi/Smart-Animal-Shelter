@@ -12,29 +12,24 @@ const sidebarHTML = `<style>
     --text-light: #94a3b8;
     --border: #e2e8f0;
     --radius-md: 12px;
-    --sidebar-width: 280px;
+    --sidebar-width: 220px;
 }
 
 /* SIDEBAR - ENHANCED */
 .sidebar {
     width: var(--sidebar-width);
-    background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.98) 0%, 
-        rgba(255, 255, 255, 0.95) 50%,
-        rgba(248, 250, 252, 0.98) 100%);
-    backdrop-filter: blur(30px) saturate(180%);
-    -webkit-backdrop-filter: blur(30px) saturate(180%);
-    border-right: 1px solid rgba(226, 232, 240, 0.6);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
     position: fixed;
     height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     z-index: 100;
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
-    box-shadow: 
-        4px 0 32px rgba(99, 102, 241, 0.12),
-        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.08);
 }
 
 .sidebar::before {
@@ -56,43 +51,101 @@ const sidebarHTML = `<style>
     transform: translateX(-100%);
 }
 
-/* Custom Scrollbar */
-.sidebar::-webkit-scrollbar {
+/* Sidebar Content Wrapper */
+.sidebar-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar-content::-webkit-scrollbar {
     width: 6px;
 }
 
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
+.sidebar-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--primary), var(--purple));
-    border-radius: 10px;
-    opacity: 0.3;
-    transition: opacity 0.3s ease;
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
 }
 
-.sidebar:hover::-webkit-scrollbar-thumb {
-    opacity: 0.6;
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Sidebar Brand/Logo - Enhanced Hierarchy */
+.sidebar-brand {
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.03) 0%, 
+        rgba(139, 92, 246, 0.02) 100%);
+    position: relative;
+}
+
+.sidebar-brand::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(99, 102, 241, 0.2), 
+        transparent);
+}
+
+.sidebar-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.sidebar-brand:hover .sidebar-logo {
+    transform: scale(1.05);
+}
+
+.sidebar-brand-title {
+    font-size: 17px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
 }
 
 /* SIDEBAR PROFILE SECTION */
 .sidebar-profile {
-    padding: 24px 20px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-    background: linear-gradient(135deg, 
-        rgba(99, 102, 241, 0.08) 0%, 
-        rgba(139, 92, 246, 0.06) 100%);
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    z-index: 1;
+    flex-shrink: 0;
     margin-bottom: 8px;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.06);
+    border-top: 1px solid var(--border);
 }
+
 
 .sidebar-profile::after {
     content: '';
@@ -116,21 +169,21 @@ const sidebarHTML = `<style>
 }
 
 .profile-avatar {
-    width: 56px;
-    height: 56px;
+    width: 42px;
+    height: 42px;
     background: linear-gradient(135deg, var(--primary), var(--purple));
-    border-radius: var(--radius-md);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: 800;
-    font-size: 18px;
+    font-weight: 700;
+    font-size: 16px;
     box-shadow: 
-        0 8px 24px rgba(99, 102, 241, 0.4),
-        0 4px 12px rgba(139, 92, 246, 0.3),
+        0 4px 12px rgba(99, 102, 241, 0.3),
+        0 2px 6px rgba(139, 92, 246, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    border: 3px solid rgba(255, 255, 255, 0.9);
     flex-shrink: 0;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -155,11 +208,12 @@ const sidebarHTML = `<style>
 }
 
 .profile-avatar:hover {
-    transform: scale(1.1) translateY(-2px);
+    transform: scale(1.08) translateY(-2px);
     box-shadow: 
-        0 12px 32px rgba(99, 102, 241, 0.5),
-        0 6px 16px rgba(139, 92, 246, 0.4),
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 1);
 }
 
 .profile-info {
@@ -171,49 +225,50 @@ const sidebarHTML = `<style>
 }
 
 .profile-name {
-    font-size: 17px;
-    font-weight: 800;
+    font-size: 14px;
+    font-weight: 700;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: -0.2px;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
 .profile-role {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.1px;
     text-transform: capitalize;
+    margin-top: 2px;
 }
 
 /* NAV SECTION - ENHANCED */
 .nav-section {
-    padding: 20px 12px;
+    padding: 4px 6px;
     position: relative;
-    z-index: 1;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+    margin-top: 8px;
 }
 
 .nav-section:first-of-type {
-    padding-top: 24px;
+    padding-top: 6px;
+    margin-top: 0;
 }
 
 .nav-title {
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 0.8px;
     color: var(--text-light);
-    padding: 0 16px 14px;
-    font-weight: 800;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 0 10px 6px;
+    font-weight: 700;
+    margin-bottom: 2px;
 }
 
 .nav-title::before {
@@ -230,15 +285,15 @@ const sidebarHTML = `<style>
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
-    margin: 4px 8px;
-    border-radius: 14px;
+    gap: 10px;
+    padding: 7px 10px;
+    margin: 1px 0;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 13px;
     position: relative;
     text-decoration: none;
     overflow: hidden;
@@ -264,25 +319,14 @@ const sidebarHTML = `<style>
 
 .nav-item:hover {
     color: var(--primary);
-    transform: translateX(6px);
-    background: linear-gradient(135deg, 
-        rgba(99, 102, 241, 0.1), 
-        rgba(139, 92, 246, 0.08));
-    box-shadow: 
-        0 4px 16px rgba(99, 102, 241, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transform: translateX(4px);
+    background: rgba(99, 102, 241, 0.08);
 }
 
 .nav-item.active {
-    background: linear-gradient(135deg, 
-        rgba(99, 102, 241, 0.18), 
-        rgba(139, 92, 246, 0.12));
+    background: rgba(99, 102, 241, 0.12);
     color: var(--primary);
-    font-weight: 700;
-    box-shadow: 
-        0 6px 20px rgba(99, 102, 241, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        0 0 0 1px rgba(99, 102, 241, 0.1);
+    font-weight: 600;
     transform: translateX(4px);
 }
 
@@ -292,12 +336,10 @@ const sidebarHTML = `<style>
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 4px;
-    height: 32px;
+    width: 3px;
+    height: 22px;
     background: linear-gradient(180deg, var(--primary), var(--purple));
-    border-radius: 0 6px 6px 0;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-    animation: activePulse 2s ease-in-out infinite;
+    border-radius: 0 4px 4px 0;
 }
 
 @keyframes activePulse {
@@ -306,9 +348,11 @@ const sidebarHTML = `<style>
 }
 
 .nav-icon {
-    font-size: 22px;
-    width: 28px;
-    height: 28px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
     text-align: center;
     display: flex;
     align-items: center;
@@ -382,46 +426,177 @@ const sidebarHTML = `<style>
     }
 
 }
+
+/* Sidebar Footer with Logout */
+.sidebar-footer {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    background: rgba(248, 250, 252, 0.5);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1.5px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    color: var(--danger);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 2px 8px rgba(239, 68, 68, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.logout-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logout-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.logout-btn:hover::before {
+    width: 350px;
+    height: 350px;
+}
+
+.logout-btn:hover::after {
+    left: 100%;
+}
+
+.logout-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: var(--danger);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 8px 24px rgba(239, 68, 68, 0.4),
+        0 4px 12px rgba(220, 38, 38, 0.3),
+        0 0 20px rgba(239, 68, 68, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn:active {
+    transform: translateY(-1px) scale(1);
+    box-shadow: 
+        0 4px 12px rgba(239, 68, 68, 0.3),
+        0 2px 6px rgba(220, 38, 38, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.logout-icon {
+    font-size: 18px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.logout-btn:hover .logout-icon {
+    transform: rotate(-20deg) scale(1.15);
+    filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+}
+
+.logout-text {
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover .logout-text {
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
 </style>
 
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar-profile" onclick="toggleUserMenu()">
-        <div class="profile-avatar">KJ</div>
-        <div class="profile-info">
-            <div class="profile-name">Khairul Johari</div>
-            <div class="profile-role">Shelter's owner</div>
+    <div class="sidebar-content">
+        <!-- Logo and Brand -->
+        <div class="sidebar-brand">
+            <img src="../../images/icon/PawShelter.png" alt="Smart PawShelter" class="sidebar-logo">
+            <h2 class="sidebar-brand-title">Smart PawShelter</h2>
+        </div>
+
+        <!-- User Profile -->
+        <div class="sidebar-profile" onclick="toggleUserMenu()">
+            <div class="profile-avatar">KJ</div>
+            <div class="profile-info">
+                <div class="profile-name">Khairul Johari</div>
+                <div class="profile-role">Shelter's owner</div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Main</div>
+            <a class="nav-item" href="../dashboard/dashboard.html">
+                <span class="nav-icon">🏠</span> Home
+            </a>
+            <a class="nav-item" href="../animals/animals.html">
+                <span class="nav-icon">🐾</span> Animals
+            </a>
+            <a class="nav-item" href="../tracking/tracking.html">
+                <span class="nav-icon">📍</span> Live Tracking
+            </a>
+            <a class="nav-item" href="../alerts/alerts.html">
+                <span class="nav-icon">🚨</span> Alerts
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Operations</div>
+            <a class="nav-item" href="../feeding/feeding.html">🍽️ Feeding</a>
+            <a class="nav-item" href="../health/health.html">❤️ Health Monitor</a>
+            <a class="nav-item" href="../cage/cage.html">🏠 Cage Monitor</a>
+            <a class="nav-item" href="../inventory/inventory.html">📦 Inventory</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">System</div>
+            <a class="nav-item" href="../reports/reports.html">
+                <span class="nav-icon">📈</span> Reports
+            </a>
         </div>
     </div>
 
-    <div class="nav-section">
-        <div class="nav-title">Main</div>
-        <a class="nav-item" href="../dashboard/dashboard.html">
-            <span class="nav-icon">📊</span> Dashboard
-        </a>
-        <a class="nav-item" href="../animals/animals.html">
-            <span class="nav-icon">🐾</span> Animals
-        </a>
-        <a class="nav-item" href="../tracking/tracking.html">
-            <span class="nav-icon">📍</span> Live Tracking
-        </a>
-        <a class="nav-item" href="../alerts/alerts.html">
-            <span class="nav-icon">🚨</span> Alerts
-        </a>
-    </div>
-
-    <div class="nav-section">
-        <div class="nav-title">Operations</div>
-        <a class="nav-item" href="../feeding/feeding.html">🍽️ Feeding</a>
-        <a class="nav-item" href="../health/health.html">❤️ Health Monitor</a>
-        <a class="nav-item" href="../cage/cage.html">🏠 Cage Monitor</a>
-        <a class="nav-item" href="../inventory/inventory.html">📦 Inventory</a>
-    </div>
-
-    <div class="nav-section">
-        <div class="nav-title">System</div>
-        <a class="nav-item" href="../reports/reports.html">
-            <span class="nav-icon">📈</span> Reports
-        </a>
+    <div class="sidebar-footer">
+        <button class="logout-btn" onclick="handleLogout()">
+            <span class="logout-icon">🚪</span>
+            <span class="logout-text">Log Out</span>
+        </button>
     </div>
 </aside>`;
 
