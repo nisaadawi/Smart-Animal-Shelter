@@ -13,11 +13,17 @@ const animalDatabase = {
             id: 1,
             name: 'Jebat',
             species: 'Goat',
+            breed: 'Boer Mix',
+            dob: '2021-03-14',
+            sex: 'Male',
             images: [
                 '../../images/goat/Jebat.jpg'
             ],
             health: 'good',
             lastFed: '1h ago',
+            behaviorNotes: 'Calm herd leader; responds to whistle commands',
+            temperament: 'CALM HERD LEADER; RESPONDS TO WHISTLE COMMANDS',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 74, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.4, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -45,11 +51,17 @@ const animalDatabase = {
             id: 2,
             name: 'Puteh',
             species: 'Goat',
+            breed: 'Nubian',
+            dob: '2020-08-22',
+            sex: 'Female',
             images: [
                 '../../images/goat/Puteh.jpg'
             ],
             health: 'warning',
             lastFed: '4h ago',
+            behaviorNotes: 'Gentle and social, prefers company of other goats',
+            temperament: 'GENTLE; SOCIAL',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 83, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 39.1, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -77,11 +89,17 @@ const animalDatabase = {
             id: 3,
             name: 'Leman',
             species: 'Goat',
+            breed: 'Alpine',
+            dob: '2019-11-05',
+            sex: 'Male',
             images: [
                 '../../images/goat/Leman.jpg'
             ],
             health: 'good',
             lastFed: '3h ago',
+            behaviorNotes: 'Active and playful, enjoys climbing structures',
+            temperament: 'ACTIVE; PLAYFUL',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 78, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.6, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -111,11 +129,17 @@ const animalDatabase = {
             id: 4,
             name: 'Mimi',
             species: 'Sugar Glider',
+            breed: 'Standard',
+            dob: '2022-05-10',
+            sex: 'Female',
             images: [
                 '../../images/sugarglider/Mimi.jpg'
             ],
             health: 'good',
             lastFed: '2h ago',
+            behaviorNotes: 'Nocturnal and active at night, enjoys gliding between perches',
+            temperament: 'NOCTURNAL; ACTIVE',
+            aiAlert: null,
             sensors: {
                 temp: { value: 24.5, unit: '°C', icon: '🌡️', label: 'Temperature' },
                 humidity: { value: 61, unit: '%', icon: '💧', label: 'Humidity' },
@@ -134,11 +158,17 @@ const animalDatabase = {
             id: 5,
             name: 'Cici',
             species: 'Sugar Glider',
+            breed: 'Standard',
+            dob: '2022-07-18',
+            sex: 'Female',
             images: [
                 '../../images/sugarglider/Cici.jpg'
             ],
             health: 'good',
             lastFed: '1h ago',
+            behaviorNotes: 'Social and bonds well with handlers, enjoys bonding pouch time',
+            temperament: 'SOCIAL; BONDING',
+            aiAlert: null,
             sensors: {
                 temp: { value: 24.1, unit: '°C', icon: '🌡️', label: 'Temperature' },
                 humidity: { value: 63, unit: '%', icon: '💧', label: 'Humidity' },
@@ -156,11 +186,17 @@ const animalDatabase = {
             id: 6,
             name: 'Miki',
             species: 'Sugar Glider',
+            breed: 'Standard',
+            dob: '2021-12-03',
+            sex: 'Male',
             images: [
                 '../../images/sugarglider/Miki.jpg'
             ],
             health: 'good',
             lastFed: '3h ago',
+            behaviorNotes: 'Calm and docile, prefers quiet environments',
+            temperament: 'CALM; DOCILE',
+            aiAlert: null,
             sensors: {
                 temp: { value: 24.8, unit: '°C', icon: '🌡️', label: 'Temperature' },
                 humidity: { value: 60, unit: '%', icon: '💧', label: 'Humidity' },
@@ -181,11 +217,17 @@ const animalDatabase = {
             id: 7,
             name: 'Awang',
             species: 'Alligator',
+            breed: 'American Alligator',
+            dob: '2018-06-15',
+            sex: 'Male',
             images: [
                 '../../images/alligators/Awang.jpg'
             ],
             health: 'good',
             lastFed: '1 day ago',
+            behaviorNotes: 'Dominant male, prefers basking during day, active hunter',
+            temperament: 'DOMINANT; ACTIVE HUNTER',
+            aiAlert: null,
             sensors: {
                 baskingTemp: { value: 32, unit: '°C', icon: '☀️', label: 'Basking Temp' },
                 waterTemp: { value: 26, unit: '°C', icon: '🌊', label: 'Water Temp' },
@@ -214,11 +256,17 @@ const animalDatabase = {
             id: 8,
             name: 'Sulong',
             species: 'Alligator',
+            breed: 'American Alligator',
+            dob: '2019-04-20',
+            sex: 'Male',
             images: [
                 '../../images/alligators/Sulong.jpg'
             ],
             health: 'warning',
             lastFed: '3 days ago',
+            behaviorNotes: 'Recently showing decreased appetite, monitoring closely',
+            temperament: 'CAUTIOUS; DECREASED APPETITE',
+            aiAlert: 'AI: Hydration dipped overnight—offer an extra water check',
             sensors: {
                 baskingTemp: { value: 30, unit: '°C', icon: '☀️', label: 'Basking Temp' },
                 waterTemp: { value: 24, unit: '°C', icon: '🌊', label: 'Water Temp' },
@@ -249,11 +297,17 @@ const animalDatabase = {
             id: 9,
             name: 'Mondok',
             species: 'Giant Snail',
+            breed: 'Achatina Fulica',
+            dob: '2020-01-12',
+            sex: 'Hermaphrodite',
             images: [
                 '../../images/snail/Mondok.jpg'
             ],
             health: 'good',
             lastFed: '10h ago',
+            behaviorNotes: 'Active feeder, enjoys fresh vegetables and calcium sources',
+            temperament: 'ACTIVE FEEDER',
+            aiAlert: null,
             sensors: {
                 humidity: { value: 86, unit: '%', icon: '💧', label: 'Humidity' },
                 temp: { value: 22, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -270,11 +324,17 @@ const animalDatabase = {
             id: 10,
             name: 'Koko',
             species: 'Giant Snail',
+            breed: 'Achatina Fulica',
+            dob: '2021-03-25',
+            sex: 'Hermaphrodite',
             images: [
                 '../../images/snail/Koko.jpg'
             ],
             health: 'good',
             lastFed: '8h ago',
+            behaviorNotes: 'Prefers moist substrate, active during humid conditions',
+            temperament: 'MOISTURE PREFERRING',
+            aiAlert: null,
             sensors: {
                 humidity: { value: 84, unit: '%', icon: '💧', label: 'Humidity' },
                 temp: { value: 21, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -291,11 +351,17 @@ const animalDatabase = {
             id: 11,
             name: 'Tutu',
             species: 'Giant Snail',
+            breed: 'Achatina Fulica',
+            dob: '2019-09-08',
+            sex: 'Hermaphrodite',
             images: [
                 '../../images/snail/Tutu.jpg'
             ],
             health: 'good',
             lastFed: '6h ago',
+            behaviorNotes: 'Strong shell development, regular calcium intake observed',
+            temperament: 'HEALTHY SHELL',
+            aiAlert: null,
             sensors: {
                 humidity: { value: 88, unit: '%', icon: '💧', label: 'Humidity' },
                 temp: { value: 22, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -314,11 +380,17 @@ const animalDatabase = {
             id: 12,
             name: 'Togo',
             species: 'Porcupine',
+            breed: 'African Crested',
+            dob: '2020-07-14',
+            sex: 'Male',
             images: [
                 '../../images/porcupine/Togo.jpg'
             ],
             health: 'good',
             lastFed: '3h ago',
+            behaviorNotes: 'Active and curious, enjoys enrichment toys and puzzle feeders',
+            temperament: 'ACTIVE; CURIOUS',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 84, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 37.1, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -345,11 +417,17 @@ const animalDatabase = {
             id: 13,
             name: 'Dodo',
             species: 'Porcupine',
+            breed: 'African Crested',
+            dob: '2019-11-30',
+            sex: 'Female',
             images: [
                 '../../images/porcupine/Dodo.jpg'
             ],
             health: 'warning',
             lastFed: '7h ago',
+            behaviorNotes: 'Reduced enrichment usage, may need additional stimulation',
+            temperament: 'REDUCED ACTIVITY',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 90, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.1, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -375,11 +453,17 @@ const animalDatabase = {
             id: 14,
             name: 'Odin',
             species: 'Porcupine',
+            breed: 'African Crested',
+            dob: '2018-12-05',
+            sex: 'Male',
             images: [
                 '../../images/porcupine/Odin.jpg'
             ],
             health: 'danger',
             lastFed: '9h ago',
+            behaviorNotes: 'Minimal activity observed, elevated temperature, vet consultation scheduled',
+            temperament: 'MINIMAL ACTIVITY; ELEVATED TEMP',
+            aiAlert: 'AI: Elevated temperature detected—immediate veterinary attention recommended',
             sensors: {
                 heartRate: { value: 96, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.6, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -408,11 +492,17 @@ const animalDatabase = {
             id: 15,
             name: 'Pandan',
             species: 'Red Fox',
+            breed: 'Vulpes Vulpes',
+            dob: '2021-02-18',
+            sex: 'Female',
             images: [
                 '../../images/fox/Pandan.jpg'
             ],
             health: 'good',
             lastFed: '6h ago',
+            behaviorNotes: 'High energy, enjoys hunt simulation and enrichment activities',
+            temperament: 'HIGH ENERGY; ACTIVE',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 120, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.7, unit: '°C', icon: '🌡️', label: 'Temperature' },
@@ -441,11 +531,17 @@ const animalDatabase = {
             id: 16,
             name: 'Jebat',
             species: 'Red Fox',
+            breed: 'Vulpes Vulpes',
+            dob: '2020-09-12',
+            sex: 'Male',
             images: [
                 '../../images/fox/Jebat.jpg'
             ],
             health: 'good',
             lastFed: '6h ago',
+            behaviorNotes: 'Active and alert, responds well to training, secure perimeter required',
+            temperament: 'ACTIVE; ALERT',
+            aiAlert: null,
             sensors: {
                 heartRate: { value: 115, unit: 'bpm', icon: '❤️', label: 'Heart Rate' },
                 temp: { value: 38.4, unit: '°C', icon: '🌡️', label: 'Temperature' },

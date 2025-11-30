@@ -22,7 +22,8 @@
     height: 100vh;
     overflow-y: auto;
     z-index: 100;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
     box-shadow: 4px 0 24px rgba(0,0,0,0.08);
 }
 
@@ -30,41 +31,127 @@
     transform: translateX(-100%);
 }
 
-.logo {
-    padding: 28px 20px;
+.sidebar-profile {
+    padding: 24px 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    gap: 16px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.08) 0%, 
+        rgba(139, 92, 246, 0.06) 100%);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.06);
 }
 
-.logo-icon {
-    width: 48px;
-    height: 48px;
+.sidebar-profile::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(99, 102, 241, 0.3), 
+        transparent);
+}
+
+.sidebar-profile:hover {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.12), 
+        rgba(139, 92, 246, 0.1));
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+    transform: translateY(-1px);
+}
+
+.profile-avatar {
+    width: 56px;
+    height: 56px;
     background: linear-gradient(135deg, var(--primary), var(--purple));
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    color: white;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 
+        0 8px 24px rgba(99, 102, 241, 0.4),
+        0 4px 12px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.logo-text h1 {
+.profile-avatar::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-avatar:hover::before {
+    opacity: 1;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 
+        0 12px 32px rgba(99, 102, 241, 0.5),
+        0 6px 16px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-name {
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-primary);
-    letter-spacing: -0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
 }
 
-.logo-text p {
+.profile-role {
     font-size: 12px;
+    font-weight: 600;
     color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.3px;
+    text-transform: capitalize;
 }
 
 .nav-section {
     padding: 20px 12px;
+    position: relative;
+}
+
+.nav-section:first-of-type {
+    padding-top: 24px;
 }
 
 .nav-title {
@@ -142,14 +229,36 @@
         transform: translateX(0);
     }
 }
+
+@media (max-width: 768px) {
+    .sidebar-profile {
+        padding: 20px 16px;
+        gap: 12px;
+    }
+
+    .profile-avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .profile-name {
+        font-size: 14px;
+    }
+
+    .profile-role {
+        font-size: 11px;
+    }
+
+}
 </style>
 
 <aside class="sidebar" id="sidebar">
-    <div class="logo">
-        <div class="logo-icon">🐾</div>
-        <div class="logo-text">
-            <h1>Smart Shelter</h1>
-            <p>Khairul Johari The First</p>
+    <div class="sidebar-profile" onclick="toggleUserMenu()">
+        <div class="profile-avatar">KJ</div>
+        <div class="profile-info">
+            <div class="profile-name">Khairul Johari</div>
+            <div class="profile-role">Shelter's Owner</div>
         </div>
     </div>
 
@@ -174,7 +283,6 @@
         <a class="nav-item" href="../feeding/feeding.html">🍽️ Feeding</a>
         <a class="nav-item" href="../health/health.html">❤️ Health Monitor</a>
         <a class="nav-item" href="../environment/cage.html">🌡️ Cage Monitor</a>
-        <a class="nav-item" href="../environment/environment.html">🌡️ Environment</a>
         <a class="nav-item" href="../inventory/inventory.html">📦 Inventory</a>
     </div>
 
