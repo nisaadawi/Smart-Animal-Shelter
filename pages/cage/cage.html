@@ -18,62 +18,14 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
-            <!-- HEADER -->
-            <header class="header">
-                <div class="header-left">
-                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="header-page-title">
-                        <h1>PawShelter Cage Monitor</h1>
-                        <p>Live CCTV feed with camera control</p>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
-                        🔔
-                        <span class="notification-badge" id="notificationBadge"></span>
-                    </button>
-                    <div class="settings-menu-container">
-                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
-                        <div class="settings-menu" id="settingsMenu">
-                            <div class="settings-menu-item" onclick="openSettingsProfile()">
-                                <span class="settings-menu-icon">👤</span>
-                                <span>Profile</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
-                                <span class="settings-menu-icon">⚙️</span>
-                                <span>Preferences</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
-                                <span class="settings-menu-icon">🔔</span>
-                                <span>Notifications</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item" onclick="openSettingsHelp()">
-                                <span class="settings-menu-icon">❓</span>
-                                <span>Help & Support</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsAbout()">
-                                <span class="settings-menu-icon">ℹ️</span>
-                                <span>About</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
-                                <span class="settings-menu-icon">🚪</span>
-                                <span>Log Out</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
             <!-- CONTENT -->
             <div class="content">
                 <!-- CAGE MONITOR SECTION -->
                 <section class="page-section active" id="cage-section">
                     <div class="species-tabs-container">
                         <div class="species-tabs">
-                            <div class="species-tab active" onclick="switchCCTVFeed('Goat')" data-species="Goat">🐐 Goats</div>
+                            <div class="species-tab active" onclick="switchCCTVFeed('All')" data-species="All">🐾 All Species</div>
+                            <div class="species-tab" onclick="switchCCTVFeed('Goat')" data-species="Goat">🐐 Goats</div>
                             <div class="species-tab" onclick="switchCCTVFeed('Sugarglider')" data-species="Sugarglider">🐿️ Sugar Gliders</div>
                             <div class="species-tab" onclick="switchCCTVFeed('Alligator')" data-species="Alligator">🐊 Alligators</div>
                             <div class="species-tab" onclick="switchCCTVFeed('Snail')" data-species="Snail">🐌 Snails</div>
@@ -84,194 +36,327 @@
 
                     <div class="cctv-container">
                         <div class="CCTV-header">
-                            <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">Goats</span></h1>
+                            <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">All Species</span></h1>
                         </div>
-                        <div class="cctv-display-wrapper">
-                            <div class="cctv-feed" id="cctvFeed">
-                                <video class="cctv-video" id="cctvVideo" autoplay loop muted playsinline>
-                                    <source src="../../videos/goat.MOV" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div class="cctv-placeholder" id="cctvPlaceholder">📹</div>
-                                <div class="cctv-overlay">
-                                    <span class="rec-dot"></span>
-                                    <span>LIVE</span>
+                  
+                        <!-- ALL SPECIES MULTI-VIEW -->
+                        <div class="cctv-display-wrapper" id="allSpeciesView">
+                            <div class="all-cctv-grid">
+                                <!-- Goat CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Goat')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🐐</span>
+                                        <h3>Goat Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/goat.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
                                 </div>
-                                <div class="camera-position-indicator" id="cameraPosition">Center</div>
+                                
+                                <!-- Sugar Glider CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Sugarglider')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🐿️</span>
+                                        <h3>Sugar Glider Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/sugarglider.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Alligator CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Alligator')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🐊</span>
+                                        <h3>Alligator Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/alligator.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Snail CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Snail')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🐌</span>
+                                        <h3>Snail Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/snail.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Porcupine CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Porcupine')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🦔</span>
+                                        <h3>Porcupine Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/porcupine.MP4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Fox CCTV -->
+                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Fox')" style="cursor: pointer;">
+                                    <div class="cctv-feed-header">
+                                        <span class="animal-icon">🦊</span>
+                                        <h3>Fox Enclosure</h3>
+                                    </div>
+                                    <div class="cctv-feed-wrapper">
+                                        <video class="cctv-video" autoplay loop muted playsinline>
+                                            <source src="../../videos/fox.MP4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="cctv-overlay">
+                                            <span class="rec-dot"></span>
+                                            <span>LIVE</span>
+                                        </div>
+                                    </div>
+                                    <div class="cctv-feed-status">
+                                        <span class="status-indicator online"></span>
+                                        <span class="status-text">Online</span>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
 
+                        <!-- SINGLE SPECIES VIEW (Hidden by default) -->
+                        <div class="cctv-display-wrapper hidden" id="singleSpeciesView">
+                            <!-- FIRST WRAPPER: Camera Controls Wrapper -->
                             <div class="camera-controls-wrapper">
+                                <div class="cctv-feed" id="cctvFeed">
+                                    <video class="cctv-video" id="cctvVideo" autoplay loop muted playsinline>
+                                        <source src="../../videos/goat.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="cctv-placeholder" id="cctvPlaceholder">📹</div>
+                                    <div class="cctv-overlay">
+                                        <span class="rec-dot"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                    <div class="camera-position-indicator" id="cameraPosition">Center</div>
+                                </div>
+
                                 <!-- Recording Banner -->
-                                <div class="recording-banner" id="recordingBanner" style="display: none;">
+                                <div class="recording-banner hidden" id="recordingBanner">
                                     <span class="recording-dot"></span>
                                     <span class="recording-text">RECORDING</span>
                                 </div>
                                 
                                 <!-- Screenshot Notification -->
-                                <div class="screenshot-notification" id="screenshotNotification" style="display: none;">
+                                <div class="screenshot-notification hidden" id="screenshotNotification">
                                     <span class="screenshot-icon">📷</span>
                                     <span class="screenshot-text">Screenshot Saved!</span>
                                 </div>
 
-                                <div class="camera-controls-card">
-                                    <div class="camera-controls">
-                                        <div class="control-row">
-                                            <button class="camera-btn" id="btnUp" onclick="moveCamera('up')" title="Look Up">
-                                                <span>▲</span>
+                                <!-- NEW: Right Side Controls Container -->
+                                <div class="camera-right-side">
+                                    <div class="camera-controls-card">
+                                        <div class="camera-controls">
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnUp" onclick="moveCamera('up')" title="Look Up">
+                                                    <span>▲</span>
+                                                </button>
+                                            </div>
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnLeft" onclick="moveCamera('left')" title="Look Left">
+                                                    <span>◄</span>
+                                                </button>
+                                                <button class="camera-btn camera-btn-center" id="btnCenter" onclick="centerCamera()" title="Center Camera">
+                                                    <!-- <span>Center</span> -->
+                                                </button>
+                                                <button class="camera-btn" id="btnRight" onclick="moveCamera('right')" title="Look Right">
+                                                    <span>►</span>
+                                                </button>
+                                            </div>
+                                            <div class="control-row">
+                                                <button class="camera-btn" id="btnDown" onclick="moveCamera('down')" title="Look Down">
+                                                    <span>▼</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="camera-action-buttons-wrapper">
+                                        <div class="camera-action-buttons">
+                                            <button class="action-btn record-btn" id="recordBtn" onclick="toggleRecording()" title="Start Recording">
+                                                <span class="action-icon">🔴</span>
+                                                <span class="action-label">Record</span>
+                                            </button>
+                                            <button class="action-btn screenshot-btn" id="screenshotBtn" onclick="takeScreenshot()" title="Take Screenshot">
+                                                <span class="action-icon">⛶</span>
+                                                <span class="action-label">Screenshot</span>
                                             </button>
                                         </div>
-                                        <div class="control-row">
-                                            <button class="camera-btn" id="btnLeft" onclick="moveCamera('left')" title="Look Left">
-                                                <span>◄</span>
-                                            </button>
-                                            <button class="camera-btn camera-btn-center" id="btnCenter" onclick="centerCamera()" title="Center Camera">
-                                                <!-- <span>Center</span> -->
-                                            </button>
-                                            <button class="camera-btn" id="btnRight" onclick="moveCamera('right')" title="Look Right">
-                                                <span>►</span>
-                                            </button>
-                                        </div>
-                                        <div class="control-row">
-                                            <button class="camera-btn" id="btnDown" onclick="moveCamera('down')" title="Look Down">
-                                                <span>▼</span>
+                                        <div class="camera-action-buttons">
+                                            <button class="action-btn history-btn" id="historyBtn" title="Recording History">
+                                                <span class="action-icon">💾</span>
+                                                <span class="action-label">Recording History</span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="camera-action-buttons-wrapper">
-                                    <div class="camera-action-buttons">
-                                        <button class="action-btn record-btn" id="recordBtn" onclick="toggleRecording()" title="Start Recording">
-                                            <span class="action-icon">🔴</span>
-                                            <span class="action-label">Record</span>
-                                        </button>
-                                        <button class="action-btn screenshot-btn" id="screenshotBtn" onclick="takeScreenshot()" title="Take Screenshot">
-                                            <span class="action-icon">⛶</span>
-                                            <span class="action-label">Screenshot</span>
-                                        </button>
-                                    </div>
-                                    <div class="camera-action-buttons">
-                                        <button class="action-btn history-btn" id="historyBtn" title="Recording History">
-                                            <span class="action-icon">💾</span>
-                                            <span class="action-label">Recording History</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- CAGE CONDITION CONTAINER -->
-                    <div class="cage-condition-container">
-                        <div class="section-header">
-                            <h2 class="section-title">Cage Condition</h2>
-                        </div>
-                        
-                        <div class="condition-grid">
-                            <!-- Temperature -->
-                            <div class="condition-card" data-metric="temperature">
-                                <div class="condition-icon">🌡️</div>
-                                <div class="condition-content">
-                                    <div class="metric-label">Temperature</div>
-                                    <div class="metric-value">22°C</div>
-                                    <div class="metric-range">(10-25°C)</div>
-                                    <div class="metric-status optimal">Optimal</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Humidity -->
-                            <div class="condition-card" data-metric="humidity">
-                                <div class="condition-icon">💧</div>
-                                <div class="condition-content">
-                                    <div class="metric-label">Humidity</div>
-                                    <div class="metric-value">65%</div>
-                                    <div class="metric-range">(40-70%)</div>
-                                    <div class="metric-status optimal">Optimal</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Air Quality -->
-                            <div class="condition-card" data-metric="air-quality">
-                                <div class="condition-icon">💨</div>
-                                <div class="condition-content">
-                                    <div class="metric-label">Air Quality</div>
-                                    <div class="metric-value">Good</div>
-                                    <div class="metric-range">CO₂: 450ppm</div>
-                                    <div class="metric-status optimal">Optimal</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CONTROLLER CONTAINER -->
-                    <div class="controller-container">
-                        <div class="section-header">
-                            <h2 class="section-title">Cage Environment Controller</h2>
-                        </div>
-                        
-                        <div class="controller-grid">
-                            <!-- Lighting Control -->
-                            <div class="controller-card">
-                                <div class="controller-header">
-                                    <span class="controller-icon">💡</span>
-                                    <h3>Lighting</h3>
-                                </div>
-                                <div class="controller-value" id="currentLightLevel">50%</div>
-                                
-                                <!-- Light Slider -->
-                                <div class="light-controls">
-                                    <input type="range" class="light-slider" id="lightSlider" 
-                                           min="0" max="100" value="50" 
-                                           oninput="handleLightSliderChange()">
-                                    <div class="slider-labels">
-                                        <span>0%</span>
-                                        <span>50%</span>
-                                        <span>100%</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="lighting-presets">
-                                    <button class="preset-btn" onclick="setLightingPreset('night')">🌙</button>
-                                    <button class="preset-btn" onclick="setLightingPreset('day')">☀️</button>
-                                    <button class="preset-btn" onclick="setLightingPreset('uvb')">🔆</button>
                                 </div>
                             </div>
 
-                            <!-- Ventilation Control -->
-                            <div class="controller-card">
-                                <div class="controller-header">
-                                    <span class="controller-icon">💨</span>
-                                    <h3>Ventilation</h3>
-                                </div>
-                                <div class="controller-value" id="fanSpeed">Low</div>
-                                <div class="fan-controls">
-                                    <button class="fan-btn" onclick="setFanSpeed('low')">Low</button>
-                                    <button class="fan-btn" onclick="setFanSpeed('medium')">Med</button>
-                                    <button class="fan-btn" onclick="setFanSpeed('high')">High</button>
+                            <!-- SECOND WRAPPER: Condition and Controller Grid Wrapper -->
+                            <div class="condition-controller-wrapper">
+                                <div class="condition-grid">
+                                    <!-- Temperature -->
+                                    <div class="condition-card" data-metric="temperature">
+                                        <div class="condition-icon">🌡️</div>
+                                        <div class="condition-content">
+                                            <div class="metric-label">Temperature</div>
+                                            <div class="metric-value">22°C</div>
+                                            <div class="metric-range">(10-25°C)</div>
+                                            <div class="metric-status optimal">Optimal</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Humidity -->
+                                    <div class="condition-card" data-metric="humidity">
+                                        <div class="condition-icon">💧</div>
+                                        <div class="condition-content">
+                                            <div class="metric-label">Humidity</div>
+                                            <div class="metric-value">65%</div>
+                                            <div class="metric-range">(40-70%)</div>
+                                            <div class="metric-status optimal">Optimal</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Air Quality -->
+                                    <div class="condition-card" data-metric="air-quality">
+                                        <div class="condition-icon">💨</div>
+                                        <div class="condition-content">
+                                            <div class="metric-label">Air Quality</div>
+                                            <div class="metric-value">Good</div>
+                                            <div class="metric-range">CO₂: 450ppm</div>
+                                            <div class="metric-status optimal">Optimal</div>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <!-- Auto Ventilation Toggle -->
-                                <div class="auto-ventilation-toggle">
-                                    <span class="toggle-label">Auto Ventilation</span>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" onchange="toggleAutoVentilation()">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
+                                <div class="controller-grid">
+                                    <!-- Lighting Control -->
+                                    <div class="controller-card">
+                                        <div class="controller-header">
+                                            <span class="controller-icon">💡</span>
+                                            <h3>Lighting</h3>
+                                        </div>
+                                        <div class="controller-value" id="currentLightLevel">50%</div>
+                                        
+                                        <!-- Light Slider -->
+                                        <div class="light-controls">
+                                            <input type="range" class="light-slider" id="lightSlider" 
+                                                min="0" max="100" value="50" 
+                                                oninput="handleLightSliderChange()">
+                                            <div class="slider-labels">
+                                                <span>0%</span>
+                                                <span>50%</span>
+                                                <span>100%</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="lighting-presets">
+                                            <button class="preset-btn" onclick="setLightingPreset('night')">🌙</button>
+                                            <button class="preset-btn" onclick="setLightingPreset('day')">☀️</button>
+                                            <button class="preset-btn" onclick="setLightingPreset('uvb')">🔆</button>
+                                        </div>
+                                    </div>
 
-                            <!-- Cage Lock -->
-                            <div class="controller-card">
-                                <div class="controller-header">
-                                    <span class="controller-icon">🔒</span>
-                                    <h3>Cage Lock</h3>
-                                </div>
-                                <div class="controller-value" id="lockStatus">
-                                    <span class="status-indicator unlocked"></span>
-                                    <span class="status-text">Unlocked</span>
-                                </div>
-                                <div class="lock-controls">
-                                    <button class="lock-btn" onclick="toggleCageLock()" id="lockToggle">
-                                        Lock Cage
-                                    </button>
+                                    <!-- Ventilation Control -->
+                                    <div class="controller-card">
+                                        <div class="controller-header">
+                                            <span class="controller-icon">💨</span>
+                                            <h3>Ventilation</h3>
+                                        </div>
+                                        <div class="controller-value" id="fanSpeed">Low</div>
+                                        <div class="fan-controls">
+                                            <button class="fan-btn" onclick="setFanSpeed('low')">Low</button>
+                                            <button class="fan-btn" onclick="setFanSpeed('medium')">Med</button>
+                                            <button class="fan-btn" onclick="setFanSpeed('high')">High</button>
+                                        </div>
+                                        
+                                        <!-- Auto Ventilation Toggle -->
+                                        <div class="auto-ventilation-toggle">
+                                            <span class="toggle-label">Auto Ventilation</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" onchange="toggleAutoVentilation()">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cage Lock -->
+                                    <div class="controller-card">
+                                        <div class="controller-header">
+                                            <span class="controller-icon">🔒</span>
+                                            <h3>Cage Lock</h3>
+                                        </div>
+                                        <div class="controller-value" id="lockStatus">
+                                            <span class="status-indicator unlocked"></span>
+                                            <span class="status-text">Unlocked</span>
+                                        </div>
+                                        <div class="lock-controls">
+                                            <button class="lock-btn" onclick="toggleCageLock()" id="lockToggle">
+                                                Lock Cage
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
