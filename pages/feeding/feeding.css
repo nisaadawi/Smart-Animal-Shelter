@@ -288,6 +288,11 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     }
 }
 
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 .feeding-right-sidebar {
     position: fixed !important;
     top: 0 !important;
@@ -685,6 +690,24 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     border: 1px solid rgba(255, 255, 255, 0.5);
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.auto-feeder-schedule-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
 }
 
 /* Ensure meter control container stacks on tablet */
@@ -1043,6 +1066,24 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     padding: 24px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.portion-control-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
 }
 
 .card-header {
@@ -1647,6 +1688,24 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 20px;
     height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.animal-selection-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
 }
 
 .animal-selection-title {
@@ -2205,6 +2264,24 @@ button, .species-tab, .portion-btn, .feed-button, .edit-schedule-btn, .edit-cont
     padding: 24px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.feeder-history-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
 }
 
 /* HISTORY FILTERS */
