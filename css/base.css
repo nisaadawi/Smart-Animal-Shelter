@@ -722,7 +722,6 @@ body {
 @media (max-width: 768px) {
     .content {
         padding: 20px;
-        padding-top: 32px; /* Extra space from header on mobile */
     }
 
     .section-title {

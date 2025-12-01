@@ -5,72 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawShelter - Inventory Management</title>
     <link rel="icon" type="image/png" href="../../images/icon/PawShelter.png">
-    <link rel="shortcut icon" type="image/png" href="../../images/icon/PawShelter.png">
-    <link rel="apple-touch-icon" href="../../images/icon/PawShelter.png">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="inventory.css">
 </head>
 <body>
     <div class="app">
-        <!-- SIDEBAR loaded dynamically from sidebar.html -->
+        <!-- SIDEBAR will be loaded here -->
 
         <!-- MAIN CONTENT -->
-        <main class="main-content" id="mainContent">
-            <!-- HEADER -->
-            <header class="header">
-                <div class="header-left">
-                    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-                    <div class="header-page-title">
-                        <h1>PawShelter Inventory</h1>
-                        <p>Manage supplies and equipment</p>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <button class="header-btn" onclick="window.location.href='../alerts/alerts.html'" title="Notifications">
-                        🔔
-                        <span class="notification-badge" id="notificationBadge"></span>
-                    </button>
-                    <div class="settings-menu-container">
-                        <button class="header-btn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
-                        <div class="settings-menu" id="settingsMenu">
-                            <div class="settings-menu-item" onclick="openSettingsProfile()">
-                                <span class="settings-menu-icon">👤</span>
-                                <span>Profile</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsPreferences()">
-                                <span class="settings-menu-icon">⚙️</span>
-                                <span>Preferences</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsNotifications()">
-                                <span class="settings-menu-icon">🔔</span>
-                                <span>Notifications</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item" onclick="openSettingsHelp()">
-                                <span class="settings-menu-icon">❓</span>
-                                <span>Help & Support</span>
-                            </div>
-                            <div class="settings-menu-item" onclick="openSettingsAbout()">
-                                <span class="settings-menu-icon">ℹ️</span>
-                                <span>About</span>
-                            </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-item logout-item" onclick="handleLogout()">
-                                <span class="settings-menu-icon">🚪</span>
-                                <span>Log Out</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- CONTENT -->
+        <main class="main-content" id="mainContent">    
             <div class="content">
                 <!-- INVENTORY SECTION -->
                 <section class="page-section active" id="inventory-section">
                     <div class="section-header">
-                        <!-- Shopping List Button moved here -->
+                        <!-- Category Filters -->
+                        <div class="category-filters" id="categoryFilters">
+                            <button class="category-filter-btn active" data-category="all">
+                                <span class="filter-icon">📦</span>
+                                All Categories
+                            </button>
+                            <!-- Dynamic category buttons will be added here -->
+                        </div>
+
+                        <!-- Shopping List Button -->
                         <button class="shopping-list-section-btn" id="shoppingListBtn">
                             <span class="shopping-list-icon">📋</span>
                             Shopping List
@@ -78,13 +35,14 @@
                         </button>
                     </div>
 
+                    <!-- Inventory Grid - EMPTY, will be populated -->
                     <div class="inventory-grid" id="inventoryGrid"></div>
                 </section>
             </div>
         </main>
     </div>
 
-    <!-- INVENTORY DETAIL MODAL -->
+    <!-- INVENTORY DETAIL MODAL - FIXED STRUCTURE -->
     <div class="modal" id="inventoryModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -100,45 +58,196 @@
                         <div class="stock-summary" id="stockSummary"></div>
                     </div>
                 </div>
-                <div class="inventory-items-list" id="inventoryItemsList">
-                    <!-- Items will be populated here -->
-                </div>
+                <!-- Container for dynamic items -->
+                <div class="inventory-items-container" id="inventoryItemsContainer"></div>
             </div>
         </div>
     </div>
 
-    <!-- SHOPPING LIST MODAL -->
+    <!-- SHOPPING LIST MODAL - FIXED STRUCTURE -->
     <div class="modal" id="shoppingListModal">
-        <div class="modal-content">
+        <div class="modal-content shopping-list-modal">
             <div class="modal-header">
                 <h2>Shopping List</h2>
                 <button class="close-btn" id="closeShoppingList">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="shopping-summary">
-                    <p>Items in list: <span id="totalShoppingItems">0</span></p>
+                <!-- Fixed Shopping List Structure -->
+                <div class="shopping-list-header">
+                    <div class="shopping-list-title">
+                        <h2>Shopping List</h2>
+                        <span class="shopping-list-date" id="shoppingListDate"></span>
+                    </div>
+                    <div class="shopping-list-summary">
+                        <div class="summary-card total">
+                            <div class="summary-value" id="totalItemsCount">0</div>
+                            <div class="summary-label">Total Items</div>
+                        </div>
+                        <div class="summary-card categories">
+                            <div class="summary-value" id="totalCategoriesCount">0</div>
+                            <div class="summary-label">Categories</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="shopping-items-list" id="shoppingItemsList">
-                    <!-- Shopping items will be populated here -->
+                
+                <!-- EMPTY container for shopping items -->
+                <div class="shopping-items-container" id="shoppingItemsContainer">
+                    <!-- Items will be added here dynamically -->
                 </div>
+                
                 <div class="shopping-actions">
-                    <button class="btn btn-outline" id="clearShoppingListBtn">Clear All</button>
-                    <button class="btn btn-primary" id="savePdfBtn">
-                        <span class="icon">📄</span>
-                        Save as PDF
+                    <button class="action-btn clear" id="clearShoppingListBtn">
+                        <span>🗑️</span>
+                        Clear All
+                    </button>
+                    <button class="action-btn generate" id="savePdfBtn">
+                        <span>📄</span>
+                        Generate PDF
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+<!-- PDF PREVIEW MODAL - Already in your HTML -->
+<div class="modal" id="pdfPreviewModal">
+    <div class="modal-content pdf-preview-modal">
+        <div class="modal-header">
+            <h2>PDF Preview</h2>
+            <button class="close-btn" id="closePdfPreview">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="pdf-preview-header">
+                <h3>Shopping List Preview</h3>
+                <span class="preview-date" id="previewDate"></span>
+            </div>
+            
+            <div class="pdf-preview-content" id="pdfPreviewContent">
+                <!-- PDF content will be generated here -->
+            </div>
+            
+            <div class="pdf-actions">
+                <button class="action-btn secondary" id="cancelPdfBtn">
+                    <span>✕</span>
+                    Cancel
+                </button>
+                <button class="action-btn primary" id="downloadPdfBtn">
+                    <span>📥</span>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
-    <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <!-- TEMPLATES (Hidden in HTML) -->
+    <template id="categoryFilterTemplate">
+        <button class="category-filter-btn" data-category="">
+            <span class="filter-icon"></span>
+            <span class="filter-text"></span>
+        </button>
+    </template>
 
+    <template id="categoryContainerTemplate">
+        <div class="category-container" data-category="">
+            <div class="category-container-header">
+                <div class="category-header-left">
+                    <div class="category-icon-large"></div>
+                    <div class="category-info">
+                        <h3 class="category-title"></h3>
+                        <div class="category-summary">
+                            <span class="category-stat low">
+                                <span>⚠️</span>
+                                <span class="low-count">0</span> need restocking
+                            </span>
+                            <span class="category-stat ok">
+                                <span>✅</span>
+                                <span class="ok-count">0</span> in stock
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="category-items-container"></div>
+        </div>
+    </template>
+
+    <template id="inventoryItemTemplate">
+        <div class="inventory-item" data-item-id="">
+            <div class="inventory-icon"></div>
+            <div class="inventory-details">
+                <div class="inventory-name"></div>
+            </div>
+            <div class="inventory-stock">
+                <div class="stock-status">
+                    <span class="status-text"></span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="inventoryDetailItemTemplate">
+        <div class="inventory-item-detail">
+            <div class="item-info">
+                <div class="item-name"></div>
+                <div class="item-quantity">
+                    <span class="current-stock"></span>
+                    <span class="min-stock"></span>
+                    <span class="low-stock-badge">LOW STOCK</span>
+                    <div class="recommended-quantity"></div>
+                </div>
+            </div>
+            <div class="item-actions">
+                <div class="quantity-selector">
+                    <div class="quantity-controls">
+                        <button class="quantity-btn decrease">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1" max="100">
+                        <button class="quantity-btn increase">+</button>
+                    </div>
+                    <button class="add-to-list-btn">Add to List</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="shoppingCategoryTemplate">
+        <div class="shopping-category">
+            <div class="shopping-category-header">
+                <div class="shopping-category-name">
+                    <div class="shopping-category-icon"></div>
+                    <span class="category-name-text"></span>
+                </div>
+                <div class="shopping-category-count">
+                    <span class="item-count">0</span> items
+                </div>
+            </div>
+            <div class="shopping-category-items"></div>
+        </div>
+    </template>
+
+    <template id="shoppingItemTemplate">
+        <div class="shopping-category-item">
+            <div class="shopping-item-name"></div>
+            <div class="shopping-item-quantity-badge">
+                <div class="shopping-item-quantity"></div>
+                <button class="shopping-item-remove" title="Remove item">🗑️</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="emptyShoppingListTemplate">
+        <div class="empty-shopping-list">
+            <div class="icon">📋</div>
+            <h3>Your shopping list is empty</h3>
+            <p>Add items from inventory details by clicking on categories</p>
+        </div>
+    </template>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="../data.js"></script>
     <script src="../sidebar.js"></script>
     <script src="../utils.js"></script>

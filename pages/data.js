@@ -588,12 +588,26 @@ const rooms = [
 ];
 
 const inventory = [
-    { name: 'Hay Bales', category: 'Feed', stock: 45, min: 20, icon: '🌾' },
-    { name: 'Raw Meat', category: 'Feed', stock: 15, min: 20, icon: '🍖' },
-    { name: 'Vegetables', category: 'Feed', stock: 8, min: 15, icon: '🥬' },
-    { name: 'Medical Supplies', category: 'Health', stock: 25, min: 30, icon: '💊' },
-    { name: 'Nectar Blend', category: 'Feed', stock: 12, min: 10, icon: '🍯' },
-    { name: 'Enrichment Toys', category: 'Equipment', stock: 18, min: 15, icon: '🎾' }
+    { id: 'hay-bales', name: 'Hay Bales', category: 'Feed', stock: 2, min: 10, icon: '🌾' },
+    { id: 'raw-meat', name: 'Raw Meat', category: 'Feed', stock: 50, min: 10, icon: '🍖' },
+    { id: 'vegetables', name: 'Vegetables', category: 'Feed', stock: 2, min: 10, icon: '🥬' },
+    { id: 'medical-supplies', name: 'Medical Supplies', category: 'Health', stock: 2, min: 10, icon: '💊' },
+    { id: 'nectar-blend', name: 'Nectar Blend', category: 'Feed', stock: 12, min: 10, icon: '🍯' },
+    { id: 'cleaning-supplies', name: 'Cleaning Supplies', category: 'Shelter Operations', stock: 5, min: 10, icon: '🧹' },
+    { id: 'bedding-and-blankets', name: 'Bedding and Blankets', category: 'Shelter Operations', stock: 40, min: 10, icon: '🛏️' },
+    { id: 'crates-and-carriers', name: 'Crates and Carriers', category: 'Shelter Operations', stock: 12, min: 10, icon: '📦' },
+    { id: 'food-and-water-bowls', name: 'Food and Water Bowls', category: 'Shelter Operations', stock: 5, min: 10, icon: '🍽️' },
+    { id: 'litter-and-litter-boxes', name: 'Litter and Litter Boxes', category: 'Animal Care', stock: 20, min: 10, icon: '🐱' },
+    { id: 'grooming-supplies', name: 'Grooming Supplies', category: 'Animal Care', stock: 8, min: 10, icon: '🪒' },
+    { id: 'pest-control', name: 'Pest Control', category: 'Animal Care', stock: 2, min: 10, icon: '🪲' },
+    { id: 'training-supplies', name: 'Training Supplies', category: 'Animal Care', stock: 30, min: 10, icon: '🎯' },
+    { id: 'enrichment-toys', name: 'Enrichment Toys', category: 'Animal Care', stock: 18, min: 10, icon: '🎾' },
+    { id: 'first-aid-kit-items', name: 'First Aid Kit Items', category: 'Health', stock: 8, min: 10, icon: '🚑' },
+    { id: 'vaccines-and-dewormers', name: 'Vaccines and Dewormers', category: 'Health', stock: 25, min: 10, icon: '💉' },
+    { id: 'quarantine-supplies', name: 'Quarantine Supplies', category: 'Health', stock: 10, min: 10, icon: '🦠' },
+    { id: 'maintenance-tools', name: 'Maintenance Tools', category: 'Facility', stock: 15, min: 10, icon: '🔧' },
+    { id: 'laundry-supplies', name: 'Laundry Supplies', category: 'Facility', stock: 28, min: 10, icon: '🧺' },
+    { id: 'office-supplies', name: 'Office Supplies', category: 'Facility', stock: 5, min: 10, icon: '📎' }
 ];
 
 const trackingSpeciesMeta = {
