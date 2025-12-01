@@ -592,11 +592,35 @@ const sidebarHTML = `<style>
         </div>
     </div>
 
-    <div class="sidebar-footer">
-        <button class="logout-btn" onclick="handleLogout()">
-            <span class="logout-icon">🚪</span>
-            <span class="logout-text">Log Out</span>
-        </button>
+    <div class="nav-section">
+        <div class="nav-title">Main</div>
+        <a class="nav-item" href="../dashboard/dashboard.html">
+            <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a class="nav-item" href="../animals/animals.html">
+            <span class="nav-icon">🐾</span> Animals
+        </a>
+        <a class="nav-item" href="../tracking/tracking.html">
+            <span class="nav-icon">📍</span> Live Tracking
+        </a>
+        <a class="nav-item" href="../alerts/alerts.html">
+            <span class="nav-icon">🚨</span> Alerts
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Operations</div>
+        <a class="nav-item" href="../feeding/feeding.html">🍽️ Feeding</a>
+        <a class="nav-item" href="../health/health.html">❤️ Health Monitor</a>
+        <a class="nav-item" href="../cage/cage.html">🏠 Cage Monitor</a>
+        <a class="nav-item" href="../inventory/inventory.html">📦 Inventory</a>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">System</div>
+        <a class="nav-item" href="../reports/reports.html">
+            <span class="nav-icon">📈</span> Reports
+        </a>
     </div>
 </aside>`;
 

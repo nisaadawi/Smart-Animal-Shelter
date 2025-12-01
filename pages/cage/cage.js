@@ -4,7 +4,7 @@ let panX = 0; // Horizontal pan position (pixels)
 let panY = 0; // Vertical pan position (pixels)
 const panStep = 50; // Pixels to move per button press
 const maxPan = 200; // Maximum pan distance in pixels
-let cageCurrentSpecies = 'Goat'; // Default species for cage monitor
+let cageCurrentSpecies = 'All'; // Default species for cage monitor
 
 // Video sources for each species
 const speciesVideos = {
@@ -18,6 +18,7 @@ const speciesVideos = {
 
 // Species display names mapping
 const speciesDisplayNames = {
+    'All': 'All Species',
     'Goat': 'Goats',
     'Sugarglider': 'Sugar Gliders',
     'Alligator': 'Alligators',
@@ -178,17 +179,12 @@ let environmentState = {
 
 // Switch CCTV feed based on selected species
 function switchCCTVFeed(species) {
-    const cctvVideo = document.getElementById('cctvVideo');
-    const cctvPlaceholder = document.getElementById('cctvPlaceholder');
     const speciesTabs = document.querySelectorAll('.species-tab');
     const speciesNameElement = document.getElementById('currentSpeciesName');
+    const allSpeciesView = document.getElementById('allSpeciesView');
+    const singleSpeciesView = document.getElementById('singleSpeciesView');
     
-    if (!cctvVideo) {
-        console.error('CCTV video element not found');
-        return;
-    }
-    
-    // Update active tab - remove active from all first
+    // Update active tab
     speciesTabs.forEach(tab => {
         tab.classList.remove('active');
     });
@@ -206,43 +202,61 @@ function switchCCTVFeed(species) {
         speciesNameElement.textContent = speciesDisplayNames[species] || species;
     }
     
-    // Reset pan position
-    panX = 0;
-    panY = 0;
-    
-    // Update video source
-    const videoSrc = speciesVideos[species] || speciesVideos['Goat'];
-    
-    // Show placeholder while loading
-    if (cctvPlaceholder) {
-        cctvPlaceholder.classList.remove('hidden');
-    }
-    
-    // Update video source and load
-    cctvVideo.src = videoSrc;
-    cageCurrentSpecies = species;
-    
-    // Reset video position
-    cctvVideo.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px))`;
-    
-    // Initialize environment for this species
-    initializeSpeciesEnvironment(species);
-    
-    // Load new video
-    cctvVideo.load();
-    
-    // Play the video after it loads
-    cctvVideo.onloadeddata = () => {
-        if (cctvPlaceholder) {
-            cctvPlaceholder.classList.add('hidden');
+    if (species === 'All') {
+        // Show all species grid view
+        allSpeciesView.classList.remove('hidden');
+        singleSpeciesView.classList.add('hidden');
+        
+        cageCurrentSpecies = 'All';
+        
+        if (typeof showToast === 'function') {
+            showToast('Showing all species');
         }
-        cctvVideo.play().catch(err => {
-            console.error('Error playing video:', err);
-        });
-    };
-    
-    if (typeof showToast === 'function') {
-        showToast(`Switched to ${species} habitat`);
+    } else {
+        // Show single species view
+        allSpeciesView.classList.add('hidden');
+        singleSpeciesView.classList.remove('hidden');
+        
+        // Reset pan position
+        panX = 0;
+        panY = 0;
+        
+        // Update video source
+        const video = document.getElementById('cctvVideo');
+        const placeholder = document.getElementById('cctvPlaceholder');
+        
+        if (speciesVideos[species]) {
+            video.src = speciesVideos[species];
+            video.load();
+        }
+        
+        // Reset video position
+        video.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px))`;
+        
+        // Reset camera position
+        document.getElementById('cameraPosition').textContent = 'Center';
+        
+        cageCurrentSpecies = species;
+        
+        // Initialize environment for this species
+        initializeSpeciesEnvironment(species);
+        
+        // Load new video
+        video.load();
+        
+        // Play the video after it loads
+        video.onloadeddata = () => {
+            if (placeholder) {
+                placeholder.classList.add('hidden');
+            }
+            video.play().catch(err => {
+                console.error('Error playing video:', err);
+            });
+        };
+        
+        if (typeof showToast === 'function') {
+            showToast(`Switched to ${species} habitat`);
+        }
     }
 }
 
@@ -474,17 +488,11 @@ function checkEnvironmentStatus(species) {
         if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
             activeAlerts.push(createTemperatureAlert(species, 'high', thresholds));
             environmentState.lastAlert = now;
-            
-            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
-            // Now fixes only happen when user clicks "Apply Fix"
         }
     } else if (environmentState.temperature < thresholds.minTemp) {
         if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
             activeAlerts.push(createTemperatureAlert(species, 'low', thresholds));
             environmentState.lastAlert = now;
-            
-            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
-            // Now fixes only happen when user clicks "Apply Fix"
         }
     }
     
@@ -493,17 +501,11 @@ function checkEnvironmentStatus(species) {
         if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
             activeAlerts.push(createHumidityAlert(species, 'high', thresholds));
             environmentState.lastAlert = now;
-            
-            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
-            // Now fixes only happen when user clicks "Apply Fix"
         }
     } else if (environmentState.humidity < thresholds.minHumidity) {
         if (!environmentState.lastAlert || now - environmentState.lastAlert > 30000) {
             activeAlerts.push(createHumidityAlert(species, 'low', thresholds));
             environmentState.lastAlert = now;
-            
-            // REMOVED: Auto-execution of fixes when autoVentilation is enabled
-            // Now fixes only happen when user clicks "Apply Fix"
         }
     }
     
@@ -569,7 +571,7 @@ window.moveCamera = function moveCamera(direction) {
     if (typeof showToast === 'function') {
         showToast(`Camera panned: ${direction.toUpperCase()}`);
     }
-};
+}
 
 // Recording state
 let isRecording = false;
@@ -608,12 +610,12 @@ window.toggleRecording = function toggleRecording() {
             recordingText.textContent = 'Recording saved';
             // Hide the dot for saved message
             if (recordingDot) {
-                recordingDot.style.display = 'none';
+                recordingDot.classList.add('hidden');
             }
             // Hide after 3 seconds
             setTimeout(() => {
                 if (recordingBanner) {
-                    recordingBanner.style.display = 'none';
+                    recordingBanner.classList.add('hidden');
                     // Reset text and dot for next recording
                     if (recordingText) {
                         recordingText.textContent = 'RECORDING';
@@ -635,7 +637,7 @@ window.takeScreenshot = function takeScreenshot() {
         screenshotNotification.style.display = 'flex';
         // Hide after 3 seconds
         setTimeout(() => {
-            screenshotNotification.style.display = 'none';
+            screenshotNotification.classList.add('hidden');
         }, 3000);
     }
     
@@ -680,7 +682,6 @@ window.centerCamera = function centerCamera() {
 // ========== ENVIRONMENT CONTROL FUNCTIONS ==========
 
 // Update environment display
-// Update environment display
 function updateEnvironmentDisplay() {
     // Update cage condition values
     const currentTempElement = document.querySelector('[data-metric="temperature"] .metric-value');
@@ -723,8 +724,10 @@ function updateEnvironmentDisplay() {
     updateFanButtons();
     updateLightingPresets();
     
-    // Check environment status for current species
-    checkEnvironmentStatus(cageCurrentSpecies);
+    // Check environment status for current species (only for individual species)
+    if (cageCurrentSpecies !== 'All') {
+        checkEnvironmentStatus(cageCurrentSpecies);
+    }
 }
 
 // Update display with species-specific ranges
@@ -814,7 +817,6 @@ function updateCageLockDisplay() {
 }
 
 // Update fan buttons active state (for initial load)
-// Update fan buttons active state (for initial load)
 function updateFanButtons() {
     const fanButtons = document.querySelectorAll('.fan-btn');
     fanButtons.forEach(btn => {
@@ -851,7 +853,6 @@ function toggleCageLock() {
     console.log(`Cage lock ${environmentState.cageLocked ? 'engaged' : 'released'}`);
 }
 
-// Set fan speed and update active state
 // Set fan speed and update active state
 function setFanSpeed(speed) {
     // Remove active class from all fan buttons
@@ -994,6 +995,8 @@ function toggleAutoVentilation() {
 
 // Simulate environment changes (for demo purposes)
 function simulateEnvironmentChanges() {
+    if (cageCurrentSpecies === 'All') return; // Don't simulate for All Species view
+    
     const thresholds = speciesThresholds[cageCurrentSpecies] || speciesThresholds['Goat'];
     
     // For problematic species, make the environment fluctuate around the problematic values
@@ -1037,6 +1040,160 @@ function simulateEnvironmentChanges() {
     updateEnvironmentDisplay();
 }
 
+// Switch main view when clicking on any card
+function switchToMainView(species) {
+    // Remove active class from all cards
+    const allCards = document.querySelectorAll('.side-cctv-card, .bottom-cctv-card');
+    allCards.forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Create and show main view for selected species
+    createAndShowMainView(species);
+    
+    // Update bottom card if it exists
+    const bottomCards = document.querySelectorAll('.bottom-cctv-card');
+    bottomCards.forEach(card => {
+        card.classList.remove('active');
+        const header = card.querySelector('h4');
+        if (header && header.textContent.includes(species)) {
+            card.classList.add('active');
+        }
+    });
+    
+    // Show toast notification
+    if (typeof showToast === 'function') {
+        showToast(`${speciesDisplayNames[species]} now in main view`);
+    }
+}
+
+// Create and show main view dynamically
+function createAndShowMainView(species) {
+    const mainViewContainer = document.querySelector('.main-cctv-section');
+    if (!mainViewContainer) return;
+    
+    // Create new main view
+    const mainCard = document.createElement('div');
+    mainCard.className = 'main-cctv-card active';
+    mainCard.id = `main${species}View`;
+    
+    mainCard.innerHTML = `
+        <div class="cctv-feed-header">
+            <span class="animal-icon">${getAnimalIcon(species)}</span>
+            <h3>${species} Enclosure</h3>
+            <span class="main-label">MAIN VIEW</span>
+        </div>
+        <div class="cctv-feed-wrapper main-video-wrapper">
+            <video class="cctv-video main-video" autoplay loop muted playsinline>
+                <source src="${speciesVideos[species]}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="cctv-overlay">
+                <span class="rec-dot"></span>
+                <span>LIVE</span>
+            </div>
+        </div>
+        <button class="view-details-btn" onclick="switchCCTVFeed('${species}')">
+            <span class="btn-icon">🔍</span>
+            View Cage Details
+        </button>
+    `;
+    
+    // Remove existing main view and add new one
+    const existingMain = mainViewContainer.querySelector('.main-cctv-card');
+    if (existingMain) {
+        mainViewContainer.removeChild(existingMain);
+    }
+    mainViewContainer.appendChild(mainCard);
+    
+    // Load and play the video
+    const video = mainCard.querySelector('.main-video');
+    if (video) {
+        video.load();
+        video.play().catch(err => {
+            console.error('Error playing video:', err);
+        });
+    }
+}
+
+// Update main view with new species
+function updateMainView(species) {
+    const mainView = document.querySelector('.main-cctv-card.active');
+    if (!mainView) return;
+    
+    // Update header
+    const icon = mainView.querySelector('.animal-icon');
+    const title = mainView.querySelector('h3');
+    
+    if (icon) icon.textContent = getAnimalIcon(species);
+    if (title) title.textContent = `${species} Enclosure`;
+    
+    // Update video
+    const video = mainView.querySelector('.cctv-video');
+    if (video && speciesVideos[species]) {
+        video.src = speciesVideos[species];
+        video.load();
+    }
+}
+
+// Helper function to get animal icon
+function getAnimalIcon(species) {
+    const iconMap = {
+        'Goat': '🐐',
+        'Sugarglider': '🐿️',
+        'Alligator': '🐊',
+        'Snail': '🐌',
+        'Porcupine': '🦔',
+        'Fox': '🦊'
+    };
+    return iconMap[species] || '🐾';
+}
+
+// Initialize main view
+function initializeMultiView() {
+    // Create main views for all species
+    const mainViewContainer = document.querySelector('.main-cctv-view');
+    if (!mainViewContainer) return;
+
+    // Ensure all PiP cards have active state on Goat initially
+    const goatPip = document.querySelector('[onclick="switchToMainView(\'Goat\')"]');
+    if (goatPip) {
+        goatPip.classList.add('active');
+    }
+    
+    const speciesList = ['Goat', 'Sugarglider', 'Alligator', 'Snail', 'Porcupine', 'Fox'];
+    
+    speciesList.forEach((species, index) => {
+        if (species === 'Goat') return; // Goat already exists
+        
+        const mainCard = document.createElement('div');
+        mainCard.className = 'main-cctv-card';
+        mainCard.id = `main${species}View`;
+        mainCard.onclick = () => switchToMainView(species);
+        mainCard.style.display = 'none';
+        
+        mainCard.innerHTML = `
+            <div class="cctv-feed-header">
+                <span class="animal-icon">${getAnimalIcon(species)}</span>
+                <h3>${species} Enclosure</h3>
+                <span class="main-label">VIEWING</span>
+            </div>
+            <div class="cctv-feed-wrapper">
+                <video class="cctv-video" autoplay loop muted playsinline>
+                    <source src="${speciesVideos[species]}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="cctv-overlay">
+                    <span class="rec-dot"></span>
+                    <span>LIVE</span>
+                </div>
+            </div>
+        `;
+        
+        mainViewContainer.appendChild(mainCard);
+    });
+}
+
 // ========== INITIALIZATION ==========
 
 // Initialize on page load
@@ -1049,9 +1206,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize species name in header
     const speciesNameElement = document.getElementById('currentSpeciesName');
     if (speciesNameElement) {
-        speciesNameElement.textContent = speciesDisplayNames[cageCurrentSpecies] || 'Goats';
+        speciesNameElement.textContent = 'All Species';
     }
 
+    // Show All Species view by default
+    document.getElementById('allSpeciesView').classList.remove('hidden');
+    document.getElementById('singleSpeciesView').classList.add('hidden');
+    
     // Hide placeholder if video loads successfully
     const cctvVideo = document.getElementById('cctvVideo');
     const cctvPlaceholder = document.getElementById('cctvPlaceholder');
@@ -1079,9 +1240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             handleVideoLoad();
         }
     }
-    
-    // Initialize environment for default species
-    initializeSpeciesEnvironment(cageCurrentSpecies);
     
     // Set up event listeners
     const lightSlider = document.getElementById('lightSlider');
@@ -1118,10 +1276,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Simulate environment changes every 8 seconds (for demo)
     setInterval(simulateEnvironmentChanges, 8000);
     
-    console.log('Cage Monitor initialized with manual fix application');
+    console.log('Cage Monitor initialized with All Species view');
     
     // Add clear all button to alert panel
     setTimeout(() => {
         addClearAllButton();
     }, 2000);
+    
+    // Initialize multi-view if all species view exists
+    if (document.getElementById('allSpeciesView')) {
+        initializeMultiView();
+    }
 });
