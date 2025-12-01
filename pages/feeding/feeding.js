@@ -268,6 +268,31 @@ function renderAnimalSelection(activeSpecies = null, displayName = null, icon = 
                 <h3 class="card-title">Animal Selection and Alerts</h3>
             </div>
             <div class="animal-selection-content">
+                <div class="color-indicator-legend">
+                    <div class="color-indicator-title">Color Indicator:</div>
+                    <div class="color-indicator-items">
+                        <div class="color-indicator-item" data-percent="< 25%">
+                            <span class="color-indicator-dot" style="background-color: #ef4444;"></span>
+                            <span class="color-indicator-label">Very Low</span>
+                            <span class="color-indicator-tooltip">< 25%</span>
+                        </div>
+                        <div class="color-indicator-item" data-percent="25-50%">
+                            <span class="color-indicator-dot" style="background-color: #fbbf24;"></span>
+                            <span class="color-indicator-label">Low</span>
+                            <span class="color-indicator-tooltip">25-50%</span>
+                        </div>
+                        <div class="color-indicator-item" data-percent="50-75%">
+                            <span class="color-indicator-dot" style="background-color: #3b82f6;"></span>
+                            <span class="color-indicator-label">Good</span>
+                            <span class="color-indicator-tooltip">50-75%</span>
+                        </div>
+                        <div class="color-indicator-item" data-percent="≥ 75%">
+                            <span class="color-indicator-dot" style="background-color: #10b981;"></span>
+                            <span class="color-indicator-label">Excellent</span>
+                            <span class="color-indicator-tooltip">≥ 75%</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="species-tabs-row">
                     ${firstRow.map(createTabHTML).join('')}
                 </div>
