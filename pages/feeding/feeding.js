@@ -1622,4 +1622,29 @@ function filterFeedersBySpecies(species) {
 // Initialize feeding page when page loads
 if (document.getElementById('feeding-section')) {
     document.addEventListener('DOMContentLoaded', initializeFeeding);
+    
+    // Re-trigger fade-in animation when section becomes active
+    const feedingSection = document.getElementById('feeding-section');
+    if (feedingSection) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (feedingSection.classList.contains('active')) {
+                        const leftContent = document.querySelector('.feeding-left-content');
+                        if (leftContent) {
+                            // Force reflow to restart animation
+                            leftContent.style.animation = 'none';
+                            void leftContent.offsetWidth; // Trigger reflow
+                            leftContent.style.animation = 'fadeInContent 0.6s ease-out';
+                        }
+                    }
+                }
+            });
+        });
+        
+        observer.observe(feedingSection, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
 }
