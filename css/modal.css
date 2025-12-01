@@ -43,7 +43,7 @@
 }
 
 .modal-header {
-    padding: 28px;
+    padding: 16px 24px;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -52,16 +52,18 @@
 }
 
 .modal-title {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 900;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    line-height: 1.2;
     color: var(--text-primary);
 }
 
 .modal-subtitle {
-    font-size: 15px;
+    font-size: 12px;
     color: var(--text-secondary);
     font-weight: 600;
+    line-height: 1.3;
 }
 
 .modal-close {
@@ -96,15 +98,159 @@
 }
 
 .tracking-info-section {
+<<<<<<< Updated upstream
     margin-bottom: 24px;
     display: none;
+=======
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Main Layout: Image left, Cards right */
+.tracking-info-main-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.tracking-info-image-placeholder {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.tracking-info-image-placeholder .modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin: 0;
+}
+
+.tracking-info-cards-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Tracking Info: 2x2 Grid Layout */
+.tracking-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tracking-info-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+>>>>>>> Stashed changes
 }
 
 .tracking-info-card {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
     padding: 20px;
     border-radius: var(--radius-md);
+<<<<<<< Updated upstream
     border: 1px solid rgba(99, 102, 241, 0.1);
+=======
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.tracking-info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.tracking-card-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.tracking-card-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tracking-card-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-secondary);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.tracking-card-value {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Status highlight when moving */
+.tracking-card-value.status-moving {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+/* Status highlight when resting */
+.tracking-card-value.status-resting {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+/* Last Charged value - black color */
+.tracking-card-value.last-charged {
+    color: var(--text-primary);
+}
+
+/* Battery colors */
+.tracking-card-value.battery-good {
+    color: #10b981;
+}
+
+.tracking-card-value.battery-warning {
+    color: #f59e0b;
+}
+
+.tracking-card-value.battery-low {
+    color: #ef4444;
+}
+
+/* Health Metrics Grid */
+.health-metrics-grid {
+>>>>>>> Stashed changes
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -127,6 +273,35 @@
 .tracking-value {
     font-size: 16px;
     font-weight: 800;
+<<<<<<< Updated upstream
+=======
+}
+
+.tracking-info-card.tracking .tracking-info-value {
+    color: rgba(5, 150, 105, 1);
+}
+
+/* Recent Activity Section */
+.recent-activity-section {
+    margin-top: 0;
+}
+
+.recent-activity-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.recent-activity-icon {
+    font-size: 18px;
+    filter: hue-rotate(-15deg) saturate(1.2);
+}
+
+.recent-activity-title {
+    font-size: 15px;
+    font-weight: 700;
+>>>>>>> Stashed changes
     color: var(--text-primary);
 }
 
@@ -134,8 +309,22 @@
     color: #1e40af;
 }
 
+<<<<<<< Updated upstream
 .tracking-value.status-resting {
     color: #065f46;
+=======
+.recent-activity-item {
+    background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0.1), 
+        rgba(99, 102, 241, 0.08));
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    display: flex;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.08);
+>>>>>>> Stashed changes
 }
 
 .tracking-value.battery-good {
@@ -151,15 +340,33 @@
 }
 
 .alerts-section {
+    margin-top: 24px;
     margin-bottom: 24px;
 }
 
+<<<<<<< Updated upstream
 .modal-alert-item {
     background: rgba(255, 255, 255, 0.95);
     border-radius: var(--radius-xl);
     padding: 24px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+=======
+/* Detailed Modal Alert Card - Matching Image 3 Style */
+.modal-alert-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(248, 250, 252, 0.95) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1.5px solid rgba(226, 232, 240, 0.8);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+>>>>>>> Stashed changes
     position: relative;
     overflow: hidden;
     margin-bottom: 18px;
@@ -202,6 +409,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
+<<<<<<< Updated upstream
+=======
+    gap: 12px;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-pill {
@@ -209,13 +420,22 @@
     align-items: center;
     gap: 8px;
     padding: 6px 14px;
+<<<<<<< Updated upstream
     border-radius: 999px;
     font-size: 12px;
+=======
+    border-radius: 20px;
+    font-size: 11px;
+>>>>>>> Stashed changes
     font-weight: 800;
     text-transform: uppercase;
+<<<<<<< Updated upstream
     letter-spacing: 1px;
     color: white;
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+=======
+    line-height: 1.2;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-pill.urgent { background: var(--danger); }
@@ -223,6 +443,7 @@
 .modal-alert-pill.routine { background: var(--primary); }
 
 .modal-alert-time {
+<<<<<<< Updated upstream
     font-size: 13px;
     color: var(--text-light);
     font-weight: 700;
@@ -241,11 +462,39 @@
     color: var(--text-secondary);
     font-weight: 600;
     margin-bottom: 14px;
+=======
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.modal-alert-message {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.modal-alert-animal {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-meta {
     display: flex;
+<<<<<<< Updated upstream
     gap: 10px;
+=======
+    gap: 8px;
+    margin-bottom: 16px;
+>>>>>>> Stashed changes
     flex-wrap: wrap;
     margin-bottom: 16px;
 }
@@ -253,6 +502,7 @@
 .modal-alert-tag {
     display: inline-flex;
     align-items: center;
+<<<<<<< Updated upstream
     gap: 6px;
     padding: 6px 12px;
     background: rgba(248, 250, 252, 0.9);
@@ -261,14 +511,32 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--text-primary);
+=======
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    line-height: 1.3;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-progress {
     height: 4px;
+<<<<<<< Updated upstream
     background: rgba(226, 232, 240, 0.5);
     border-radius: 999px;
     margin-bottom: 18px;
     overflow: hidden;
+=======
+    background: rgba(226, 232, 240, 0.6);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-progress-fill {
@@ -293,19 +561,33 @@
 
 .modal-alert-actions {
     display: flex;
+<<<<<<< Updated upstream
     gap: 12px;
     margin-top: 8px;
+=======
+    gap: 10px;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-actions .btn {
     flex: 1;
+<<<<<<< Updated upstream
     padding: 12px 20px;
+=======
+    padding: 11px 18px;
+    font-size: 13px;
+>>>>>>> Stashed changes
     font-weight: 700;
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
+<<<<<<< Updated upstream
     transition: all 0.25s ease;
     font-size: 14px;
+=======
+    transition: all 0.3s ease;
+    line-height: 1.4;
+>>>>>>> Stashed changes
 }
 
 .modal-alert-actions .btn-primary {
@@ -325,7 +607,455 @@
 
 .modal-alert-actions .btn-success:hover {
     transform: translateY(-2px);
+<<<<<<< Updated upstream
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+=======
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Old alert-card style - keeping for backward compatibility */
+.alert-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    background: rgba(254, 226, 226, 0.8);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #b91c1c;
+}
+
+.alert-icon {
+    font-size: 20px;
+}
+
+.cctv-feed {
+    background: #000;
+    border-radius: var(--radius-md);
+    height: 280px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.cctv-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 56px;
+}
+
+.cctv-overlay {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Behavior Notes Section in Modal */
+.behavior-notes-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.behavior-notes-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.behavior-notes-header {
+    margin-bottom: 16px;
+}
+
+.behavior-notes-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.behavior-icon {
+    font-size: 20px;
+}
+
+.behavior-notes-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 30px;
+}
+
+.behavior-notes-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    width: fit-content;
+}
+
+.behavior-notes-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.03);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+.rec-dot {
+    width: 9px;
+    height: 9px;
+    background: white;
+    border-radius: 50%;
+    animation: recBlink 1s infinite;
+}
+
+@keyframes recBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+.notes-section {
+    margin-top: 24px;
+}
+
+.notes-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.note-item {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    font-size: 14px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.note-time {
+    font-weight: 900;
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.modal-footer {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.02), rgba(139, 92, 246, 0.02));
+}
+
+/* EMERGENCY LOCK PANEL */
+.emergency-panel {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--danger);
+    margin-bottom: 20px;
+}
+
+.emergency-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--danger);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Behavior Notes Section in Modal */
+.behavior-notes-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.behavior-notes-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.behavior-notes-header {
+    margin-bottom: 16px;
+}
+
+.behavior-notes-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.behavior-icon {
+    font-size: 20px;
+}
+
+.behavior-notes-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 30px;
+}
+
+.behavior-notes-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    width: fit-content;
+}
+
+.behavior-notes-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.03);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+
+/* MODAL SPECIFIC STYLES */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-xl);
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    animation: modalSlideUp 0.4s ease;
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 2px;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+.modal-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.25s ease;
+    color: var(--text-secondary);
+}
+
+.modal-close:hover {
+    background: var(--danger);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 28px;
+}
+
+.modal-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+>>>>>>> Stashed changes
 }
 
 .sensors-grid {
@@ -345,7 +1075,350 @@
     min-height: 120px;
     display: flex;
     flex-direction: column;
+<<<<<<< Updated upstream
     justify-content: space-between;
+=======
+    gap: 12px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    width: fit-content;
+}
+
+.behavior-notes-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.03);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+.rec-dot {
+    width: 9px;
+    height: 9px;
+    background: white;
+    border-radius: 50%;
+    animation: recBlink 1s infinite;
+}
+
+@keyframes recBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+.notes-section {
+    margin-top: 24px;
+}
+
+.notes-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.note-item {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    font-size: 14px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.note-time {
+    font-weight: 900;
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.modal-footer {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.02), rgba(139, 92, 246, 0.02));
+}
+
+/* EMERGENCY LOCK PANEL */
+.emergency-panel {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--danger);
+    margin-bottom: 20px;
+}
+
+.emergency-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--danger);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Behavior Notes Section in Modal */
+.behavior-notes-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.behavior-notes-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.behavior-notes-header {
+    margin-bottom: 16px;
+}
+
+.behavior-notes-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.behavior-icon {
+    font-size: 20px;
+}
+
+.behavior-notes-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 30px;
+}
+
+.behavior-notes-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.behavior-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    width: fit-content;
+}
+
+.behavior-notes-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.03);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary);
+}
+
+.behavior-ai-alert {
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ai-label {
+    font-weight: 800;
+    color: #dc2626;
+    margin-right: 6px;
+}
+
+.ai-message {
+    color: var(--text-primary);
+}
+
+
+/* MODAL SPECIFIC STYLES */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-xl);
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    animation: modalSlideUp 0.4s ease;
+}
+
+@keyframes modalSlideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 2px;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+.modal-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.25s ease;
+    color: var(--text-secondary);
+}
+
+.modal-close:hover {
+    background: var(--danger);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 28px;
+}
+
+.modal-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.sensors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.sensor-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+    padding: 18px;
+    border-radius: var(--radius-md);
+    text-align: center;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    transition: all 0.25s ease;
+>>>>>>> Stashed changes
 }
 
 .sensor-card:hover {
@@ -431,10 +1504,11 @@
 }
 
 .notes-title {
-    font-size: 17px;
-    font-weight: 800;
-    margin-bottom: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
     color: var(--text-primary);
+    line-height: 1.4;
 }
 
 .note-item {

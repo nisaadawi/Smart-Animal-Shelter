@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
+<<<<<<< Updated upstream
     <div class="app">
         <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
@@ -68,6 +69,10 @@
                 </div>
             </div>
         </aside>
+=======
+    <div class="app reports-page">
+        <!-- SIDEBAR loaded dynamically from sidebar.html -->
+>>>>>>> Stashed changes
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="mainContent">
@@ -118,6 +123,85 @@
                             <div class="stat-label">System Uptime</div>
                         </div>
                     </div>
+<<<<<<< Updated upstream
+=======
+
+                    <!-- Generate Reports Section -->
+                    <div class="reports-panel">
+                        <div class="report-header">
+                            <h2 class="report-title">📋 Generate Reports</h2>
+                        </div>
+                        <div class="report-cards-grid">
+                            <div class="report-card" onclick="generateReport('health')" data-report-type="health">
+                                <div class="report-card-icon">❤️</div>
+                                <h3 class="report-card-title">Health Report</h3>
+                                <p class="report-card-desc">Generate comprehensive health status report for all animals</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('feeding')" data-report-type="feeding">
+                                <div class="report-card-icon">🍽️</div>
+                                <h3 class="report-card-title">Feeding Report</h3>
+                                <p class="report-card-desc">View feeding schedules and compliance statistics</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('tracking')" data-report-type="tracking">
+                                <div class="report-card-icon">📍</div>
+                                <h3 class="report-card-title">Tracking Report</h3>
+                                <p class="report-card-desc">Animal movement patterns and location history</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('alerts')" data-report-type="alerts">
+                                <div class="report-card-icon">🚨</div>
+                                <h3 class="report-card-title">Alerts Report</h3>
+                                <p class="report-card-desc">Summary of all alerts and notifications</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('inventory')" data-report-type="inventory">
+                                <div class="report-card-icon">📦</div>
+                                <h3 class="report-card-title">Inventory Report</h3>
+                                <p class="report-card-desc">Stock levels and inventory management data</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                            <div class="report-card" onclick="generateReport('system')" data-report-type="system">
+                                <div class="report-card-icon">⚙️</div>
+                                <h3 class="report-card-title">System Report</h3>
+                                <p class="report-card-desc">System performance and device status overview</p>
+                                <div class="report-card-action">Generate →</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Reports Section -->
+                    <div class="reports-panel">
+                        <div class="report-header">
+                            <h2 class="report-title">📁 Recent Reports</h2>
+                            <div class="report-actions">
+                                <button class="report-action-btn" onclick="refreshReports()">🔄 Refresh</button>
+                            </div>
+                        </div>
+                        <div class="reports-list" id="reportsList">
+                            <!-- Reports will be dynamically generated here -->
+                        </div>
+                    </div>
+
+                    <!-- Report Preview & Export Section -->
+                    <div class="reports-panel report-preview-panel" id="reportPreviewPanel" style="display: none;">
+                        <div class="report-header">
+                            <h2 class="report-title">📄 Report Preview</h2>
+                            <div class="report-actions">
+                                <button class="report-action-btn" id="downloadPdfBtn" onclick="downloadReportPdf()">
+                                    ⬇️ Download PDF
+                                </button>
+                                <button class="report-action-btn" id="closePreviewBtn" onclick="closeReportPreview()">
+                                    ✖ Close
+                                </button>
+                            </div>
+                        </div>
+                        <div id="reportPreview" class="report-preview-content">
+                            <!-- Active report preview will be rendered here -->
+                        </div>
+                    </div>
+>>>>>>> Stashed changes
                 </section>
             </div>
         </main>
@@ -125,6 +209,10 @@
 
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
+
+    <!-- PDF generation libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script src="../data.js"></script>
     <script src="../utils.js"></script>

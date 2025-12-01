@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* TRACKING SPECIFIC STYLES */
 
 .tracking-panel {
@@ -7,25 +8,67 @@
     border: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     margin-bottom: 28px;
+=======
+/* TRACKING SPECIFIC STYLES - COMPACT & ENHANCED */
+
+.tracking-panel {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 4px 20px rgba(99, 102, 241, 0.1),
+        0 1px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.tracking-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+>>>>>>> Stashed changes
 }
 
 .tracking-toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 .tracking-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .tracking-filter {
     border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 999px;
+<<<<<<< Updated upstream
     padding: 10px 18px;
     display: inline-flex;
     align-items: center;
@@ -35,6 +78,49 @@
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
+=======
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tracking-filter::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.tracking-filter:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.tracking-filter:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.15), 
+        rgba(139, 92, 246, 0.12));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.18);
+>>>>>>> Stashed changes
 }
 
 .tracking-filter.active {
@@ -42,6 +128,7 @@
     color: white;
     box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3);
     border-color: transparent;
+<<<<<<< Updated upstream
 }
 
 .filter-count {
@@ -49,12 +136,105 @@
     padding: 2px 8px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.25);
+=======
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.35),
+        0 2px 10px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    animation: filterPulse 2s ease-in-out infinite;
+}
+
+@keyframes filterPulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4), 0 4px 12px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 10px 28px rgba(99, 102, 241, 0.5), 0 6px 16px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+}
+
+.filter-count {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: 800;
+    box-shadow: 
+        0 1px 6px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
+}
+
+.tracking-filter.active .filter-count {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Add Button - appears after Alligators */
+.tracking-add-btn {
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 999px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1), 
+        rgba(139, 92, 246, 0.08));
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 40px;
+    height: 40px;
+}
+
+.tracking-add-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.tracking-add-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.tracking-add-btn:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.15), 
+        rgba(139, 92, 246, 0.12));
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.18);
+}
+
+.tracking-add-btn .add-icon {
+    font-size: 22px;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+>>>>>>> Stashed changes
 }
 
 .tracking-controls-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .tracking-view-toggle {
@@ -62,15 +242,30 @@
     background: rgba(99, 102, 241, 0.08);
     border-radius: 999px;
     padding: 4px;
+<<<<<<< Updated upstream
     gap: 6px;
+=======
+    gap: 3px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+>>>>>>> Stashed changes
 }
 
 .tracking-view-btn {
     border: none;
     background: transparent;
+<<<<<<< Updated upstream
     padding: 8px 18px;
     border-radius: 999px;
     font-weight: 700;
+=======
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+>>>>>>> Stashed changes
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -85,14 +280,16 @@
 
 .tracking-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .map-zoom-controls {
     display: flex;
     align-items: center;
+<<<<<<< Updated upstream
     gap: 12px;
     margin-top: 20px;
     padding-top: 20px;
@@ -104,16 +301,61 @@
     font-weight: 700;
     color: var(--text-secondary);
     white-space: nowrap;
+=======
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+    position: relative;
+}
+
+.map-zoom-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(99, 102, 241, 0.3), 
+        transparent);
+}
+
+.zoom-label {
+    font-size: 12px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--text-secondary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+>>>>>>> Stashed changes
 }
 
 .species-zoom-select {
     flex: 1;
+<<<<<<< Updated upstream
     max-width: 400px;
     padding: 12px 16px;
     border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.95);
     font-size: 14px;
+=======
+    max-width: 350px;
+    padding: 10px 14px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98), 
+        rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(10px);
+    font-size: 12px;
+>>>>>>> Stashed changes
     font-weight: 600;
     color: var(--text-primary);
     cursor: pointer;
@@ -121,13 +363,28 @@
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
+<<<<<<< Updated upstream
     background-position: right 16px center;
     padding-right: 40px;
+=======
+    background-position: right 14px center;
+    padding-right: 36px;
+    box-shadow: 
+        0 2px 8px rgba(99, 102, 241, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+>>>>>>> Stashed changes
 }
 
 .species-zoom-select:hover {
     border-color: rgba(99, 102, 241, 0.4);
+<<<<<<< Updated upstream
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+=======
+    box-shadow: 
+        0 4px 16px rgba(99, 102, 241, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+>>>>>>> Stashed changes
 }
 
 .species-zoom-select:focus {
@@ -144,42 +401,89 @@
 .tracking-stat-card {
     background: rgba(248, 250, 252, 0.9);
     border-radius: var(--radius-lg);
+<<<<<<< Updated upstream
     padding: 16px 20px;
     border: 1px solid rgba(99, 102, 241, 0.1);
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+=======
+    padding: 12px 14px;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 
+        0 4px 20px rgba(99, 102, 241, 0.1),
+        0 1px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tracking-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--purple));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tracking-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 24px rgba(99, 102, 241, 0.12),
+        0 2px 10px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+.tracking-stat-card:hover::before {
+    opacity: 1;
+>>>>>>> Stashed changes
 }
 
 .tracking-stat-card .stat-label {
-    font-size: 12px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     color: var(--text-light);
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .tracking-stat-card .stat-value {
+<<<<<<< Updated upstream
     font-size: 32px;
+=======
+    font-size: 28px;
+>>>>>>> Stashed changes
     font-weight: 900;
     color: var(--text-primary);
     line-height: 1;
     margin-bottom: 4px;
+<<<<<<< Updated upstream
+=======
+    position: relative;
+>>>>>>> Stashed changes
 }
 
 .tracking-stat-card .stat-meta {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-secondary);
     font-weight: 600;
+    line-height: 1.3;
 }
 
 .tracking-container {
     display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 24px;
-    margin-bottom: 32px;
+    grid-template-columns: 1fr 360px;
+    gap: 12px;
+    margin-bottom: 0;
 }
 
 .map-card {
+<<<<<<< Updated upstream
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-radius: var(--radius-xl);
@@ -187,10 +491,45 @@
     box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.5);
     height: 580px;
+=======
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: 
+        0 4px 20px rgba(99, 102, 241, 0.1),
+        0 1px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    height: calc(100vh - 280px);
+    max-height: 500px;
+>>>>>>> Stashed changes
     position: relative;
     overflow: hidden;
 }
 
+<<<<<<< Updated upstream
+=======
+.map-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        var(--primary), 
+        var(--purple), 
+        var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+    z-index: 1;
+}
+
+>>>>>>> Stashed changes
 .map-card.heat-mode {
     box-shadow: 0 25px 70px rgba(99, 102, 241, 0.25);
 }
@@ -350,14 +689,30 @@
 }
 
 .tracking-list {
+<<<<<<< Updated upstream
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-radius: var(--radius-xl);
     padding: 24px;
     box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.5);
+=======
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: 
+        0 4px 20px rgba(99, 102, 241, 0.1),
+        0 1px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+>>>>>>> Stashed changes
     overflow-y: auto;
-    max-height: 580px;
+    height: calc(100vh - 280px);
+    max-height: 500px;
     position: relative;
 }
 
@@ -373,26 +728,52 @@
 }
 
 .tracking-list h3 {
+<<<<<<< Updated upstream
     margin-bottom: 18px;
     font-size: 18px;
     font-weight: 800;
     color: var(--text-primary);
+=======
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--text-primary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+>>>>>>> Stashed changes
 }
 
 .tracking-item {
     display: flex;
     align-items: center;
+<<<<<<< Updated upstream
     gap: 16px;
     padding: 16px;
     background: rgba(248, 250, 252, 0.9);
     border-radius: var(--radius-lg);
     margin-bottom: 14px;
+=======
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.95) 0%, 
+        rgba(255, 255, 255, 0.9) 100%);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+>>>>>>> Stashed changes
     cursor: pointer;
     transition: all 0.25s ease;
     border: 1px solid rgba(99, 102, 241, 0.08);
 }
 
 .tracking-item:hover {
+<<<<<<< Updated upstream
     background: white;
     transform: translateX(6px);
     box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
@@ -412,8 +793,53 @@
     border-radius: var(--radius-lg);
     background: rgba(248, 250, 252, 0.8);
     border: 1px dashed rgba(99, 102, 241, 0.4);
+=======
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 1) 0%, 
+        rgba(248, 250, 252, 0.98) 100%);
+    transform: translateX(4px) translateY(-1px);
+    box-shadow: 
+        0 6px 24px rgba(99, 102, 241, 0.15),
+        0 2px 10px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.tracking-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 
+        0 3px 12px rgba(99, 102, 241, 0.18),
+        0 1px 6px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.tracking-item:hover .tracking-avatar {
+    transform: scale(1.08) rotate(2deg);
+    box-shadow: 
+        0 6px 20px rgba(99, 102, 241, 0.25),
+        0 2px 10px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.tracking-empty {
+    padding: 24px 20px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.95), 
+        rgba(241, 245, 249, 0.9));
+    border: 2px dashed rgba(99, 102, 241, 0.3);
+>>>>>>> Stashed changes
     text-align: center;
     font-weight: 700;
+    font-size: 13px;
     color: var(--text-secondary);
 }
 
@@ -422,19 +848,22 @@
 }
 
 .tracking-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 800;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     color: var(--text-primary);
+    line-height: 1.3;
 }
 
 .tracking-location {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
     gap: 4px;
     font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 2px;
 }
 
 /* Movement trail tooltip styling */
@@ -450,12 +879,27 @@
 }
 
 .tracking-status {
+<<<<<<< Updated upstream
     padding: 7px 14px;
     border-radius: var(--radius-sm);
     font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+=======
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+>>>>>>> Stashed changes
 }
 
 .status-moving {
@@ -472,16 +916,18 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 8px;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
 .tracking-battery {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
-    margin-top: 4px;
+    margin-top: 2px;
     display: flex;
     align-items: center;
     gap: 4px;
+    line-height: 1.3;
 }
 
 .tracking-battery.battery-good {
@@ -521,10 +967,70 @@
 @media (max-width: 1200px) {
     .tracking-container {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .tracking-list {
         max-height: 400px;
+    }
+    
+    .tracking-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tracking-panel {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .tracking-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .tracking-filters {
+        justify-content: center;
+    }
+    
+    .tracking-controls-group {
+        justify-content: center;
+    }
+    
+    .tracking-stats {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .map-zoom-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+    
+    .species-zoom-select {
+        max-width: 100%;
+    }
+    
+    .map-card,
+    .tracking-list {
+        height: calc(100vh - 240px);
+        max-height: 350px;
+    }
+    
+    .tracking-item {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .tracking-avatar {
+        width: 44px;
+        height: 44px;
     }
 }
 

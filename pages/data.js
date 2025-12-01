@@ -105,10 +105,11 @@ const animalDatabase = {
                 lastCharge: '1 day ago'
             },
             cctv: true,
-            alerts: [],
+            alerts: ['Quarantine required - Contagious disease suspected'],
             notes: [
                 { time: '07:30', text: 'Completed morning health check' },
-                { time: '10:45', text: 'Led herd to shaded area' }
+                { time: '10:45', text: 'Led herd to shaded area' },
+                { time: '14:00', text: 'Isolated due to suspected contagious condition' }
             ]
         }
     ],

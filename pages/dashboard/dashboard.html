@@ -96,6 +96,7 @@
             <div class="content">
                 <!-- DASHBOARD SECTION -->
                 <section class="page-section active" id="dashboard-section">
+<<<<<<< Updated upstream
                     <div class="section-header">
                         <h1 class="section-title">Dashboard Overview</h1>
                         <p class="section-subtitle">Real-time shelter management and monitoring</p>
@@ -120,6 +121,67 @@
                             <div class="stat-icon green">
                                 <span>✅</span>
                             </div>
+=======
+                    <!-- PERSONALIZED GREETING -->
+                    <div class="dashboard-greeting-simple">
+                        <div class="greeting-main-text">
+                            <span class="greeting-welcome-text">Welcome back,</span>
+                            <span class="greeting-name" id="greetingName">Khairul Johari</span>
+                            <span class="greeting-wave">👋</span>
+                        </div>
+                        <div class="greeting-subtitle" id="greetingSubtitle">
+                            <span class="greeting-subtitle-content"></span>
+                        </div>
+                    </div>
+
+                    <!-- QUARANTINE ALERT POPUP (Top Right Corner) -->
+                    <div class="quarantine-popup" id="quarantinePopup" style="display: none;">
+                        <div class="quarantine-popup-content">
+                            <div class="quarantine-popup-header">
+                                <div class="quarantine-popup-icon">
+                                    <span class="quarantine-icon-emoji">🚨</span>
+                                </div>
+                                <div class="quarantine-popup-title">Quarantine Alert</div>
+                                <button class="quarantine-popup-close" onclick="dismissQuarantinePopup()" title="Dismiss">
+                                    <span>×</span>
+                                </button>
+                            </div>
+                            <div class="quarantine-popup-body">
+                                <div class="quarantine-popup-message" id="quarantinePopupMessage">No quarantine alerts</div>
+                                <div class="quarantine-popup-animals" id="quarantinePopupAnimals"></div>
+                            </div>
+                            <div class="quarantine-popup-footer">
+                                <button class="quarantine-popup-action-btn" onclick="handleQuarantineAction()" title="View Details">
+                                    <span>View Details</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ANIMAL SPECIES OVERVIEW CARD -->
+                    <div class="species-overview-card">
+                        <div class="species-total-section">
+                            <div class="species-total">
+                                <span class="species-total-icon">🐾</span>
+                                <div class="species-total-content">
+                                    <div class="species-total-label">Total Animals</div>
+                                    <div class="species-total-value" id="speciesTotalValue">0</div>
+                                    <div class="species-total-count" id="speciesCount">0 species</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="species-scroll-container">
+                            <div class="species-list" id="speciesList">
+                                <div class="species-loading">Loading species...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KEY METRICS (Priority 1: Overview Stats) -->
+                    <div class="stats-grid">
+                        <!-- <div class="stat-card" onclick="window.location.href='../feeding/feeding.html'">
+                            <div class="stat-icon green">✅</div>
+>>>>>>> Stashed changes
                             <div class="stat-value" id="tasksPending">0</div>
                             <div class="stat-label">Tasks Pending</div>
                         </div>
@@ -129,20 +191,70 @@
                             </div>
                             <div class="stat-value" id="trackingActive">0</div>
                             <div class="stat-label">Tracking Active</div>
-                        </div>
+<<<<<<< Updated upstream
+=======
+                            <div class="stat-meta" id="trackingBatteryMeta">Devices online</div>
+                        </div> -->
                     </div>
 
+        <!-- ALERTS CARD -->
+        <div class="info-card alerts-card">
+            <div class="info-card-header">
+                <span class="info-card-icon warning" aria-hidden="true">⚠️</span>
+                <h3 class="info-card-title">Alerts</h3>
+                <span class="info-card-badge" id="attentionCount" aria-label="Total alerts">0</span>
+            </div>
+                        <div class="info-card-content" id="attentionAlertsList" role="list" aria-label="List of animals needing attention">
+                            <div class="info-empty">All animals are healthy</div>
+>>>>>>> Stashed changes
+                        </div>
+                        <a href="../alerts/alerts.html" class="info-card-link">View all alerts →</a>
+                    </div>
+
+<<<<<<< Updated upstream
                     <div class="dashboard-graphs">
                         <div class="graph-card species-card">
                             <h3>Species Distribution</h3>
                             <p>Population mix across the shelter</p>
                             <canvas id="speciesChart"></canvas>
                             <div class="chart-meta" id="speciesSummary"></div>
+=======
+                    <!-- PRIORITY 2: ACTIONABLE ITEMS (Feedings, Inventory, Map) -->
+                    <div class="info-cards-container">
+                        <div class="info-cards-left">
+                            <!-- Upcoming Feedings Card -->
+                            <div class="info-card feeding-card">
+                                <div class="info-card-header">
+                                    <span class="info-card-icon">🍽️</span>
+                                    <h3 class="info-card-title">Upcoming Feedings</h3>
+                                    <span class="info-card-badge" id="upcomingFeedingsCount">0</span>
+                                    <span class="info-card-time" id="nextFeedingTime">--:--</span>
+                                </div>
+                                <div class="info-card-content" id="upcomingFeedingsList">
+                                    <div class="info-empty">No upcoming feedings</div>
+                                </div>
+                                <a href="../feeding/feeding.html" class="info-card-link">View schedule →</a>
+                            </div>
+
+                            <!-- Low Stock Alert Card -->
+                            <div class="info-card stock-card">
+                                <div class="info-card-header">
+                                    <span class="info-card-icon warning">📦</span>
+                                    <h3 class="info-card-title">Inventory</h3>
+                                    <span class="info-card-badge" id="lowStockCount">0</span>
+                                </div>
+                                <div class="info-card-content" id="lowStockList">
+                                    <div class="info-empty">All items in stock</div>
+                                </div>
+                                <a href="../inventory/inventory.html" class="info-card-link">View inventory →</a>
+                            </div>
+>>>>>>> Stashed changes
                         </div>
                         <div class="graph-card health-card">
                             <h3>Health Status</h3>
                             <p>Overall wellness for tracked animals</p>
                             <canvas id="healthStatusChart"></canvas>
+<<<<<<< Updated upstream
                             <div class="chart-legend" id="healthLegend"></div>
                             <div class="chart-meta" id="healthSummary"></div>
                         </div>
@@ -313,6 +425,76 @@
                             <div class="activity-list" id="activityList"></div>
                         </div>
                     </div>
+=======
+                            <div class="health-chart-context"></div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="info-card timeline-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📅</span>
+                                <h3 class="info-card-title">Recent Activity</h3>
+                            </div>
+                            <div class="info-card-content scrollable" id="activityTimeline">
+                                <div class="activity-item">
+                                    <div class="activity-icon">⏳</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Loading activities...</div>
+                                        <div class="activity-time">--</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Status -->
+                        <div class="info-card environment-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">🌡️</span>
+                                <h3 class="info-card-title">Environment</h3>
+                            </div>
+                            <div class="info-card-content" id="environmentStatus">
+                                <div class="environment-summary">
+                                    <div class="env-stat">
+                                        <span class="env-label">Good</span>
+                                        <span class="env-value" id="envGood">0</span>
+                                    </div>
+                                    <div class="env-stat">
+                                        <span class="env-label">Warning</span>
+                                        <span class="env-value warning" id="envWarning">0</span>
+                                    </div>
+                                    <div class="env-stat">
+                                        <span class="env-label">Critical</span>
+                                        <span class="env-value danger" id="envCritical">0</span>
+                                    </div>
+                                </div>
+                                <div class="environment-list" id="environmentList">
+                                    <div class="info-empty">No environment data</div>
+                                </div>
+                            </div>
+                            <a href="../cage/cage.html" class="info-card-link">View cage monitor →</a>
+                        </div>
+                    </div>
+
+                    <!-- CAGE GALLERY - Responsive Grid -->
+                    <div class="cage-gallery-section">
+                        <div class="info-card cage-gallery-card">
+                            <div class="info-card-header">
+                                <div class="info-card-header-left">
+                                    <span class="info-card-icon">🏠</span>
+                                    <h3 class="info-card-title">Cage Overview</h3>
+                                </div>
+                                <button class="cage-edit-btn" onclick="openEditCageMode()" title="Edit cages">
+                                    <span class="cage-edit-icon">✏️</span>
+                                    <span class="cage-edit-text">Edit</span>
+                                </button>
+                            </div>
+                            <div class="cage-gallery-grid" id="cageGallery">
+                                <!-- Cage items will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+
+>>>>>>> Stashed changes
                 </section>
             </div>
         </main>
@@ -320,6 +502,128 @@
 
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
+
+    <!-- ADD CAGE MODAL -->
+    <div class="modal-overlay" id="addCageModal">
+        <div class="modal-container add-cage-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Place</h2>
+                <button class="modal-close" onclick="closeAddCageModal()" title="Close">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCageForm" onsubmit="handleAddCageSubmit(event)">
+                    <div class="form-group">
+                        <label for="cageName" class="form-label">
+                            Place Name <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cageName" 
+                            name="cageName" 
+                            class="form-input" 
+                            placeholder="e.g., New Enclosure, Outdoor Habitat"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cageType" class="form-label">
+                            Type <span class="required">*</span>
+                        </label>
+                        <select id="cageType" name="cageType" class="form-input" required>
+                            <option value="">Select type...</option>
+                            <option value="Enclosure">Enclosure</option>
+                            <option value="Terrarium">Terrarium</option>
+                            <option value="Habitat">Habitat</option>
+                            <option value="Pasture">Pasture</option>
+                            <option value="Aviary">Aviary</option>
+                            <option value="Aquarium">Aquarium</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cageSpecies" class="form-label">
+                            Species
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cageSpecies" 
+                            name="cageSpecies" 
+                            class="form-input" 
+                            placeholder="e.g., Alligator, Fox, Goat"
+                        >
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cageCapacity" class="form-label">
+                                Capacity
+                            </label>
+                            <input 
+                                type="number" 
+                                id="cageCapacity" 
+                                name="cageCapacity" 
+                                class="form-input" 
+                                placeholder="Max animals"
+                                min="1"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cageLocation" class="form-label">
+                                Location
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cageLocation" 
+                                name="cageLocation" 
+                                class="form-input" 
+                                placeholder="e.g., Building A, Outdoor"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cageImage" class="form-label">
+                            Image URL
+                        </label>
+                        <input 
+                            type="url" 
+                            id="cageImage" 
+                            name="cageImage" 
+                            class="form-input" 
+                            placeholder="https://example.com/image.jpg"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cageDescription" class="form-label">
+                            Description
+                        </label>
+                        <textarea 
+                            id="cageDescription" 
+                            name="cageDescription" 
+                            class="form-input form-textarea" 
+                            rows="3"
+                            placeholder="Additional notes about this place..."
+                        ></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeAddCageModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Add Place
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
