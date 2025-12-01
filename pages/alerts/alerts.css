@@ -9,30 +9,30 @@
 
 /* Species Tabs */
 .species-tabs-container {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     overflow: visible;
-    padding-top: 4px;
+    padding-top: 2px;
 }
 
 .species-tabs {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     overflow: visible;
 }
 
 .species-tabs::-webkit-scrollbar {
-    height: 6px;
+    height: 4px;
 }
 
 .species-tabs::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .species-tab {
-    padding: 12px 24px;
+    padding: 8px 16px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.5);
@@ -42,7 +42,7 @@
     color: var(--text-secondary);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
-    font-size: 14px;
+    font-size: 12px;
     position: relative;
     overflow: visible;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -106,13 +106,13 @@
 .alerts-panel {
     background: #ffffff;
     border-radius: var(--radius-xl);
-    padding: 24px 28px;
+    padding: 16px 20px;
     border: 1px solid rgba(226, 232, 240, 0.8);
     box-shadow: 
         0 8px 32px rgba(99, 102, 241, 0.1),
         0 4px 16px rgba(0, 0, 0, 0.05),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    margin-bottom: 28px;
+    margin-bottom: 16px;
     position: relative;
     overflow: hidden;
     animation: fadeInUp 0.5s ease-out;
@@ -151,30 +151,30 @@
 .alerts-toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .alert-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     flex: 1;
 }
 
 .alert-filter {
-    padding: 10px 18px;
+    padding: 6px 14px;
     border-radius: 50px;
     border: 2px solid rgba(148, 163, 184, 0.4);
     background: #ffffff;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 11px;
     color: #475569;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
@@ -235,10 +235,10 @@
 }
 
 .filter-status {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #475569;
-    padding: 6px 12px;
+    padding: 5px 10px;
     background: #ffffff;
     border-radius: var(--radius-sm);
     border: 1px solid rgba(226, 232, 240, 0.8);
@@ -248,13 +248,13 @@
 /* Compact Summary Cards */
 .alerts-summary {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
     margin-top: 0;
 }
 
 .alert-summary-card {
-    padding: 20px;
+    padding: 12px 16px;
     border-radius: var(--radius-xl);
     background: #ffffff;
     border: 1px solid rgba(226, 232, 240, 0.8);
@@ -300,11 +300,11 @@
 
 .alert-summary-card .label {
     text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.8px;
+    font-size: 9px;
+    letter-spacing: 0.6px;
     color: #94a3b8;
     font-weight: 800;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 /* Color-coded labels */
@@ -321,14 +321,14 @@
 }
 
 .alert-summary-card .value {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 900;
     background: linear-gradient(135deg, #0f172a, var(--primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     transition: all 0.3s ease;
 }
 
@@ -406,7 +406,7 @@
 }
 
 .alert-summary-card .meta {
-    font-size: 12px;
+    font-size: 10px;
     color: #64748b;
     font-weight: 600;
     line-height: 1.3;
@@ -415,7 +415,7 @@
 /* Improved Alerts Grid */
 .alerts-grid {
     display: grid;
-    gap: 16px;
+    gap: 10px;
     grid-template-columns: 1fr;
     max-width: 100%;
     margin: 0 auto;
@@ -451,8 +451,8 @@
 .alert-item {
     background: #ffffff;
     border-radius: var(--radius-xl);
-    padding: 22px 24px;
-    border-left: 5px solid transparent;
+    padding: 14px 18px;
+    border-left: 4px solid transparent;
     border-right: 1px solid rgba(226, 232, 240, 0.6);
     border-top: 1px solid rgba(226, 232, 240, 0.6);
     border-bottom: 1px solid rgba(226, 232, 240, 0.6);
@@ -464,7 +464,7 @@
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
@@ -546,19 +546,19 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0;
-    gap: 12px;
+    gap: 8px;
 }
 
 .alert-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
+    gap: 4px;
+    padding: 5px 10px;
     border-radius: 50px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     color: white;
     box-shadow: 
         0 3px 10px rgba(0, 0, 0, 0.15),
@@ -604,11 +604,11 @@
 }
 
 .alert-time {
-    font-size: 12px;
+    font-size: 10px;
     color: #64748b;
     font-weight: 700;
     white-space: nowrap;
-    padding: 4px 10px;
+    padding: 3px 8px;
     background: rgba(248, 250, 252, 0.8);
     border-radius: 50px;
     border: 1px solid rgba(226, 232, 240, 0.6);
@@ -616,12 +616,12 @@
 
 /* Compact Message */
 .alert-message {
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 800;
     margin-bottom: 0;
     color: #0f172a;
-    line-height: 1.5;
-    letter-spacing: -0.2px;
+    line-height: 1.4;
+    letter-spacing: -0.1px;
     transition: color 0.3s ease;
 }
 
@@ -630,34 +630,34 @@
 }
 
 .alert-animal {
-    font-size: 14px;
+    font-size: 12px;
     color: #475569;
     font-weight: 700;
     margin-bottom: 0;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 /* Compact Meta Tags */
 .alert-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12px;
+    gap: 6px;
+    font-size: 11px;
     margin-bottom: 0;
 }
 
 .alert-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    gap: 4px;
+    padding: 4px 10px;
     border-radius: 50px;
     background: linear-gradient(135deg, rgba(226, 232, 240, 0.9), rgba(241, 245, 249, 0.9));
     color: #475569;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 10px;
     border: 1px solid rgba(226, 232, 240, 0.6);
     transition: all 0.2s ease;
 }
@@ -670,20 +670,20 @@
 
 /* Compact Actions */
 .alert-actions {
-    margin-top: 10px;
+    margin-top: 6px;
     display: flex;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .alert-actions .btn {
-    padding: 10px 20px;
-    font-size: 13px;
+    padding: 7px 16px;
+    font-size: 11px;
     font-weight: 800;
     border-radius: 50px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     position: relative;
     overflow: hidden;
 }
@@ -720,7 +720,7 @@
 
 /* Empty State */
 .alerts-empty {
-    padding: 60px 40px;
+    padding: 40px 30px;
     border-radius: var(--radius-xl);
     background: linear-gradient(135deg, 
         rgba(248, 250, 252, 0.8), 
@@ -729,7 +729,7 @@
     text-align: center;
     font-weight: 800;
     color: #64748b;
-    font-size: 15px;
+    font-size: 13px;
     box-shadow: 
         0 4px 16px rgba(99, 102, 241, 0.06),
         0 2px 8px rgba(0, 0, 0, 0.04);
@@ -758,6 +758,7 @@
 @media (max-width: 768px) {
     .alerts-summary {
         grid-template-columns: 1fr;
+        gap: 6px;
     }
     
     .alert-filters {
@@ -767,18 +768,29 @@
     .alerts-toolbar {
         flex-direction: column;
         align-items: stretch;
-    }
-    
-    .alert-item {
-        padding: 16px;
-    }
-    
-    .species-tabs {
         gap: 8px;
     }
     
+    .alert-item {
+        padding: 12px 14px;
+        gap: 8px;
+    }
+    
+    .species-tabs {
+        gap: 6px;
+    }
+    
     .species-tab {
-        padding: 10px 18px;
+        padding: 6px 14px;
+        font-size: 11px;
+    }
+    
+    .alerts-panel {
+        padding: 12px 16px;
+        margin-bottom: 12px;
+    }
+    
+    .alert-message {
         font-size: 13px;
     }
 }
