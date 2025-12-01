@@ -10,10 +10,10 @@ let cageCurrentSpecies = 'All'; // Default species for cage monitor
 const speciesVideos = {
     'Goat': '../../videos/goat.MOV',
     'Sugarglider': '../../videos/sugarglider.MOV',
-    'Alligator': '../../videos/alligator.MOV',
+    'Alligator': '../../videos/alligator.mp4',
     'Snail': '../../videos/snail.MOV',
-    'Porcupine': '../../videos/porcupine.MOV',
-    'Fox': '../../videos/fox.MOV'
+    'Porcupine': '../../videos/porcupine.MP4',
+    'Fox': '../../videos/fox.MP4'
 };
 
 // Species display names mapping
@@ -1040,34 +1040,79 @@ function simulateEnvironmentChanges() {
     updateEnvironmentDisplay();
 }
 
-// Switch main view when clicking on PiP screens
+// Switch main view when clicking on any card
 function switchToMainView(species) {
-    // Hide all main views
-    const mainViews = document.querySelectorAll('.main-cctv-card');
-    mainViews.forEach(view => {
-        view.classList.remove('active');
-        view.style.display = 'none';
+    // Remove active class from all cards
+    const allCards = document.querySelectorAll('.side-cctv-card, .bottom-cctv-card');
+    allCards.forEach(card => {
+        card.classList.remove('active');
     });
     
-    // Show the selected species as main view
-    const newMainView = document.getElementById(`main${species}View`);
-    if (newMainView) {
-        newMainView.classList.add('active');
-        newMainView.style.display = 'block';
-    } else {
-        // If no specific view exists, update the current one
-        updateMainView(species);
-    }
+    // Create and show main view for selected species
+    createAndShowMainView(species);
     
-    // Update the main label
-    const mainLabels = document.querySelectorAll('.main-label');
-    mainLabels.forEach(label => {
-        label.textContent = species === 'Goat' ? 'MAIN VIEW' : 'VIEWING';
+    // Update bottom card if it exists
+    const bottomCards = document.querySelectorAll('.bottom-cctv-card');
+    bottomCards.forEach(card => {
+        card.classList.remove('active');
+        const header = card.querySelector('h4');
+        if (header && header.textContent.includes(species)) {
+            card.classList.add('active');
+        }
     });
     
     // Show toast notification
     if (typeof showToast === 'function') {
         showToast(`${speciesDisplayNames[species]} now in main view`);
+    }
+}
+
+// Create and show main view dynamically
+function createAndShowMainView(species) {
+    const mainViewContainer = document.querySelector('.main-cctv-section');
+    if (!mainViewContainer) return;
+    
+    // Create new main view
+    const mainCard = document.createElement('div');
+    mainCard.className = 'main-cctv-card active';
+    mainCard.id = `main${species}View`;
+    
+    mainCard.innerHTML = `
+        <div class="cctv-feed-header">
+            <span class="animal-icon">${getAnimalIcon(species)}</span>
+            <h3>${species} Enclosure</h3>
+            <span class="main-label">MAIN VIEW</span>
+        </div>
+        <div class="cctv-feed-wrapper main-video-wrapper">
+            <video class="cctv-video main-video" autoplay loop muted playsinline>
+                <source src="${speciesVideos[species]}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="cctv-overlay">
+                <span class="rec-dot"></span>
+                <span>LIVE</span>
+            </div>
+        </div>
+        <button class="view-details-btn" onclick="switchCCTVFeed('${species}')">
+            <span class="btn-icon">🔍</span>
+            View Cage Details
+        </button>
+    `;
+    
+    // Remove existing main view and add new one
+    const existingMain = mainViewContainer.querySelector('.main-cctv-card');
+    if (existingMain) {
+        mainViewContainer.removeChild(existingMain);
+    }
+    mainViewContainer.appendChild(mainCard);
+    
+    // Load and play the video
+    const video = mainCard.querySelector('.main-video');
+    if (video) {
+        video.load();
+        video.play().catch(err => {
+            console.error('Error playing video:', err);
+        });
     }
 }
 
@@ -1109,6 +1154,12 @@ function initializeMultiView() {
     // Create main views for all species
     const mainViewContainer = document.querySelector('.main-cctv-view');
     if (!mainViewContainer) return;
+
+    // Ensure all PiP cards have active state on Goat initially
+    const goatPip = document.querySelector('[onclick="switchToMainView(\'Goat\')"]');
+    if (goatPip) {
+        goatPip.classList.add('active');
+    }
     
     const speciesList = ['Goat', 'Sugarglider', 'Alligator', 'Snail', 'Porcupine', 'Fox'];
     
@@ -1136,10 +1187,6 @@ function initializeMultiView() {
                     <span class="rec-dot"></span>
                     <span>LIVE</span>
                 </div>
-            </div>
-            <div class="cctv-feed-status">
-                <span class="status-indicator online"></span>
-                <span class="status-text">Online</span>
             </div>
         `;
         

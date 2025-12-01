@@ -22,18 +22,6 @@
             <div class="content">
                 <!-- CAGE MONITOR SECTION -->
                 <section class="page-section active" id="cage-section">
-                    <div class="species-tabs-container">
-                        <div class="species-tabs">
-                            <div class="species-tab active" onclick="switchCCTVFeed('All')" data-species="All">🐾 All Species</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Goat')" data-species="Goat">🐐 Goats</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Sugarglider')" data-species="Sugarglider">🐿️ Sugar Gliders</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Alligator')" data-species="Alligator">🐊 Alligators</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Snail')" data-species="Snail">🐌 Snails</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Porcupine')" data-species="Porcupine">🦔 Porcupines</div>
-                            <div class="species-tab" onclick="switchCCTVFeed('Fox')" data-species="Fox">🦊 Foxes</div>
-                        </div>
-                    </div>
-
                     <div class="cctv-container">
                         <div class="CCTV-header">
                             <h1 class="h1-cctv-header">Cage Monitor: <span id="currentSpeciesName">All Species</span></h1>
@@ -41,136 +29,158 @@
                   
                         <!-- ALL SPECIES MULTI-VIEW -->
                         <div class="cctv-display-wrapper" id="allSpeciesView">
-                            <div class="all-cctv-grid">
-                                <!-- Goat CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Goat')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🐐</span>
-                                        <h3>Goat Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/goat.MOV" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+                            <div class="dashboard-layout">
+                                <!-- Main large screen (left side) -->
+                                <div class="main-cctv-section">
+                                    <div class="main-cctv-card active" id="mainGoatView">
+                                        <div class="cctv-feed-header">
+                                            <span class="animal-icon">🐐</span>
+                                            <h3>Goat Enclosure</h3>
+                                            <span class="main-label">MAIN VIEW</span>
                                         </div>
-                                    </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
+                                        <div class="cctv-feed-wrapper main-video-wrapper">
+                                            <video class="cctv-video main-video" autoplay loop muted playsinline>
+                                                <source src="../../videos/goat.MOV" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                            <div class="cctv-overlay">
+                                                <span class="rec-dot"></span>
+                                                <span>LIVE</span>
+                                            </div>
+                                        </div>
+                                        <!-- View Details Button -->
+                                        <button class="view-details-btn" onclick="switchCCTVFeed('Goat')">
+                                            <span class="btn-icon">🔍</span>
+                                            View Cage Details
+                                        </button>
                                     </div>
                                 </div>
-                                
-                                <!-- Sugar Glider CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Sugarglider')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🐿️</span>
-                                        <h3>Sugar Glider Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/sugarglider.MOV" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+
+                                <!-- Side panel with 2 vertical screens (right side) -->
+                                <div class="side-panel-section">                                    
+                                    <!-- Sugar Glider -->
+                                    <div class="side-cctv-card" onclick="switchToMainView('Sugarglider')">
+                                        <div class="side-card-header">
+                                            <span class="animal-icon">🐿️</span>
+                                            <h4>Sugar Glider</h4>
+                                            <button class="view-small-btn" onclick="switchCCTVFeed('Sugarglider')">
+                                                View Details
+                                            </button>
+                                        </div>
+                                        <div class="side-video-wrapper">
+                                            <video class="side-video" autoplay loop muted playsinline>
+                                                <source src="../../videos/sugarglider.MOV" type="video/mp4">
+                                            </video>
+                                            <div class="side-overlay">
+                                                <span class="rec-dot small"></span>
+                                                <span>LIVE</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
+                                    
+                                    <!-- Alligator -->
+                                    <div class="side-cctv-card" onclick="switchToMainView('Alligator')">
+                                        <div class="side-card-header">
+                                            <span class="animal-icon">🐊</span>
+                                            <h4>Alligator</h4>
+                                            <button class="view-small-btn" onclick="switchCCTVFeed('Alligator')">
+                                                View Details
+                                            </button>
+                                        </div>
+                                        <div class="side-video-wrapper">
+                                            <video class="side-video" autoplay loop muted playsinline>
+                                                <source src="../../videos/alligator.mp4" type="video/mp4">
+                                            </video>
+                                            <div class="side-overlay">
+                                                <span class="rec-dot small"></span>
+                                                <span>LIVE</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Alligator CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Alligator')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🐊</span>
-                                        <h3>Alligator Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/alligator.mp4" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+
+                                <!-- Bottom panel with 4 horizontal screens -->
+                                <div class="bottom-panel-section">
+                                    <div class="bottom-cctv-grid">
+                                        <!-- Porcupine -->
+                                        <div class="bottom-cctv-card" onclick="switchToMainView('Porcupine')">
+                                            <div class="bottom-card-header">
+                                                <span class="animal-icon">🦔</span>
+                                                <h4>Porcupine</h4>
+                                                <button class="view-small-btn" onclick="switchCCTVFeed('Porcupine')">
+                                                    View Details
+                                                </button>
+                                            </div>
+                                            <div class="bottom-video-wrapper">
+                                                <video class="bottom-video" autoplay loop muted playsinline>
+                                                    <source src="../../videos/porcupine.MP4" type="video/mp4">
+                                                </video>
+                                                <div class="bottom-overlay">
+                                                    <span class="rec-dot small"></span>
+                                                    <span>LIVE</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Snail CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Snail')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🐌</span>
-                                        <h3>Snail Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/snail.MOV" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+                                        
+                                        <!-- Fox -->
+                                        <div class="bottom-cctv-card" onclick="switchToMainView('Fox')">
+                                            <div class="bottom-card-header">
+                                                <span class="animal-icon">🦊</span>
+                                                <h4>Fox</h4>
+                                                <button class="view-small-btn" onclick="switchCCTVFeed('Fox')">
+                                                    View Details
+                                                </button>
+                                            </div>
+                                            <div class="bottom-video-wrapper">
+                                                <video class="bottom-video" autoplay loop muted playsinline>
+                                                    <source src="../../videos/fox.MP4" type="video/mp4">
+                                                </video>
+                                                <div class="bottom-overlay">
+                                                    <span class="rec-dot small"></span>
+                                                    <span>LIVE</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Porcupine CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Porcupine')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🦔</span>
-                                        <h3>Porcupine Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/porcupine.MP4" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+                                        
+                                        <!-- Snail -->
+                                        <div class="bottom-cctv-card" onclick="switchToMainView('Snail')">
+                                            <div class="bottom-card-header">
+                                                <span class="animal-icon">🐌</span>
+                                                <h4>Snail</h4>
+                                                <button class="view-small-btn" onclick="switchCCTVFeed('Snail')">
+                                                    View Details
+                                                </button>
+                                            </div>
+                                            <div class="bottom-video-wrapper">
+                                                <video class="bottom-video" autoplay loop muted playsinline>
+                                                    <source src="../../videos/snail.MOV" type="video/mp4">
+                                                </video>
+                                                <div class="bottom-overlay">
+                                                    <span class="rec-dot small"></span>
+                                                    <span>LIVE</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Fox CCTV -->
-                                <div class="cctv-feed-card" onclick="switchCCTVFeed('Fox')" style="cursor: pointer;">
-                                    <div class="cctv-feed-header">
-                                        <span class="animal-icon">🦊</span>
-                                        <h3>Fox Enclosure</h3>
-                                    </div>
-                                    <div class="cctv-feed-wrapper">
-                                        <video class="cctv-video" autoplay loop muted playsinline>
-                                            <source src="../../videos/fox.MP4" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        <div class="cctv-overlay">
-                                            <span class="rec-dot"></span>
-                                            <span>LIVE</span>
+                                        
+                                        <!-- Goat (duplicate for symmetry in bottom panel) -->
+                                        <div class="bottom-cctv-card active" onclick="switchToMainView('Goat')">
+                                            <div class="bottom-card-header">
+                                                <span class="animal-icon">🐐</span>
+                                                <h4>Goat</h4>
+                                                <button class="view-small-btn" onclick="switchCCTVFeed('Goat')">
+                                                    View Details
+                                                </button>                                                
+                                            </div>
+                                            <div class="bottom-video-wrapper">
+                                                <video class="bottom-video" autoplay loop muted playsinline>
+                                                    <source src="../../videos/goat.MOV" type="video/mp4">
+                                                </video>
+                                                <div class="bottom-overlay">
+                                                    <span class="rec-dot small"></span>
+                                                    <span>LIVE</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="cctv-feed-status">
-                                        <span class="status-indicator online"></span>
-                                        <span class="status-text">Online</span>
                                     </div>
                                 </div>
                             </div>
@@ -178,6 +188,19 @@
 
                         <!-- SINGLE SPECIES VIEW (Hidden by default) -->
                         <div class="cctv-display-wrapper hidden" id="singleSpeciesView">
+                            <!-- Species tabs only visible in single species view -->
+                            <div class="species-tabs-container">
+                                <div class="species-tabs">
+                                    <div class="species-tab" onclick="switchCCTVFeed('All')" data-species="All">🐾 All Species</div>
+                                    <div class="species-tab active" onclick="switchCCTVFeed('Goat')" data-species="Goat">🐐 Goats</div>
+                                    <div class="species-tab" onclick="switchCCTVFeed('Sugarglider')" data-species="Sugarglider">🐿️ Sugar Gliders</div>
+                                    <div class="species-tab" onclick="switchCCTVFeed('Alligator')" data-species="Alligator">🐊 Alligators</div>
+                                    <div class="species-tab" onclick="switchCCTVFeed('Snail')" data-species="Snail">🐌 Snails</div>
+                                    <div class="species-tab" onclick="switchCCTVFeed('Porcupine')" data-species="Porcupine">🦔 Porcupines</div>
+                                    <div class="species-tab" onclick="switchCCTVFeed('Fox')" data-species="Fox">🦊 Foxes</div>
+                                </div>
+                            </div>
+
                             <!-- FIRST WRAPPER: Camera Controls Wrapper -->
                             <div class="camera-controls-wrapper">
                                 <div class="cctv-feed" id="cctvFeed">
