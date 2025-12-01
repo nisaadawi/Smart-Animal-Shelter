@@ -265,7 +265,7 @@ function renderAnimalSelection(activeSpecies = null, displayName = null, icon = 
     return `
         <div class="animal-selection-card">
             <div class="card-header">
-                <h3 class="card-title">Animal Selection</h3>
+                <h3 class="card-title">Animal Selection and Alerts</h3>
             </div>
             <div class="animal-selection-content">
                 <div class="species-tabs-row">
